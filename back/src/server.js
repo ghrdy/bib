@@ -7,15 +7,21 @@ import projectRoutes from "./routes/projects.js";
 import childProfileRoutes from "./routes/childProfiles.js";
 import bookLoanRoutes from "./routes/bookLoans.js";
 import uploadRoutes from "./routes/upload.js";
-import authToken from "./middleware/authToken.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const port = 5000;
 
 // Middleware
 app.use(bodyParser.json());
-app.use(cors());
-app.use("/uploads", express.static("uploads")); // Serve uploaded files
+app.use(cookieParser());
+
+// CORS configuration
+const corsOptions = {
+  origin: "http://localhost:5173", // Replace with your frontend URL
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 // MongoDB connection
 mongoose.connect("mongodb://localhost:27017/ULPT");
@@ -26,9 +32,8 @@ db.once("open", () => {
   console.log("Connected to MongoDB");
 });
 
-app.use("/api", userRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/upload", uploadRoutes); // Route pour les uploads d'images
-
 app.use("/api/projects", projectRoutes);
 app.use("/api/childProfiles", childProfileRoutes);
 app.use("/api/bookLoans", bookLoanRoutes);

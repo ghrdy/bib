@@ -1,5 +1,5 @@
 ### Login
-POST http://localhost:5000/api/login
+POST http://localhost:5000/api/users/login
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 
 
 ### Login non Admin
-POST http://localhost:5000/api/login
+POST http://localhost:5000/api/users/login
 Content-Type: application/json
 
 {
@@ -18,7 +18,7 @@ Content-Type: application/json
 }
 
 ### Create a new user (Admin only)
-POST http://localhost:5000/api/users
+POST http://localhost:5000/api/users/add
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNDAwMjQ4Y2FkOThlZTBhYzM3NSIsInJvbGUiOiJyZWZlcmVudCIsImlhdCI6MTczMTU5Mjk0NywiZXhwIjoxNzMxNTk2NTQ3fQ.-vBuEqWjdMMjO7t28vsQoetP7lOODYKdfrmGL5qkS9g
 
@@ -84,6 +84,12 @@ Authorization: Bearer
 ### Delete a project (Admin only)
 DELETE http://localhost:5000/api/projects/555555555555
 Authorization: Bearer 
+
+
+### Get all images
+GET http://localhost:5000/api/upload
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNWM0ZjlhNGJiN2JmNjY2NjI2MiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczMTYzMTQyNSwiZXhwIjoxNzMxNjMyMzI1fQ.cWZHYhrs0FINHUP_BcN3uU4GGEzIlYLtvmFU-BYIsc4
 
 ### Create a new child profile
 POST http://localhost:5000/api/childProfiles

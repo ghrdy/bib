@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 const authenticateToken = (req, res, next) => {
-  const token = req.headers["authorization"];
+  const token = req.cookies.accessToken; // Récupérer le token depuis les cookies
   if (!token)
     return res.status(401).json({ message: "Access denied (authmiddleware)" });
 

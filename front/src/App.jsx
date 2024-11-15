@@ -1,35 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import LoginLogout from './LoginLogout';
+import AdminPanelUsers from './AdminPanelUsers';
+import PanelProjects from './PanelProjects';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+const Home = () => {
+  const navigate = useNavigate();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="home-container">
+      <h1>Welcome to the Admin Users Test Panel</h1>
+      <button onClick={() => navigate('/login')} className="btn">Login/Logout Test</button>
+      <button onClick={() => navigate('/admin')} className="btn">Admin Panel</button>
+      <button onClick={() => navigate('/projects')} className="btn">Projects Panel</button>
+    </div>
+  );
+};
 
-export default App
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginLogout />} />
+        <Route path="/admin" element={<AdminPanelUsers />} />
+        <Route path="/projects" element={<PanelProjects />} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;

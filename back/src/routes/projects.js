@@ -1,26 +1,22 @@
 import express from "express";
 import Project from "../models/Project.js";
 import authToken from "../middleware/authToken.js";
-
+import isAdmin from "../middleware/isAdmin.js";
 const router = express.Router();
-
-// Middleware to check if the user is an admin
-const isAdmin = (req, res, next) => {
-  const { role } = req.user;
-  if (role === "admin") {
-    next();
-  } else {
-    res.status(403).json({ message: "Access denied (canManageProjects)" });
-  }
-};
 
 // Protected routes (authentication required)
 router.use(authToken);
 
 // Create a new project
 router.post("/", isAdmin, async (req, res) => {
-  const { image, nom, annee } = req.body;
-  const newProject = new Project({ image, nom, annee });
+  const { image, nom, annee, description, animateurs } = req.body;
+  const newProject = new Project({
+    image,
+    nom,
+    annee,
+    description,
+    animateurs,
+  });
   try {
     const savedProject = await newProject.save();
     res.status(201).json(savedProject);
@@ -55,11 +51,11 @@ router.get("/:id", async (req, res) => {
 
 // Update a project
 router.put("/:id", isAdmin, async (req, res) => {
-  const { image, nom, annee } = req.body;
+  const { image, nom, annee, description, animateurs } = req.body;
   try {
     const updatedProject = await Project.findByIdAndUpdate(
       req.params.id,
-      { image, nom, annee },
+      { image, nom, annee, description, animateurs },
       { new: true }
     );
     if (updatedProject) {
