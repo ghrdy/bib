@@ -27,7 +27,7 @@ export default function Login() {
     try {
       const response = await fetch("http://localhost:5001/api/users/login", {
         method: "POST",
-        credentials: 'include',
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -39,14 +39,15 @@ export default function Login() {
       }
 
       const data = await response.json();
-      login(
-        { id: data.userId, role: data.role },
-        data.token,
-        data.reftoken
-      );
-      
+
+      // Extract role from JWT token
+      const tokenPayload = JSON.parse(atob(data.token.split(".")[1]));
+      const userRole = tokenPayload.role;
+
+      login({ id: tokenPayload.id, role: userRole }, data.token, data.reftoken);
+
       toast.success("Login successful!");
-      navigate(data.role === 'admin' ? '/admin' : '/worker');
+      navigate(userRole === "admin" ? "/admin" : "/worker");
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -89,7 +90,9 @@ export default function Login() {
               />
             </div>
             {error && <p className="text-red-500">{error}</p>}
-            <Button type="submit">Login</Button>
+            <Button type="submit" className="w-full">
+              Login
+            </Button>
           </form>
         </CardContent>
       </Card>
