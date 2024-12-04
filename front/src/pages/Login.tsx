@@ -47,7 +47,7 @@ export default function Login() {
       login({ id: tokenPayload.id, role: userRole }, data.token, data.reftoken);
 
       toast.success("Login successful!");
-      navigate(userRole === "admin" ? "/admin" : "/worker");
+      navigate("/");
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);

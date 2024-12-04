@@ -29,7 +29,11 @@ import { Switch } from "@/components/ui/switch";
 import { UserPlus, Pencil, Trash2 } from "lucide-react";
 import AddChildDialog from "./AddChildDialog";
 import EditChildDialog from "./EditChildDialog";
-import { ChildProfile, getChildProfiles, deleteChildProfile } from "@/lib/api/children";
+import {
+  ChildProfile,
+  getChildProfiles,
+  deleteChildProfile,
+} from "@/lib/api/children";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
@@ -48,7 +52,7 @@ export default function ChildrenManagement() {
       const fetchedChildren = await getChildProfiles(accessToken);
       setChildren(fetchedChildren);
     } catch (error) {
-      toast.error('Failed to fetch children profiles');
+      toast.error("Failed to fetch children profiles");
     }
   };
 
@@ -69,12 +73,12 @@ export default function ChildrenManagement() {
   const confirmDelete = async () => {
     try {
       if (!childToDelete || !accessToken) return;
-      
+
       await deleteChildProfile(childToDelete._id, accessToken);
-      toast.success('Child profile deleted successfully');
+      toast.success("Child profile deleted successfully");
       fetchChildren();
     } catch (error) {
-      toast.error('Failed to delete child profile');
+      toast.error("Failed to delete child profile");
     } finally {
       setShowDeleteDialog(false);
       setChildToDelete(null);
@@ -85,7 +89,9 @@ export default function ChildrenManagement() {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Children Management</h2>
+          <h2 className="text-2xl font-bold tracking-tight">
+            Children Management
+          </h2>
           <p className="text-muted-foreground">
             Add and manage children's profiles
           </p>
@@ -116,7 +122,9 @@ export default function ChildrenManagement() {
                 <TableRow key={child._id}>
                   <TableCell>{`${child.prenom} ${child.nom}`}</TableCell>
                   <TableCell>{child.classeSuivie}</TableCell>
-                  <TableCell>{new Date(child.dateNaissance).toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    {new Date(child.dateNaissance).toLocaleDateString()}
+                  </TableCell>
                   <TableCell>
                     <Button
                       variant="ghost"
@@ -160,12 +168,15 @@ export default function ChildrenManagement() {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the child's profile.
+              This action cannot be undone. This will permanently delete the
+              child's profile.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>Delete</AlertDialogAction>
+            <AlertDialogAction onClick={confirmDelete}>
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

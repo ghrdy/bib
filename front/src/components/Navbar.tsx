@@ -1,13 +1,14 @@
+/// <reference types="vite-plugin-svgr/client" />
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { useAuth } from "@/lib/auth";
 import { useNavigate } from "react-router-dom";
-import HouseIcon from "../assets/House.svg";
-import BooksIcon from "../assets/Books.svg";
-import UsersIcon from "../assets/UsersThree.svg";
-import GearIcon from "../assets/Gear.svg";
+import HouseIcon from "../assets/House.svg?react";
+import BooksIcon from "../assets/Books.svg?react";
+import UsersIcon from "../assets/UsersThree.svg?react";
+import GearIcon from "../assets/Gear.svg?react";
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
