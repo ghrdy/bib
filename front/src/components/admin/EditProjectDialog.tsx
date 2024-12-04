@@ -4,39 +4,44 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useState } from "react";
-import { createProject } from "@/lib/api/projects";
+import { Project, UpdateProjectData, updateProject } from "@/lib/api/projects";
 import { useAuth } from "@/lib/auth";
 
-interface AddProjectDialogProps {
+interface EditProjectDialogProps {
+  project: Project;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onProjectAdded: () => void;
+  onProjectUpdated: () => void;
 }
 
-export default function AddProjectDialog({ open, onOpenChange, onProjectAdded }: AddProjectDialogProps) {
+export default function EditProjectDialog({ project, open, onOpenChange, onProjectUpdated }: EditProjectDialogProps) {
   const { accessToken } = useAuth();
   const [formData, setFormData] = useState({
-    nom: '',
-    annee: new Date().getFullYear(),
-    image: '',
-    animateurs: [],
+    nom: project.nom,
+    annee: project.annee,
+    image: project.image,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
+      const updateData: UpdateProjectData = {
+        nom: formData.nom,
+        annee: formData.annee,
+        image: formData.image,
+      };
+
       if (!accessToken) {
         throw new Error('No access token available');
       }
 
-      await createProject(formData, accessToken);
-      toast.success("Project added successfully!");
-      onProjectAdded();
+      await updateProject(project._id, updateData, accessToken);
+      toast.success("Project updated successfully!");
+      onProjectUpdated();
       onOpenChange(false);
-      setFormData({ nom: '', annee: new Date().getFullYear(), image: '', animateurs: [] });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to create project');
+      toast.error(error instanceof Error ? error.message : 'Failed to update project');
     }
   };
 
@@ -44,7 +49,7 @@ export default function AddProjectDialog({ open, onOpenChange, onProjectAdded }:
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Project</DialogTitle>
+          <DialogTitle>Edit Project</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -75,7 +80,7 @@ export default function AddProjectDialog({ open, onOpenChange, onProjectAdded }:
               onChange={(e) => setFormData({ ...formData, image: e.target.value })}
             />
           </div>
-          <Button type="submit" className="w-full">Add Project</Button>
+          <Button type="submit" className="w-full">Update Project</Button>
         </form>
       </DialogContent>
     </Dialog>

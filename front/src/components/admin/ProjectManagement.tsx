@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,11 +15,70 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FolderPlus } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { FolderPlus, Pencil, Trash2 } from "lucide-react";
 import AddProjectDialog from "./AddProjectDialog";
+import EditProjectDialog from "./EditProjectDialog";
+import { Project, getProjects, deleteProject } from "@/lib/api/projects";
+import { useAuth } from "@/lib/auth";
+import { toast } from "sonner";
 
 export default function ProjectManagement() {
+  const { accessToken } = useAuth();
+  const [projects, setProjects] = useState<Project[]>([]);
   const [showAddProject, setShowAddProject] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [showEditProject, setShowEditProject] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
+
+  const fetchProjects = async () => {
+    try {
+      if (!accessToken) return;
+      const fetchedProjects = await getProjects(accessToken);
+      setProjects(fetchedProjects);
+    } catch (error) {
+      toast.error('Failed to fetch projects');
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects();
+  }, [accessToken]);
+
+  const handleEditProject = (project: Project) => {
+    setSelectedProject(project);
+    setShowEditProject(true);
+  };
+
+  const handleDeleteProject = (project: Project) => {
+    setProjectToDelete(project);
+    setShowDeleteDialog(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      if (!projectToDelete || !accessToken) return;
+      
+      await deleteProject(projectToDelete._id, accessToken);
+      toast.success('Project deleted successfully');
+      fetchProjects();
+    } catch (error) {
+      toast.error('Failed to delete project');
+    } finally {
+      setShowDeleteDialog(false);
+      setProjectToDelete(null);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -46,30 +105,67 @@ export default function ProjectManagement() {
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Start Date</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Year</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell>Summer Reading</TableCell>
-                <TableCell>Summer reading program for kids</TableCell>
-                <TableCell>2024-06-01</TableCell>
-                <TableCell>Active</TableCell>
-                <TableCell>
-                  <Button variant="ghost" size="sm">
-                    Edit
-                  </Button>
-                </TableCell>
-              </TableRow>
+              {projects.map((project) => (
+                <TableRow key={project._id}>
+                  <TableCell>{project.nom}</TableCell>
+                  <TableCell>{project.annee}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleEditProject(project)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDeleteProject(project)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
 
-      <AddProjectDialog open={showAddProject} onOpenChange={setShowAddProject} />
+      <AddProjectDialog
+        open={showAddProject}
+        onOpenChange={setShowAddProject}
+        onProjectAdded={fetchProjects}
+      />
+
+      {selectedProject && (
+        <EditProjectDialog
+          project={selectedProject}
+          open={showEditProject}
+          onOpenChange={setShowEditProject}
+          onProjectUpdated={fetchProjects}
+        />
+      )}
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the project.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

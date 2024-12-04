@@ -5,55 +5,53 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useState } from "react";
-import { createChildProfile } from "@/lib/api/children";
+import { ChildProfile, UpdateChildProfileData, updateChildProfile } from "@/lib/api/children";
 import { useAuth } from "@/lib/auth";
 
-interface AddChildDialogProps {
+interface EditChildDialogProps {
+  child: ChildProfile;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onChildAdded: () => void;
+  onChildUpdated: () => void;
 }
 
-export default function AddChildDialog({ open, onOpenChange, onChildAdded }: AddChildDialogProps) {
-  const { accessToken, user } = useAuth();
+export default function EditChildDialog({ child, open, onOpenChange, onChildUpdated }: EditChildDialogProps) {
+  const { accessToken } = useAuth();
   const [formData, setFormData] = useState({
-    nom: '',
-    prenom: '',
-    dateNaissance: '',
-    classeSuivie: '',
-    noteObservation: '',
+    nom: child.nom,
+    prenom: child.prenom,
+    dateNaissance: child.dateNaissance.split('T')[0],
+    classeSuivie: child.classeSuivie,
+    noteObservation: child.noteObservation,
     photo: null as File | null,
-    parentId: user?.id || '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
+      const updateData: UpdateChildProfileData = {
+        nom: formData.nom,
+        prenom: formData.prenom,
+        dateNaissance: formData.dateNaissance,
+        classeSuivie: formData.classeSuivie,
+        noteObservation: formData.noteObservation,
+      };
+
+      if (formData.photo) {
+        updateData.photo = formData.photo;
+      }
+
       if (!accessToken) {
         throw new Error('No access token available');
       }
 
-      const data = {
-        ...formData,
-        photo: formData.photo || undefined,
-      };
-
-      await createChildProfile(data, accessToken);
-      toast.success("Child profile added successfully!");
-      onChildAdded();
+      await updateChildProfile(child._id, updateData, accessToken);
+      toast.success("Child profile updated successfully!");
+      onChildUpdated();
       onOpenChange(false);
-      setFormData({
-        nom: '',
-        prenom: '',
-        dateNaissance: '',
-        classeSuivie: '',
-        noteObservation: '',
-        photo: null,
-        parentId: user?.id || '',
-      });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to create child profile');
+      toast.error(error instanceof Error ? error.message : 'Failed to update child profile');
     }
   };
 
@@ -67,7 +65,7 @@ export default function AddChildDialog({ open, onOpenChange, onChildAdded }: Add
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Add New Child</DialogTitle>
+          <DialogTitle>Edit Child Profile</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
@@ -112,7 +110,7 @@ export default function AddChildDialog({ open, onOpenChange, onChildAdded }: Add
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="photo">Photo</Label>
+            <Label htmlFor="photo">New Photo (Optional)</Label>
             <Input
               id="photo"
               type="file"
@@ -128,7 +126,7 @@ export default function AddChildDialog({ open, onOpenChange, onChildAdded }: Add
               onChange={(e) => setFormData({ ...formData, noteObservation: e.target.value })}
             />
           </div>
-          <Button type="submit" className="w-full">Add Child</Button>
+          <Button type="submit" className="w-full">Update Child Profile</Button>
         </form>
       </DialogContent>
     </Dialog>

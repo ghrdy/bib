@@ -11,23 +11,24 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
-import { createBookLoan } from "@/lib/api/bookLoans";
+import { BookLoan, UpdateBookLoanData, updateBookLoan } from "@/lib/api/bookLoans";
 import { getChildProfiles, ChildProfile } from "@/lib/api/children";
 import { useAuth } from "@/lib/auth";
 
-interface AddLoanDialogProps {
+interface EditLoanDialogProps {
+  loan: BookLoan;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onLoanAdded: () => void;
+  onLoanUpdated: () => void;
 }
 
-export default function AddLoanDialog({ open, onOpenChange, onLoanAdded }: AddLoanDialogProps) {
+export default function EditLoanDialog({ loan, open, onOpenChange, onLoanUpdated }: EditLoanDialogProps) {
   const { accessToken } = useAuth();
   const [children, setChildren] = useState<ChildProfile[]>([]);
   const [formData, setFormData] = useState({
-    bookTitle: '',
-    userId: '',
-    returnDate: '',
+    bookTitle: loan.bookTitle,
+    userId: loan.userId,
+    returnDate: loan.returnDate.split('T')[0],
   });
 
   useEffect(() => {
@@ -50,21 +51,22 @@ export default function AddLoanDialog({ open, onOpenChange, onLoanAdded }: AddLo
     e.preventDefault();
     
     try {
+      const updateData: UpdateBookLoanData = {
+        bookTitle: formData.bookTitle,
+        userId: formData.userId,
+        returnDate: formData.returnDate,
+      };
+
       if (!accessToken) {
         throw new Error('No access token available');
       }
 
-      await createBookLoan(formData, accessToken);
-      toast.success("Book loan added successfully!");
-      onLoanAdded();
+      await updateBookLoan(loan._id, updateData, accessToken);
+      toast.success("Book loan updated successfully!");
+      onLoanUpdated();
       onOpenChange(false);
-      setFormData({
-        bookTitle: '',
-        userId: '',
-        returnDate: '',
-      });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to create book loan');
+      toast.error(error instanceof Error ? error.message : 'Failed to update book loan');
     }
   };
 
@@ -72,7 +74,7 @@ export default function AddLoanDialog({ open, onOpenChange, onLoanAdded }: AddLo
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>New Book Loan</DialogTitle>
+          <DialogTitle>Edit Book Loan</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -112,7 +114,7 @@ export default function AddLoanDialog({ open, onOpenChange, onLoanAdded }: AddLo
               required
             />
           </div>
-          <Button type="submit" className="w-full">Create Loan</Button>
+          <Button type="submit" className="w-full">Update Loan</Button>
         </form>
       </DialogContent>
     </Dialog>
