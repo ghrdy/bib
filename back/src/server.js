@@ -10,7 +10,7 @@ import uploadRoutes from "./routes/upload.js";
 import cookieParser from "cookie-parser";
 
 const app = express();
-const port = 5000;
+const port = 5001;
 
 // Middleware
 app.use(bodyParser.json());
@@ -24,7 +24,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // MongoDB connection
-mongoose.connect("mongodb://localhost:27017/ULPT");
+mongoose.connect("mongodb://127.0.0.1:27017/dev");
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
