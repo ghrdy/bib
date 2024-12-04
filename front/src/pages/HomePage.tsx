@@ -1,20 +1,29 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { BookOpen, Users, ArrowRight, Library, BookMarked, UserCheck } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Library, BookMarked, UserCheck } from "lucide-react";
+import { Link } from "react-router-dom";
+import Logo from "../assets/Logo.svg?react";
 
 export default function HomePage() {
   return (
-    <div className="min-h-[80vh] flex flex-col justify-center space-y-12 py-12">
+    <div className="min-h-[80vh] flex flex-col justify-center space-y-12">
       <section className="text-center space-y-6">
         <div className="relative">
           <div className="absolute inset-0 blur-3xl bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-blue-500/20 rounded-full" />
           <h1 className="text-5xl font-bold tracking-tight relative">
-            <Library className="inline-block h-12 w-12 mb-2" />
+            <Logo className="inline-block h-48 w-48 mb-2" />
           </h1>
         </div>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          Une plateforme moderne et intuitive conçue pour simplifier les opérations de la bibliothèque et améliorer l'expérience de lecture pour tous.
+          Une plateforme moderne et intuitive conçue pour simplifier les
+          opérations de la bibliothèque et améliorer l'expérience de lecture
+          pour tous.
         </p>
         <div className="flex justify-center gap-4">
           <Link to="/login">
