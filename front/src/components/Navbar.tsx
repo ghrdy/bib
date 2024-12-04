@@ -4,10 +4,10 @@ import { LogOut } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { useAuth } from "@/lib/auth";
 import { useNavigate } from "react-router-dom";
-import { ReactComponent as HouseIcon } from "@/assets/House.svg";
-import { ReactComponent as BooksIcon } from "@/assets/Books.svg";
-import { ReactComponent as UsersIcon } from "@/assets/UsersThree.svg";
-import { ReactComponent as GearIcon } from "@/assets/Gear.svg";
+import { HouseIcon } from "../assets/House.svg";
+import { BooksIcon } from "../assets/Books.svg";
+import { UsersIcon } from "../assets/UsersThree.svg";
+import { GearIcon } from "../assets/Gear.svg";
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
