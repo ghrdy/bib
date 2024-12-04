@@ -2,8 +2,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import Layout from '@/components/Layout';
 import HomePage from '@/pages/HomePage';
-import AdminDashboard from '@/pages/AdminDashboard';
-import WorkerDashboard from '@/pages/WorkerDashboard';
+import ChildrenPage from '@/pages/ChildrenPage';
+import BooksPage from '@/pages/BooksPage';
+import SettingsPage from '@/pages/SettingsPage';
 import Login from '@/pages/Login';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/components/AuthProvider';
@@ -18,18 +19,26 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
               <Route
-                path="admin/*"
+                path="children"
                 element={
-                  <ProtectedRoute allowedRoles={['admin']}>
-                    <AdminDashboard />
+                  <ProtectedRoute allowedRoles={['admin', 'referent', 'simple']}>
+                    <ChildrenPage />
                   </ProtectedRoute>
                 }
               />
               <Route
-                path="worker/*"
+                path="books"
                 element={
                   <ProtectedRoute allowedRoles={['admin', 'referent', 'simple']}>
-                    <WorkerDashboard />
+                    <BooksPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="settings"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <SettingsPage />
                   </ProtectedRoute>
                 }
               />

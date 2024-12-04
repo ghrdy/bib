@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Users, Home, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { useAuth } from "@/lib/auth";
 import { useNavigate } from "react-router-dom";
+import { ReactComponent as HouseIcon } from "@/assets/House.svg";
+import { ReactComponent as BooksIcon } from "@/assets/Books.svg";
+import { ReactComponent as UsersIcon } from "@/assets/UsersThree.svg";
+import { ReactComponent as GearIcon } from "@/assets/Gear.svg";
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
@@ -27,31 +31,48 @@ export default function Navbar() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center space-x-8">
           <Link to="/" className="flex items-center space-x-2">
-            <BookOpen className="h-6 w-6" />
+            <HouseIcon className="h-6 w-6" />
             <span className="font-semibold text-lg">LibraryAdmin</span>
           </Link>
           <div className="flex items-center space-x-4">
             <Link to="/">
               <Button variant="ghost" className="flex items-center space-x-2">
-                <Home className="h-4 w-4" />
-                <span>Home</span>
+                <HouseIcon className="h-4 w-4" />
+                <span>Accueil</span>
               </Button>
             </Link>
-            {isAuthenticated && user?.role === "admin" && (
-              <Link to="/admin">
-                <Button variant="ghost" className="flex items-center space-x-2">
-                  <Users className="h-4 w-4" />
-                  <span>Admin</span>
-                </Button>
-              </Link>
-            )}
             {isAuthenticated && (
-              <Link to="/worker">
-                <Button variant="ghost" className="flex items-center space-x-2">
-                  <BookOpen className="h-4 w-4" />
-                  <span>Worker</span>
-                </Button>
-              </Link>
+              <>
+                <Link to="/children">
+                  <Button
+                    variant="ghost"
+                    className="flex items-center space-x-2"
+                  >
+                    <UsersIcon className="h-4 w-4" />
+                    <span>Enfants</span>
+                  </Button>
+                </Link>
+                <Link to="/books">
+                  <Button
+                    variant="ghost"
+                    className="flex items-center space-x-2"
+                  >
+                    <BooksIcon className="h-4 w-4" />
+                    <span>Livres</span>
+                  </Button>
+                </Link>
+                {user?.role === "admin" && (
+                  <Link to="/settings">
+                    <Button
+                      variant="ghost"
+                      className="flex items-center space-x-2"
+                    >
+                      <GearIcon className="h-4 w-4" />
+                      <span>Plus</span>
+                    </Button>
+                  </Link>
+                )}
+              </>
             )}
           </div>
         </div>
