@@ -11,9 +11,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { toast } from "sonner";
+import { useAuth } from "@/lib/auth";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -25,6 +27,7 @@ export default function Login() {
     try {
       const response = await fetch("http://localhost:5001/api/users/login", {
         method: "POST",
+        credentials: 'include',
         headers: {
           "Content-Type": "application/json",
         },
@@ -36,8 +39,14 @@ export default function Login() {
       }
 
       const data = await response.json();
+      login(
+        { id: data.userId, role: data.role },
+        data.token,
+        data.reftoken
+      );
+      
       toast.success("Login successful!");
-      navigate("/admin");
+      navigate(data.role === 'admin' ? '/admin' : '/worker');
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
