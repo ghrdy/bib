@@ -11,40 +11,51 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useState } from "react";
-import { createUser } from "@/lib/api/users";
+import { User, UpdateUserData, updateUser } from "@/lib/api/users";
 import { useAuth } from "@/lib/auth";
 
-interface AddUserDialogProps {
+interface EditUserDialogProps {
+  user: User;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onUserAdded: () => void;
+  onUserUpdated: () => void;
 }
 
-export default function AddUserDialog({ open, onOpenChange, onUserAdded }: AddUserDialogProps) {
+export default function EditUserDialog({ user, open, onOpenChange, onUserUpdated }: EditUserDialogProps) {
   const { accessToken } = useAuth();
   const [formData, setFormData] = useState({
-    nom: '',
-    prenom: '',
-    email: '',
+    nom: user.nom,
+    prenom: user.prenom,
+    email: user.email,
+    role: user.role,
     password: '',
-    role: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
+      const updateData: UpdateUserData = {
+        nom: formData.nom,
+        prenom: formData.prenom,
+        email: formData.email,
+        role: formData.role,
+      };
+
+      if (formData.password) {
+        updateData.password = formData.password;
+      }
+
       if (!accessToken) {
         throw new Error('No access token available');
       }
 
-      await createUser(formData, accessToken);
-      toast.success("User added successfully!");
-      onUserAdded();
+      await updateUser(user._id, updateData, accessToken);
+      toast.success("User updated successfully!");
+      onUserUpdated();
       onOpenChange(false);
-      setFormData({ nom: '', prenom: '', email: '', password: '', role: '' });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to create user');
+      toast.error(error instanceof Error ? error.message : 'Failed to update user');
     }
   };
 
@@ -52,7 +63,7 @@ export default function AddUserDialog({ open, onOpenChange, onUserAdded }: AddUs
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New User</DialogTitle>
+          <DialogTitle>Edit User</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
@@ -86,20 +97,20 @@ export default function AddUserDialog({ open, onOpenChange, onUserAdded }: AddUs
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">New Password (leave empty to keep current)</Label>
             <Input
               id="password"
               type="password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              required
+              placeholder="Enter new password"
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="role">Role</Label>
             <Select
               value={formData.role}
-              onValueChange={(value) => setFormData({ ...formData, role: value })}
+              onValueChange={(value) => setFormData({ ...formData, role: value as 'admin' | 'referent' | 'simple' })}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select role" />
@@ -111,7 +122,7 @@ export default function AddUserDialog({ open, onOpenChange, onUserAdded }: AddUs
               </SelectContent>
             </Select>
           </div>
-          <Button type="submit" className="w-full">Add User</Button>
+          <Button type="submit" className="w-full">Update User</Button>
         </form>
       </DialogContent>
     </Dialog>
