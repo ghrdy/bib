@@ -8,7 +8,7 @@ export default function SettingsPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Paramètres</h1>
         <p className="text-muted-foreground">
-          Gérer les utilisateurs, les projets et les paramètres du système
+          Gérer les utilisateurs et les projets
         </p>
       </div>
 

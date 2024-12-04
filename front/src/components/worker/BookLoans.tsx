@@ -47,7 +47,7 @@ export default function BookLoans() {
       const fetchedLoans = await getBookLoans(accessToken);
       setLoans(fetchedLoans);
     } catch (error) {
-      toast.error('Failed to fetch book loans');
+      toast.error('Échec du chargement des emprunts');
     }
   };
 
@@ -70,10 +70,10 @@ export default function BookLoans() {
       if (!loanToDelete || !accessToken) return;
       
       await deleteBookLoan(loanToDelete._id, accessToken);
-      toast.success('Book loan deleted successfully');
+      toast.success('Emprunt supprimé avec succès');
       fetchLoans();
     } catch (error) {
-      toast.error('Failed to delete book loan');
+      toast.error('Échec de la suppression');
     } finally {
       setShowDeleteDialog(false);
       setLoanToDelete(null);
@@ -81,63 +81,54 @@ export default function BookLoans() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Book Loans</h2>
-          <p className="text-muted-foreground">
-            Manage book loans and returns
-          </p>
+          <CardTitle>Emprunts en cours</CardTitle>
+          <CardDescription>Liste des livres actuellement empruntés</CardDescription>
         </div>
         <Button onClick={() => setShowAddLoan(true)}>
           <BookPlus className="mr-2 h-4 w-4" />
-          New Loan
+          Nouvel emprunt
         </Button>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Active Loans</CardTitle>
-          <CardDescription>Currently borrowed books.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Book Title</TableHead>
-                <TableHead>Loan Date</TableHead>
-                <TableHead>Due Date</TableHead>
-                <TableHead>Actions</TableHead>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Titre du livre</TableHead>
+              <TableHead>Date d'emprunt</TableHead>
+              <TableHead>Date de retour</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {loans.map((loan) => (
+              <TableRow key={loan._id}>
+                <TableCell>{loan.bookTitle}</TableCell>
+                <TableCell>{new Date(loan.loanDate).toLocaleDateString()}</TableCell>
+                <TableCell>{new Date(loan.returnDate).toLocaleDateString()}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleEditLoan(loan)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDeleteLoan(loan)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loans.map((loan) => (
-                <TableRow key={loan._id}>
-                  <TableCell>{loan.bookTitle}</TableCell>
-                  <TableCell>{new Date(loan.loanDate).toLocaleDateString()}</TableCell>
-                  <TableCell>{new Date(loan.returnDate).toLocaleDateString()}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleEditLoan(loan)}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDeleteLoan(loan)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
 
       <AddLoanDialog
         open={showAddLoan}
@@ -157,17 +148,17 @@ export default function BookLoans() {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the book loan record.
+              Cette action est irréversible. L'enregistrement de l'emprunt sera définitivement supprimé.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>Delete</AlertDialogAction>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>Supprimer</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </Card>
   );
 }

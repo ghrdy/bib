@@ -25,7 +25,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Switch } from "@/components/ui/switch";
 import { UserPlus, Pencil, Trash2 } from "lucide-react";
 import AddChildDialog from "./AddChildDialog";
 import EditChildDialog from "./EditChildDialog";
@@ -52,7 +51,7 @@ export default function ChildrenManagement() {
       const fetchedChildren = await getChildProfiles(accessToken);
       setChildren(fetchedChildren);
     } catch (error) {
-      toast.error("Failed to fetch children profiles");
+      toast.error("Échec du chargement des profils");
     }
   };
 
@@ -75,10 +74,10 @@ export default function ChildrenManagement() {
       if (!childToDelete || !accessToken) return;
 
       await deleteChildProfile(childToDelete._id, accessToken);
-      toast.success("Child profile deleted successfully");
+      toast.success("Profil supprimé avec succès");
       fetchChildren();
     } catch (error) {
-      toast.error("Failed to delete child profile");
+      toast.error("Échec de la suppression du profil");
     } finally {
       setShowDeleteDialog(false);
       setChildToDelete(null);
@@ -86,67 +85,56 @@ export default function ChildrenManagement() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">
-            Children Management
-          </h2>
-          <p className="text-muted-foreground">
-            Add and manage children's profiles
-          </p>
+          <CardTitle>Liste des enfants</CardTitle>
+          <CardDescription>Liste des enfants inscrits</CardDescription>
         </div>
         <Button onClick={() => setShowAddChild(true)}>
           <UserPlus className="mr-2 h-4 w-4" />
-          Add Child
+          Ajouter
         </Button>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Children</CardTitle>
-          <CardDescription>A list of all registered children.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Class</TableHead>
-                <TableHead>Birth Date</TableHead>
-                <TableHead>Actions</TableHead>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nom</TableHead>
+              <TableHead>Classe</TableHead>
+              <TableHead>Date de naissance</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {children.map((child) => (
+              <TableRow key={child._id}>
+                <TableCell>{`${child.prenom} ${child.nom}`}</TableCell>
+                <TableCell>{child.classeSuivie}</TableCell>
+                <TableCell>
+                  {new Date(child.dateNaissance).toLocaleDateString()}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleEditChild(child)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDeleteChild(child)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {children.map((child) => (
-                <TableRow key={child._id}>
-                  <TableCell>{`${child.prenom} ${child.nom}`}</TableCell>
-                  <TableCell>{child.classeSuivie}</TableCell>
-                  <TableCell>
-                    {new Date(child.dateNaissance).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleEditChild(child)}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDeleteChild(child)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
 
       <AddChildDialog
         open={showAddChild}
@@ -166,20 +154,19 @@ export default function ChildrenManagement() {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              child's profile.
+              Cette action est irréversible. Le profil sera définitivement supprimé.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDelete}>
-              Delete
+              Supprimer
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </Card>
   );
 }

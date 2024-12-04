@@ -10,16 +10,16 @@ export default function HomePage() {
         <div className="relative">
           <div className="absolute inset-0 blur-3xl bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-blue-500/20 rounded-full" />
           <h1 className="text-5xl font-bold tracking-tight relative">
-            Library Management System
+            <Library className="inline-block h-12 w-12 mb-2" />
           </h1>
         </div>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          A modern, intuitive platform designed to streamline library operations and enhance the reading experience for everyone.
+          Une plateforme moderne et intuitive conçue pour simplifier les opérations de la bibliothèque et améliorer l'expérience de lecture pour tous.
         </p>
         <div className="flex justify-center gap-4">
           <Link to="/login">
             <Button size="lg" className="gap-2">
-              Get Started
+              Commencer
               <ArrowRight className="h-4 w-4" />
             </Button>
           </Link>
@@ -32,24 +32,24 @@ export default function HomePage() {
             <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
               <Library className="h-6 w-6 text-primary" />
             </div>
-            <CardTitle>Smart Management</CardTitle>
+            <CardTitle>Gestion Intelligente</CardTitle>
             <CardDescription>
-              Efficiently manage your library's resources with our intelligent system
+              Gérez efficacement les ressources de votre bibliothèque
             </CardDescription>
           </CardHeader>
           <CardContent>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Automated tracking
+                Suivi automatisé
               </li>
               <li className="flex items-center gap-2">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Real-time updates
+                Mises à jour en temps réel
               </li>
               <li className="flex items-center gap-2">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Smart notifications
+                Notifications intelligentes
               </li>
             </ul>
           </CardContent>
@@ -60,24 +60,24 @@ export default function HomePage() {
             <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
               <BookMarked className="h-6 w-6 text-primary" />
             </div>
-            <CardTitle>Book Tracking</CardTitle>
+            <CardTitle>Suivi des Livres</CardTitle>
             <CardDescription>
-              Keep track of your books and loans with ease
+              Suivez vos livres et prêts en toute simplicité
             </CardDescription>
           </CardHeader>
           <CardContent>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Digital cataloging
+                Catalogage numérique
               </li>
               <li className="flex items-center gap-2">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Loan management
+                Gestion des prêts
               </li>
               <li className="flex items-center gap-2">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Return reminders
+                Rappels de retour
               </li>
             </ul>
           </CardContent>
@@ -88,98 +88,28 @@ export default function HomePage() {
             <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
               <UserCheck className="h-6 w-6 text-primary" />
             </div>
-            <CardTitle>User Management</CardTitle>
+            <CardTitle>Gestion des Utilisateurs</CardTitle>
             <CardDescription>
-              Manage users and permissions with precision
+              Gérez les utilisateurs avec précision
             </CardDescription>
           </CardHeader>
           <CardContent>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Role-based access
+                Accès basé sur les rôles
               </li>
               <li className="flex items-center gap-2">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Activity tracking
+                Suivi des activités
               </li>
               <li className="flex items-center gap-2">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                User analytics
+                Analytique utilisateur
               </li>
             </ul>
           </CardContent>
         </Card>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto px-4 mt-12">
-        <Link to="/admin" className="group">
-          <Card className="hover-card h-full transition-all duration-300 hover:border-primary">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2 text-2xl">
-                <Users className="h-8 w-8 text-primary transition-transform group-hover:scale-110" />
-                <span>Administrators</span>
-              </CardTitle>
-              <CardDescription className="text-lg">
-                Powerful tools for system management
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                <li className="flex items-center space-x-2">
-                  <div className="h-2 w-2 rounded-full bg-primary" />
-                  <span>Comprehensive user management</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <div className="h-2 w-2 rounded-full bg-primary" />
-                  <span>Project creation and tracking</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <div className="h-2 w-2 rounded-full bg-primary" />
-                  <span>Advanced system configuration</span>
-                </li>
-              </ul>
-              <Button variant="ghost" className="w-full mt-6 group-hover:bg-primary group-hover:text-primary-foreground">
-                Access Admin Dashboard
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link to="/worker" className="group">
-          <Card className="hover-card h-full transition-all duration-300 hover:border-primary">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2 text-2xl">
-                <BookOpen className="h-8 w-8 text-primary transition-transform group-hover:scale-110" />
-                <span>Workers</span>
-              </CardTitle>
-              <CardDescription className="text-lg">
-                Streamlined tools for daily operations
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                <li className="flex items-center space-x-2">
-                  <div className="h-2 w-2 rounded-full bg-primary" />
-                  <span>Efficient child registration</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <div className="h-2 w-2 rounded-full bg-primary" />
-                  <span>Simple book loan management</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <div className="h-2 w-2 rounded-full bg-primary" />
-                  <span>Quick access to important features</span>
-                </li>
-              </ul>
-              <Button variant="ghost" className="w-full mt-6 group-hover:bg-primary group-hover:text-primary-foreground">
-                Access Worker Dashboard
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </CardContent>
-          </Card>
-        </Link>
       </div>
     </div>
   );
