@@ -1,5 +1,5 @@
 /// <reference types="vite-plugin-svgr/client" />
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
@@ -13,6 +13,7 @@ import GearIcon from "../assets/Gear.svg?react";
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -29,16 +30,18 @@ export default function Navbar() {
 
   const getRoleDisplay = (role: string) => {
     switch (role) {
-      case 'admin':
-        return 'Administrateur';
-      case 'referent':
-        return 'Animateur Référent';
-      case 'simple':
-        return 'Animateur';
+      case "admin":
+        return "Administrateur";
+      case "referent":
+        return "Animateur Référent";
+      case "simple":
+        return "Animateur";
       default:
         return role;
     }
   };
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <nav className="border-b">
@@ -46,7 +49,12 @@ export default function Navbar() {
         <div className="flex items-center space-x-8">
           <div className="flex items-center space-x-4">
             <Link to="/">
-              <Button variant="ghost" className="flex items-center space-x-2">
+              <Button
+                variant="ghost"
+                className={`flex items-center space-x-2 ${
+                  isActive("/") ? "bg-gray-200" : ""
+                }`}
+              >
                 <HouseIcon className="h-4 w-4" />
                 <span>Accueil</span>
               </Button>
@@ -56,7 +64,9 @@ export default function Navbar() {
                 <Link to="/children">
                   <Button
                     variant="ghost"
-                    className="flex items-center space-x-2"
+                    className={`flex items-center space-x-2 ${
+                      isActive("/children") ? "bg-gray-200" : ""
+                    }`}
                   >
                     <UsersIcon className="h-4 w-4" />
                     <span>Enfants</span>
@@ -65,7 +75,9 @@ export default function Navbar() {
                 <Link to="/books">
                   <Button
                     variant="ghost"
-                    className="flex items-center space-x-2"
+                    className={`flex items-center space-x-2 ${
+                      isActive("/books") ? "bg-gray-200" : ""
+                    }`}
                   >
                     <BooksIcon className="h-4 w-4" />
                     <span>Livres</span>
@@ -75,7 +87,9 @@ export default function Navbar() {
                   <Link to="/settings">
                     <Button
                       variant="ghost"
-                      className="flex items-center space-x-2"
+                      className={`flex items-center space-x-2 ${
+                        isActive("/settings") ? "bg-gray-200" : ""
+                      }`}
                     >
                       <GearIcon className="h-4 w-4" />
                       <span>Plus</span>
@@ -93,7 +107,9 @@ export default function Navbar() {
               {user && (
                 <div className="text-right">
                   <p className="text-sm font-medium">{`${user.prenom} ${user.nom}`}</p>
-                  <p className="text-xs text-muted-foreground">{getRoleDisplay(user.role)}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {getRoleDisplay(user.role)}
+                  </p>
                 </div>
               )}
               <Button onClick={handleLogout} variant="ghost" size="icon">
