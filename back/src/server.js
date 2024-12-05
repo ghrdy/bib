@@ -30,8 +30,15 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// Protected route for serving static files from the uploads directory
-app.use("/uploads", authenticateToken, express.static(path.join(__dirname, "../uploads")));
+// Create uploads directory if it doesn't exist
+import fs from 'fs';
+const uploadsDir = path.join(__dirname, "../uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Serve static files from the uploads directory
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // MongoDB connection
 mongoose.connect("mongodb://127.0.0.1:27017/dev");

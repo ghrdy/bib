@@ -28,7 +28,7 @@ router.post("/", canManageChildProfiles, upload, async (req, res) => {
     noteObservation,
     parentId,
   } = req.body;
-  const photo = req.file ? req.file.path : null;
+  const photo = req.file ? `/uploads/${req.file.filename}` : null;
   const newChildProfile = new ChildProfile({
     nom,
     prenom,
@@ -80,19 +80,29 @@ router.put("/:id", canManageChildProfiles, upload, async (req, res) => {
     noteObservation,
     parentId,
   } = req.body;
-  const photo = req.file ? req.file.path : null;
+  const photo = req.file ? `/uploads/${req.file.filename}` : undefined;
   try {
+    const updateData = {
+      nom,
+      prenom,
+      dateNaissance,
+      classeSuivie,
+      noteObservation,
+      parentId,
+    };
+
+    if (photo) {
+      updateData.photo = photo;
+    }
+
+    // Remove undefined values
+    Object.keys(updateData).forEach(
+      (key) => updateData[key] === undefined && delete updateData[key]
+    );
+
     const updatedChildProfile = await ChildProfile.findByIdAndUpdate(
       req.params.id,
-      {
-        nom,
-        prenom,
-        dateNaissance,
-        classeSuivie,
-        noteObservation,
-        photo,
-        parentId,
-      },
+      updateData,
       { new: true }
     );
     if (updatedChildProfile) {
