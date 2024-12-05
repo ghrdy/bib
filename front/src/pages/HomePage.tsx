@@ -22,8 +22,8 @@ export default function HomePage() {
         </div>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
           Une plateforme moderne et intuitive conçue pour simplifier les
-          opérations de la bibliothèque et améliorer l'expérience de lecture
-          pour tous.
+          opérations de bibliothèque et améliorer l'expérience de lecture pour
+          tous.
         </p>
         <div className="flex justify-center gap-4">
           <Link to="/login">
