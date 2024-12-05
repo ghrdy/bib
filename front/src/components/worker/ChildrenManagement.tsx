@@ -3,9 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   Table,
@@ -26,7 +24,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { UserPlus, Pencil, Trash2 } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { ProfileAvatar } from "@/components/ui/profile-avatar";
 import AddChildDialog from "./AddChildDialog";
 import EditChildDialog from "./EditChildDialog";
 import {
@@ -85,10 +83,6 @@ export default function ChildrenManagement() {
     }
   };
 
-  const getInitials = (prenom: string, nom: string) => {
-    return `${prenom.charAt(0)}${nom.charAt(0)}`.toUpperCase();
-  };
-
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -112,22 +106,10 @@ export default function ChildrenManagement() {
             {children.map((child) => (
               <TableRow key={child._id}>
                 <TableCell>
-                  <Avatar>
-                    {child.photo ? (
-                      <AvatarImage 
-                        src={`http://localhost:5001${child.photo}`} 
-                        alt={`${child.prenom} ${child.nom}`}
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="50%" y="50%" text-anchor="middle" dy=".3em">${getInitials(child.prenom, child.nom)}</text></svg>`;
-                        }}
-                      />
-                    ) : (
-                      <AvatarFallback>
-                        {getInitials(child.prenom, child.nom)}
-                      </AvatarFallback>
-                    )}
-                  </Avatar>
+                  <ProfileAvatar
+                    imageUrl={child.photo}
+                    name={`${child.prenom} ${child.nom}`}
+                  />
                 </TableCell>
                 <TableCell>{`${child.prenom} ${child.nom}`}</TableCell>
                 <TableCell>{child.classeSuivie}</TableCell>
