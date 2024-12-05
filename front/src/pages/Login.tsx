@@ -43,12 +43,12 @@ export default function Login() {
       
       // Extract user info from JWT token
       const tokenPayload = JSON.parse(atob(data.token.split(".")[1]));
-
+      
       const user = {
         id: tokenPayload.id,
-        nom: tokenPayload.nom || "",
-        prenom: tokenPayload.prenom || "",
-        role: tokenPayload.role || "simple",
+        nom: tokenPayload.nom,
+        prenom: tokenPayload.prenom,
+        role: tokenPayload.role,
       };
 
       login(user, data.token, data.reftoken);
