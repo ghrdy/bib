@@ -15,7 +15,7 @@ import { useAuth } from "@/lib/auth";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, setAccessToken } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -41,8 +41,11 @@ export default function Login() {
         throw new Error(errorData.message || "Login failed");
       }
 
-      const { user } = await response.json();
+      const { user, accessToken } = await response.json();
       login(user);
+      if (accessToken) {
+        setAccessToken(accessToken);
+      }
       toast.success("Login successful!");
       navigate("/");
     } catch (err) {

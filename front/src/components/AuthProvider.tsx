@@ -5,15 +5,13 @@ import { useNavigate } from 'react-router-dom';
 const AuthContext = createContext<null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { accessToken, refreshToken, logout } = useAuth();
+  const { accessToken, setAccessToken, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     const refreshAccessToken = async () => {
-      if (!refreshToken) return;
-
       try {
-        const response = await fetch('http://localhost:5001/api/users/token', {
+        const response = await fetch('http://localhost:5001/api/users/refresh-token', {
           method: 'POST',
           credentials: 'include',
           headers: {
@@ -23,6 +21,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (!response.ok) {
           throw new Error('Token refresh failed');
+        }
+
+        const data = await response.json();
+        if (data.accessToken) {
+          setAccessToken(data.accessToken);
         }
       } catch (error) {
         console.error('Token refresh failed:', error);
@@ -38,7 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const intervalId = setInterval(refreshAccessToken, 14 * 60 * 1000);
 
     return () => clearInterval(intervalId);
-  }, [refreshToken, logout, navigate]);
+  }, [accessToken, setAccessToken, logout, navigate]);
 
   return (
     <AuthContext.Provider value={null}>
