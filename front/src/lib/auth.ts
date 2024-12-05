@@ -3,6 +3,8 @@ import { persist } from 'zustand/middleware';
 
 interface User {
   id: string;
+  nom: string;
+  prenom: string;
   role: 'admin' | 'referent' | 'simple';
 }
 

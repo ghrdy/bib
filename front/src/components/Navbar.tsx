@@ -27,6 +27,19 @@ export default function Navbar() {
     }
   };
 
+  const getRoleDisplay = (role: string) => {
+    switch (role) {
+      case 'admin':
+        return 'Administrateur';
+      case 'referent':
+        return 'Animateur Référent';
+      case 'simple':
+        return 'Animateur';
+      default:
+        return role;
+    }
+  };
+
   return (
     <nav className="border-b">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -77,11 +90,12 @@ export default function Navbar() {
           <ModeToggle />
           {isAuthenticated ? (
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-muted-foreground">
-                {user?.role
-                  ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
-                  : ""}
-              </span>
+              {user && (
+                <div className="text-right">
+                  <p className="text-sm font-medium">{`${user.prenom} ${user.nom}`}</p>
+                  <p className="text-xs text-muted-foreground">{getRoleDisplay(user.role)}</p>
+                </div>
+              )}
               <Button onClick={handleLogout} variant="ghost" size="icon">
                 <LogOut className="h-4 w-4" />
               </Button>

@@ -35,17 +35,23 @@ export default function Login() {
       });
 
       if (!response.ok) {
-        throw new Error("Login failed");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Login failed");
       }
 
       const data = await response.json();
-
-      // Extract role from JWT token
+      
+      // Extract user info from JWT token
       const tokenPayload = JSON.parse(atob(data.token.split(".")[1]));
-      const userRole = tokenPayload.role;
 
-      login({ id: tokenPayload.id, role: userRole }, data.token, data.reftoken);
+      const user = {
+        id: tokenPayload.id,
+        nom: tokenPayload.nom || "",
+        prenom: tokenPayload.prenom || "",
+        role: tokenPayload.role || "simple",
+      };
 
+      login(user, data.token, data.reftoken);
       toast.success("Login successful!");
       navigate("/");
     } catch (err) {
@@ -89,7 +95,7 @@ export default function Login() {
                 required
               />
             </div>
-            {error && <p className="text-red-500">{error}</p>}
+            {error && <p className="text-sm text-red-500">{error}</p>}
             <Button type="submit" className="w-full">
               Login
             </Button>
