@@ -8,9 +8,16 @@ import childProfileRoutes from "./routes/childProfiles.js";
 import bookLoanRoutes from "./routes/bookLoans.js";
 import uploadRoutes from "./routes/upload.js";
 import cookieParser from "cookie-parser";
+import path from "path";
+import { fileURLToPath } from "url";
+import authenticateToken from "./middleware/authToken.js";
 
 const app = express();
 const port = 5001;
+
+// Get current directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Middleware
 app.use(bodyParser.json());
@@ -18,10 +25,13 @@ app.use(cookieParser());
 
 // CORS configuration
 const corsOptions = {
-  origin: "http://localhost:5173", // Replace with your frontend URL
+  origin: "http://localhost:5173",
   credentials: true,
 };
 app.use(cors(corsOptions));
+
+// Protected route for serving static files from the uploads directory
+app.use("/uploads", authenticateToken, express.static(path.join(__dirname, "../uploads")));
 
 // MongoDB connection
 mongoose.connect("mongodb://127.0.0.1:27017/dev");
@@ -33,7 +43,7 @@ db.once("open", () => {
 });
 
 app.use("/api/users", userRoutes);
-app.use("/api/upload", uploadRoutes); // Route pour les uploads d'images
+app.use("/api/upload", uploadRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/childProfiles", childProfileRoutes);
 app.use("/api/bookLoans", bookLoanRoutes);

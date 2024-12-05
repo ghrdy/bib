@@ -7,29 +7,13 @@ export interface ChildProfile {
   dateNaissance: string;
   classeSuivie: string;
   noteObservation: string;
-  photo: string;
+  photo: string | null;
   parentId: string;
 }
 
-export interface CreateChildProfileData {
-  nom: string;
-  prenom: string;
-  dateNaissance: string;
-  classeSuivie: string;
-  noteObservation: string;
-  photo?: File;
-  parentId: string;
-}
+export interface CreateChildProfileData extends FormData {}
 
-export interface UpdateChildProfileData {
-  nom?: string;
-  prenom?: string;
-  dateNaissance?: string;
-  classeSuivie?: string;
-  noteObservation?: string;
-  photo?: File;
-  parentId?: string;
-}
+export interface UpdateChildProfileData extends FormData {}
 
 const API_URL = 'http://localhost:5001/api';
 
@@ -49,20 +33,13 @@ export async function getChildProfiles(token: string): Promise<ChildProfile[]> {
 }
 
 export async function createChildProfile(data: CreateChildProfileData, token: string): Promise<ChildProfile> {
-  const formData = new FormData();
-  Object.entries(data).forEach(([key, value]) => {
-    if (value !== undefined) {
-      formData.append(key, value);
-    }
-  });
-
   const response = await fetch(`${API_URL}/childProfiles`, {
     method: 'POST',
     headers: {
       'Cookie': `accessToken=${token}`,
     },
     credentials: 'include',
-    body: formData,
+    body: data,
   });
 
   if (!response.ok) {
@@ -74,20 +51,13 @@ export async function createChildProfile(data: CreateChildProfileData, token: st
 }
 
 export async function updateChildProfile(id: string, data: UpdateChildProfileData, token: string): Promise<ChildProfile> {
-  const formData = new FormData();
-  Object.entries(data).forEach(([key, value]) => {
-    if (value !== undefined) {
-      formData.append(key, value);
-    }
-  });
-
   const response = await fetch(`${API_URL}/childProfiles/${id}`, {
     method: 'PUT',
     headers: {
       'Cookie': `accessToken=${token}`,
     },
     credentials: 'include',
-    body: formData,
+    body: data,
   });
 
   if (!response.ok) {

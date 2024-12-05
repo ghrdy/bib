@@ -7,7 +7,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useState } from "react";
 import { createChildProfile } from "@/lib/api/children";
@@ -43,12 +42,18 @@ export default function AddChildDialog({
         throw new Error("No access token available");
       }
 
-      const data = {
-        ...formData,
-        photo: formData.photo || undefined,
-      };
+      const formDataToSend = new FormData();
+      formDataToSend.append("nom", formData.nom);
+      formDataToSend.append("prenom", formData.prenom);
+      formDataToSend.append("dateNaissance", formData.dateNaissance);
+      formDataToSend.append("classeSuivie", formData.classeSuivie);
+      formDataToSend.append("noteObservation", formData.noteObservation);
+      formDataToSend.append("parentId", formData.parentId);
+      if (formData.photo) {
+        formDataToSend.append("photo", formData.photo);
+      }
 
-      await createChildProfile(data, accessToken);
+      await createChildProfile(formDataToSend, accessToken);
       toast.success("Child profile added successfully!");
       onChildAdded();
       onOpenChange(false);

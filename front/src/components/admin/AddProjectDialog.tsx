@@ -39,12 +39,15 @@ export default function AddProjectDialog({
         throw new Error("No access token available");
       }
 
-      const data = {
-        ...formData,
-        image: formData.image || null,
-      };
+      const formDataToSend = new FormData();
+      formDataToSend.append("nom", formData.nom);
+      formDataToSend.append("annee", formData.annee.toString());
+      if (formData.image) {
+        formDataToSend.append("photo", formData.image);
+      }
+      formDataToSend.append("animateurs", JSON.stringify(formData.animateurs));
 
-      await createProject(data, accessToken);
+      await createProject(formDataToSend, accessToken);
       toast.success("Project added successfully!");
       onProjectAdded();
       onOpenChange(false);

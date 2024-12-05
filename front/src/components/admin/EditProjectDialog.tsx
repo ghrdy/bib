@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Project, UpdateProjectData, updateProject } from "@/lib/api/projects";
 import { useAuth } from "@/lib/auth";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface EditProjectDialogProps {
   project: Project;
@@ -36,17 +37,18 @@ export default function EditProjectDialog({
     e.preventDefault();
 
     try {
-      const updateData: UpdateProjectData = {
-        nom: formData.nom,
-        annee: formData.annee,
-        image: formData.image,
-      };
+      const formDataToSend = new FormData();
+      formDataToSend.append("nom", formData.nom);
+      formDataToSend.append("annee", formData.annee.toString());
+      if (formData.image) {
+        formDataToSend.append("photo", formData.image);
+      }
 
       if (!accessToken) {
         throw new Error("No access token available");
       }
 
-      await updateProject(project._id, updateData, accessToken);
+      await updateProject(project._id, formDataToSend, accessToken);
       toast.success("Project updated successfully!");
       onProjectUpdated();
       onOpenChange(false);
@@ -94,7 +96,24 @@ export default function EditProjectDialog({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="image">URL de l'image</Label>
+            <Label>Image actuelle</Label>
+            <div className="flex items-center space-x-4">
+              <Avatar className="h-20 w-20">
+                {project.image ? (
+                  <AvatarImage
+                    src={`http://localhost:5001${project.image}`}
+                    alt={project.nom}
+                  />
+                ) : (
+                  <AvatarFallback>
+                    {project.nom.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                )}
+              </Avatar>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="image">Nouvelle image (optionnel)</Label>
             <Input
               id="image"
               type="file"

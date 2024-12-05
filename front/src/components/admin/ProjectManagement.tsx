@@ -26,6 +26,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { FolderPlus, Pencil, Trash2 } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import AddProjectDialog from "./AddProjectDialog";
 import EditProjectDialog from "./EditProjectDialog";
 import { Project, getProjects, deleteProject } from "@/lib/api/projects";
@@ -93,6 +94,7 @@ export default function ProjectManagement() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Image</TableHead>
                 <TableHead>Nom</TableHead>
                 <TableHead>Année</TableHead>
                 <TableHead>Actions</TableHead>
@@ -101,6 +103,20 @@ export default function ProjectManagement() {
             <TableBody>
               {projects.map((project) => (
                 <TableRow key={project._id}>
+                  <TableCell>
+                    <Avatar>
+                      {project.image ? (
+                        <AvatarImage 
+                          src={`http://localhost:5001${project.image}`} 
+                          alt={project.nom} 
+                        />
+                      ) : (
+                        <AvatarFallback>
+                          {project.nom.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
+                  </TableCell>
                   <TableCell>{project.nom}</TableCell>
                   <TableCell>{project.annee}</TableCell>
                   <TableCell>

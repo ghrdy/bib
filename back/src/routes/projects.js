@@ -2,22 +2,27 @@ import express from "express";
 import Project from "../models/Project.js";
 import authToken from "../middleware/authToken.js";
 import isAdmin from "../middleware/isAdmin.js";
+import upload from "../middleware/imageUpload.js";
+
 const router = express.Router();
 
 // Protected routes (authentication required)
 router.use(authToken);
 
 // Create a new project
-router.post("/", isAdmin, async (req, res) => {
-  const { image, nom, annee, description, animateurs } = req.body;
-  const newProject = new Project({
-    image,
-    nom,
-    annee,
-    description,
-    animateurs,
-  });
+router.post("/", isAdmin, upload, async (req, res) => {
   try {
+    const { nom, annee, description, animateurs } = req.body;
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
+
+    const newProject = new Project({
+      image,
+      nom,
+      annee,
+      description,
+      animateurs: animateurs ? JSON.parse(animateurs) : [],
+    });
+
     const savedProject = await newProject.save();
     res.status(201).json(savedProject);
   } catch (err) {
@@ -50,14 +55,31 @@ router.get("/:id", async (req, res) => {
 });
 
 // Update a project
-router.put("/:id", isAdmin, async (req, res) => {
-  const { image, nom, annee, description, animateurs } = req.body;
+router.put("/:id", isAdmin, upload, async (req, res) => {
   try {
+    const { nom, annee, description, animateurs } = req.body;
+    const updateData = {
+      nom,
+      annee,
+      description,
+      animateurs: animateurs ? JSON.parse(animateurs) : undefined,
+    };
+
+    if (req.file) {
+      updateData.image = `/uploads/${req.file.filename}`;
+    }
+
+    // Remove undefined values
+    Object.keys(updateData).forEach(
+      (key) => updateData[key] === undefined && delete updateData[key]
+    );
+
     const updatedProject = await Project.findByIdAndUpdate(
       req.params.id,
-      { image, nom, annee, description, animateurs },
+      updateData,
       { new: true }
     );
+
     if (updatedProject) {
       res.json(updatedProject);
     } else {

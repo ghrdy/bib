@@ -7,7 +7,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useState } from "react";
 import {
@@ -16,6 +15,7 @@ import {
   updateChildProfile,
 } from "@/lib/api/children";
 import { useAuth } from "@/lib/auth";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface EditChildDialogProps {
   child: ChildProfile;
@@ -44,23 +44,21 @@ export default function EditChildDialog({
     e.preventDefault();
 
     try {
-      const updateData: UpdateChildProfileData = {
-        nom: formData.nom,
-        prenom: formData.prenom,
-        dateNaissance: formData.dateNaissance,
-        classeSuivie: formData.classeSuivie,
-        noteObservation: formData.noteObservation,
-      };
-
+      const formDataToSend = new FormData();
+      formDataToSend.append("nom", formData.nom);
+      formDataToSend.append("prenom", formData.prenom);
+      formDataToSend.append("dateNaissance", formData.dateNaissance);
+      formDataToSend.append("classeSuivie", formData.classeSuivie);
+      formDataToSend.append("noteObservation", formData.noteObservation);
       if (formData.photo) {
-        updateData.photo = formData.photo;
+        formDataToSend.append("photo", formData.photo);
       }
 
       if (!accessToken) {
         throw new Error("No access token available");
       }
 
-      await updateChildProfile(child._id, updateData, accessToken);
+      await updateChildProfile(child._id, formDataToSend, accessToken);
       toast.success("Child profile updated successfully!");
       onChildUpdated();
       onOpenChange(false);
@@ -133,6 +131,23 @@ export default function EditChildDialog({
                 }
                 required
               />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>Photo actuelle</Label>
+            <div className="flex items-center space-x-4">
+              <Avatar className="h-20 w-20">
+                {child.photo ? (
+                  <AvatarImage
+                    src={`http://localhost:5001${child.photo}`}
+                    alt={`${child.prenom} ${child.nom}`}
+                  />
+                ) : (
+                  <AvatarFallback>
+                    {`${child.prenom.charAt(0)}${child.nom.charAt(0)}`.toUpperCase()}
+                  </AvatarFallback>
+                )}
+              </Avatar>
             </div>
           </div>
           <div className="space-y-2">

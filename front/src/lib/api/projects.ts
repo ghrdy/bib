@@ -2,25 +2,15 @@ import { toast } from "sonner";
 
 export interface Project {
   _id: string;
-  image: File | null;
+  image: string | null;
   nom: string;
   annee: number;
   animateurs: string[];
 }
 
-export interface CreateProjectData {
-  image: File | null;
-  nom: string;
-  annee: number;
-  animateurs: string[];
-}
+export interface CreateProjectData extends FormData {}
 
-export interface UpdateProjectData {
-  image?: File | null;
-  nom?: string;
-  annee?: number;
-  animateurs?: string[];
-}
+export interface UpdateProjectData extends FormData {}
 
 const API_URL = 'http://localhost:5001/api';
 
@@ -43,11 +33,10 @@ export async function createProject(data: CreateProjectData, token: string): Pro
   const response = await fetch(`${API_URL}/projects`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
       'Cookie': `accessToken=${token}`,
     },
     credentials: 'include',
-    body: JSON.stringify(data),
+    body: data,
   });
 
   if (!response.ok) {
@@ -62,11 +51,10 @@ export async function updateProject(id: string, data: UpdateProjectData, token: 
   const response = await fetch(`${API_URL}/projects/${id}`, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json',
       'Cookie': `accessToken=${token}`,
     },
     credentials: 'include',
-    body: JSON.stringify(data),
+    body: data,
   });
 
   if (!response.ok) {
