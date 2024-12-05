@@ -143,7 +143,7 @@ export default function AddChildDialog({
           </div>
           <div className="space-y-2">
             <Label htmlFor="notes">Notes / Observations</Label>
-            <Textarea
+            <Input
               id="notes"
               value={formData.noteObservation}
               onChange={(e) =>
