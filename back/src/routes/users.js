@@ -16,7 +16,8 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "User not found" });
+    if (!user)
+      return res.status(400).json({ message: "Utilisateur introuvable" });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
@@ -180,7 +181,7 @@ router.put("/:id", isAdmin, async (req, res) => {
     if (updatedUser) {
       res.json(updatedUser);
     } else {
-      res.status(404).json({ message: "User not found" });
+      res.status(404).json({ message: "Utilisateur introuvable" });
     }
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -194,7 +195,7 @@ router.delete("/:id", isAdmin, async (req, res) => {
     if (deletedUser) {
       res.json({ message: "User deleted" });
     } else {
-      res.status(404).json({ message: "User not found" });
+      res.status(404).json({ message: "Utilisateur introuvable" });
     }
   } catch (err) {
     res.status(500).json({ message: err.message });

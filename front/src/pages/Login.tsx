@@ -36,14 +36,14 @@ export default function Login() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed");
+        throw new Error(errorData.message || "Connexion échouée");
       }
 
       const data = await response.json();
-      
+
       // Extract user info from JWT token
       const tokenPayload = JSON.parse(atob(data.token.split(".")[1]));
-      
+
       const user = {
         id: tokenPayload.id,
         nom: tokenPayload.nom,
@@ -60,7 +60,7 @@ export default function Login() {
       } else {
         setError("An unknown error occurred");
       }
-      toast.error("Login failed!");
+      toast.error("Connexion échouée!");
     }
   };
 
@@ -68,9 +68,9 @@ export default function Login() {
     <div className="flex items-center justify-center min-h-[80vh]">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Login</CardTitle>
+          <CardTitle>Connexion</CardTitle>
           <CardDescription>
-            Enter your credentials to access the system
+            Entrez vos identifiants pour vous connecter
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -86,7 +86,7 @@ export default function Login() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Mot de passe</Label>
               <Input
                 id="password"
                 type="password"
@@ -97,7 +97,7 @@ export default function Login() {
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
             <Button type="submit" className="w-full">
-              Login
+              Se connecter
             </Button>
           </form>
         </CardContent>

@@ -118,7 +118,7 @@ export default function Navbar() {
             </div>
           ) : (
             <Link to="/login">
-              <Button>Login</Button>
+              <Button>Connexion</Button>
             </Link>
           )}
         </div>
