@@ -52,7 +52,7 @@ export default function Navbar() {
               <Button
                 variant="ghost"
                 className={`flex items-center space-x-2 ${
-                  isActive("/") ? "bg-gray-200" : ""
+                  isActive("/") ? "navbar-button-selected" : ""
                 }`}
               >
                 <HouseIcon className="h-4 w-4" />
@@ -65,7 +65,7 @@ export default function Navbar() {
                   <Button
                     variant="ghost"
                     className={`flex items-center space-x-2 ${
-                      isActive("/children") ? "bg-gray-200" : ""
+                      isActive("/children") ? "navbar-button-selected" : ""
                     }`}
                   >
                     <UsersIcon className="h-4 w-4" />
@@ -76,7 +76,7 @@ export default function Navbar() {
                   <Button
                     variant="ghost"
                     className={`flex items-center space-x-2 ${
-                      isActive("/books") ? "bg-gray-200" : ""
+                      isActive("/books") ? "navbar-button-selected" : ""
                     }`}
                   >
                     <BooksIcon className="h-4 w-4" />
@@ -88,7 +88,7 @@ export default function Navbar() {
                     <Button
                       variant="ghost"
                       className={`flex items-center space-x-2 ${
-                        isActive("/settings") ? "bg-gray-200" : ""
+                        isActive("/settings") ? "navbar-button-selected" : ""
                       }`}
                     >
                       <GearIcon className="h-4 w-4" />
