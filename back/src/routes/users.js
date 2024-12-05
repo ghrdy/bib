@@ -138,8 +138,9 @@ router.post("/add", isAdmin, async (req, res) => {
     const mailOptions = {
       from: "tim.hrdy.1@gmail.com",
       to: savedUser.email,
-      subject: "Account Creation",
-      text: `Please use the following link to create your account: http://localhost:5173/create-account?token=${token}`,
+      subject: "Création de compte : Un Livre Pour Tous",
+      html: `<p>Cliquez sur le lien pour définir votre mot de passe. : </p>
+             <a href="http://localhost:5173/create-account?token=${token}">Créer Votre Compte</a>`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
