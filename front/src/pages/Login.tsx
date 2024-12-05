@@ -19,10 +19,12 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     try {
       const response = await fetch("http://localhost:5001/api/users/login", {
@@ -39,28 +41,16 @@ export default function Login() {
         throw new Error(errorData.message || "Login failed");
       }
 
-      const data = await response.json();
-      
-      // Extract user info from JWT token
-      const tokenPayload = JSON.parse(atob(data.token.split(".")[1]));
-
-      const user = {
-        id: tokenPayload.id,
-        nom: tokenPayload.nom || "",
-        prenom: tokenPayload.prenom || "",
-        role: tokenPayload.role || "simple",
-      };
-
-      login(user, data.token, data.reftoken);
+      const { user } = await response.json();
+      login(user);
       toast.success("Login successful!");
       navigate("/");
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unknown error occurred");
-      }
-      toast.error("Login failed!");
+      const message = err instanceof Error ? err.message : "An unknown error occurred";
+      setError(message);
+      toast.error(message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -82,6 +72,7 @@ export default function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={isLoading}
                 required
               />
             </div>
@@ -92,12 +83,13 @@ export default function Login() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                disabled={isLoading}
                 required
               />
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
-            <Button type="submit" className="w-full">
-              Login
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Logging in..." : "Login"}
             </Button>
           </form>
         </CardContent>
