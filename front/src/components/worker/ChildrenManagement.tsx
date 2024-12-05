@@ -87,10 +87,6 @@ export default function ChildrenManagement() {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <div>
-          <CardTitle>Liste des enfants</CardTitle>
-          <CardDescription>Liste des enfants inscrits</CardDescription>
-        </div>
         <Button onClick={() => setShowAddChild(true)}>
           <UserPlus className="mr-2 h-4 w-4" />
           Ajouter
@@ -156,7 +152,8 @@ export default function ChildrenManagement() {
           <AlertDialogHeader>
             <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible. Le profil sera définitivement supprimé.
+              Cette action est irréversible. Le profil sera définitivement
+              supprimé.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

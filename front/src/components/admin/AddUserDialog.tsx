@@ -1,4 +1,9 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,31 +25,37 @@ interface AddUserDialogProps {
   onUserAdded: () => void;
 }
 
-export default function AddUserDialog({ open, onOpenChange, onUserAdded }: AddUserDialogProps) {
+export default function AddUserDialog({
+  open,
+  onOpenChange,
+  onUserAdded,
+}: AddUserDialogProps) {
   const { accessToken } = useAuth();
   const [formData, setFormData] = useState({
-    nom: '',
-    prenom: '',
-    email: '',
-    password: '',
-    role: '',
+    nom: "",
+    prenom: "",
+    email: "",
+    password: "",
+    role: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       if (!accessToken) {
-        throw new Error('No access token available');
+        throw new Error("No access token available");
       }
 
       await createUser(formData, accessToken);
       toast.success("User added successfully!");
       onUserAdded();
       onOpenChange(false);
-      setFormData({ nom: '', prenom: '', email: '', password: '', role: '' });
+      setFormData({ nom: "", prenom: "", email: "", password: "", role: "" });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to create user');
+      toast.error(
+        error instanceof Error ? error.message : "Failed to create user"
+      );
     }
   };
 
@@ -52,66 +63,78 @@ export default function AddUserDialog({ open, onOpenChange, onUserAdded }: AddUs
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New User</DialogTitle>
+          <DialogTitle>Ajouter un nouvel utilisateur</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName">Prénom</Label>
               <Input
                 id="firstName"
                 value={formData.prenom}
-                onChange={(e) => setFormData({ ...formData, prenom: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, prenom: e.target.value })
+                }
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName">Nom</Label>
               <Input
                 id="lastName"
                 value={formData.nom}
-                onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, nom: e.target.value })
+                }
                 required
               />
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Adresse Mail</Label>
             <Input
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Mot de passe</Label>
             <Input
               id="password"
               type="password"
               value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="role">Role</Label>
+            <Label htmlFor="role">Rôle</Label>
             <Select
               value={formData.role}
-              onValueChange={(value) => setFormData({ ...formData, role: value })}
+              onValueChange={(value) =>
+                setFormData({ ...formData, role: value })
+              }
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select role" />
+                <SelectValue placeholder="Choisir un Rôle" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="admin">Administrator</SelectItem>
-                <SelectItem value="referent">Referent</SelectItem>
-                <SelectItem value="simple">Simple</SelectItem>
+                <SelectItem value="admin">Administrateur</SelectItem>
+                <SelectItem value="referent">Animateur référent</SelectItem>
+                <SelectItem value="simple">Animateur Simple</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <Button type="submit" className="w-full">Add User</Button>
+          <Button type="submit" className="w-full">
+            Créer l'utilisateur
+          </Button>
         </form>
       </DialogContent>
     </Dialog>

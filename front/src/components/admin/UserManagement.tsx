@@ -47,7 +47,7 @@ export default function UserManagement() {
       const fetchedUsers = await getUsers(accessToken);
       setUsers(fetchedUsers);
     } catch (error) {
-      toast.error('Failed to fetch users');
+      toast.error("Failed to fetch users");
     }
   };
 
@@ -68,12 +68,12 @@ export default function UserManagement() {
   const confirmDelete = async () => {
     try {
       if (!userToDelete || !accessToken) return;
-      
+
       await deleteUser(userToDelete._id, accessToken);
-      toast.success('User deleted successfully');
+      toast.success("User deleted successfully");
       fetchUsers();
     } catch (error) {
-      toast.error('Failed to delete user');
+      toast.error("Failed to delete user");
     } finally {
       setShowDeleteDialog(false);
       setUserToDelete(null);
@@ -82,31 +82,20 @@ export default function UserManagement() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">User Management</h2>
-          <p className="text-muted-foreground">
-            Add, edit, and manage system users
-          </p>
-        </div>
-        <Button onClick={() => setShowAddUser(true)}>
-          <UserPlus className="mr-2 h-4 w-4" />
-          Add User
-        </Button>
-      </div>
-
       <Card>
-        <CardHeader>
-          <CardTitle>Users</CardTitle>
-          <CardDescription>A list of all system users.</CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <Button onClick={() => setShowAddUser(true)}>
+            <UserPlus className="mr-2 h-4 w-4" />
+            Ajouter un utilisateur
+          </Button>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
+                <TableHead>Nom / Prénom</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
+                <TableHead>Rôle</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -157,15 +146,17 @@ export default function UserManagement() {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>Etes-vous sûr?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the user
-              account and remove their data from the system.
+              Cette action est définitive. Le compte sera supprimé du système et
+              les données liées seront perdues.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>Delete</AlertDialogAction>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>
+              Supprimer
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

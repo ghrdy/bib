@@ -1,4 +1,9 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,19 +26,24 @@ interface EditUserDialogProps {
   onUserUpdated: () => void;
 }
 
-export default function EditUserDialog({ user, open, onOpenChange, onUserUpdated }: EditUserDialogProps) {
+export default function EditUserDialog({
+  user,
+  open,
+  onOpenChange,
+  onUserUpdated,
+}: EditUserDialogProps) {
   const { accessToken } = useAuth();
   const [formData, setFormData] = useState({
     nom: user.nom,
     prenom: user.prenom,
     email: user.email,
     role: user.role,
-    password: '',
+    password: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const updateData: UpdateUserData = {
         nom: formData.nom,
@@ -47,7 +57,7 @@ export default function EditUserDialog({ user, open, onOpenChange, onUserUpdated
       }
 
       if (!accessToken) {
-        throw new Error('No access token available');
+        throw new Error("No access token available");
       }
 
       await updateUser(user._id, updateData, accessToken);
@@ -55,7 +65,9 @@ export default function EditUserDialog({ user, open, onOpenChange, onUserUpdated
       onUserUpdated();
       onOpenChange(false);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to update user');
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update user"
+      );
     }
   };
 
@@ -63,66 +75,84 @@ export default function EditUserDialog({ user, open, onOpenChange, onUserUpdated
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit User</DialogTitle>
+          <DialogTitle>Modifier l'utilisateur</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName">Prénom</Label>
               <Input
                 id="firstName"
                 value={formData.prenom}
-                onChange={(e) => setFormData({ ...formData, prenom: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, prenom: e.target.value })
+                }
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName">Nom</Label>
               <Input
                 id="lastName"
                 value={formData.nom}
-                onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, nom: e.target.value })
+                }
                 required
               />
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Adresse Mail</Label>
             <Input
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">New Password (leave empty to keep current)</Label>
+            <Label htmlFor="password">
+              Nouveau mot de passse (laisser vide pour garder le mot de passe
+              actuel)
+            </Label>
             <Input
               id="password"
               type="password"
               value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              placeholder="Enter new password"
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
+              placeholder="Entrez un nouveau mot de passe"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="role">Role</Label>
+            <Label htmlFor="role">Rôle</Label>
             <Select
               value={formData.role}
-              onValueChange={(value) => setFormData({ ...formData, role: value as 'admin' | 'referent' | 'simple' })}
+              onValueChange={(value) =>
+                setFormData({
+                  ...formData,
+                  role: value as "admin" | "referent" | "simple",
+                })
+              }
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select role" />
+                <SelectValue placeholder="Choisir un rôle" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="admin">Administrator</SelectItem>
-                <SelectItem value="referent">Referent</SelectItem>
-                <SelectItem value="simple">Simple</SelectItem>
+                <SelectItem value="admin">Administrateur</SelectItem>
+                <SelectItem value="referent">Animateur Référent</SelectItem>
+                <SelectItem value="simple">Animateur Simple</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <Button type="submit" className="w-full">Update User</Button>
+          <Button type="submit" className="w-full">
+            Modifier l'utilisateur
+          </Button>
         </form>
       </DialogContent>
     </Dialog>

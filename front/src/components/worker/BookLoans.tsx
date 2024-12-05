@@ -47,7 +47,7 @@ export default function BookLoans() {
       const fetchedLoans = await getBookLoans(accessToken);
       setLoans(fetchedLoans);
     } catch (error) {
-      toast.error('Échec du chargement des emprunts');
+      toast.error("Échec du chargement des emprunts");
     }
   };
 
@@ -68,12 +68,12 @@ export default function BookLoans() {
   const confirmDelete = async () => {
     try {
       if (!loanToDelete || !accessToken) return;
-      
+
       await deleteBookLoan(loanToDelete._id, accessToken);
-      toast.success('Emprunt supprimé avec succès');
+      toast.success("Emprunt supprimé avec succès");
       fetchLoans();
     } catch (error) {
-      toast.error('Échec de la suppression');
+      toast.error("Échec de la suppression");
     } finally {
       setShowDeleteDialog(false);
       setLoanToDelete(null);
@@ -83,10 +83,6 @@ export default function BookLoans() {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <div>
-          <CardTitle>Emprunts en cours</CardTitle>
-          <CardDescription>Liste des livres actuellement empruntés</CardDescription>
-        </div>
         <Button onClick={() => setShowAddLoan(true)}>
           <BookPlus className="mr-2 h-4 w-4" />
           Nouvel emprunt
@@ -106,8 +102,12 @@ export default function BookLoans() {
             {loans.map((loan) => (
               <TableRow key={loan._id}>
                 <TableCell>{loan.bookTitle}</TableCell>
-                <TableCell>{new Date(loan.loanDate).toLocaleDateString()}</TableCell>
-                <TableCell>{new Date(loan.returnDate).toLocaleDateString()}</TableCell>
+                <TableCell>
+                  {new Date(loan.loanDate).toLocaleDateString()}
+                </TableCell>
+                <TableCell>
+                  {new Date(loan.returnDate).toLocaleDateString()}
+                </TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"
@@ -150,12 +150,15 @@ export default function BookLoans() {
           <AlertDialogHeader>
             <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible. L'enregistrement de l'emprunt sera définitivement supprimé.
+              Cette action est irréversible. L'enregistrement de l'emprunt sera
+              définitivement supprimé.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Annuler</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>Supprimer</AlertDialogAction>
+            <AlertDialogAction onClick={confirmDelete}>
+              Supprimer
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

@@ -47,7 +47,7 @@ export default function ProjectManagement() {
       const fetchedProjects = await getProjects(accessToken);
       setProjects(fetchedProjects);
     } catch (error) {
-      toast.error('Failed to fetch projects');
+      toast.error("Failed to fetch projects");
     }
   };
 
@@ -68,12 +68,12 @@ export default function ProjectManagement() {
   const confirmDelete = async () => {
     try {
       if (!projectToDelete || !accessToken) return;
-      
+
       await deleteProject(projectToDelete._id, accessToken);
-      toast.success('Project deleted successfully');
+      toast.success("Project deleted successfully");
       fetchProjects();
     } catch (error) {
-      toast.error('Failed to delete project');
+      toast.error("Failed to delete project");
     } finally {
       setShowDeleteDialog(false);
       setProjectToDelete(null);
@@ -82,30 +82,19 @@ export default function ProjectManagement() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Project Management</h2>
-          <p className="text-muted-foreground">
-            Create and manage library projects
-          </p>
-        </div>
-        <Button onClick={() => setShowAddProject(true)}>
-          <FolderPlus className="mr-2 h-4 w-4" />
-          Add Project
-        </Button>
-      </div>
-
       <Card>
-        <CardHeader>
-          <CardTitle>Projects</CardTitle>
-          <CardDescription>A list of all library projects.</CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <Button onClick={() => setShowAddProject(true)}>
+            <FolderPlus className="mr-2 h-4 w-4" />
+            Ajouter un projet
+          </Button>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Year</TableHead>
+                <TableHead>Nom</TableHead>
+                <TableHead>Année</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -155,14 +144,17 @@ export default function ProjectManagement() {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>Etes-vous sûr?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the project.
+              Cette action est définitive. Le projet sera supprimé du système et
+              les données liées seront perdues.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>Delete</AlertDialogAction>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>
+              Supprimer
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

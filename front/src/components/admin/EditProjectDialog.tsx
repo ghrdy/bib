@@ -1,4 +1,9 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,7 +19,12 @@ interface EditProjectDialogProps {
   onProjectUpdated: () => void;
 }
 
-export default function EditProjectDialog({ project, open, onOpenChange, onProjectUpdated }: EditProjectDialogProps) {
+export default function EditProjectDialog({
+  project,
+  open,
+  onOpenChange,
+  onProjectUpdated,
+}: EditProjectDialogProps) {
   const { accessToken } = useAuth();
   const [formData, setFormData] = useState({
     nom: project.nom,
@@ -24,7 +34,7 @@ export default function EditProjectDialog({ project, open, onOpenChange, onProje
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const updateData: UpdateProjectData = {
         nom: formData.nom,
@@ -33,7 +43,7 @@ export default function EditProjectDialog({ project, open, onOpenChange, onProje
       };
 
       if (!accessToken) {
-        throw new Error('No access token available');
+        throw new Error("No access token available");
       }
 
       await updateProject(project._id, updateData, accessToken);
@@ -41,7 +51,9 @@ export default function EditProjectDialog({ project, open, onOpenChange, onProje
       onProjectUpdated();
       onOpenChange(false);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to update project');
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update project"
+      );
     }
   };
 
@@ -53,34 +65,42 @@ export default function EditProjectDialog({ project, open, onOpenChange, onProje
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Project Name</Label>
+            <Label htmlFor="name">Nom du Projet</Label>
             <Input
               id="name"
               value={formData.nom}
-              onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, nom: e.target.value })
+              }
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="year">Year</Label>
+            <Label htmlFor="year">Année</Label>
             <Input
               id="year"
               type="number"
               value={formData.annee}
-              onChange={(e) => setFormData({ ...formData, annee: parseInt(e.target.value) })}
+              onChange={(e) =>
+                setFormData({ ...formData, annee: parseInt(e.target.value) })
+              }
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="image">Image URL</Label>
+            <Label htmlFor="image">URL de l'image</Label>
             <Input
               id="image"
               type="url"
               value={formData.image}
-              onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, image: e.target.value })
+              }
             />
           </div>
-          <Button type="submit" className="w-full">Update Project</Button>
+          <Button type="submit" className="w-full">
+            Mettre à jour le projet
+          </Button>
         </form>
       </DialogContent>
     </Dialog>
