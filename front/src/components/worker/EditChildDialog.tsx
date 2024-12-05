@@ -15,7 +15,7 @@ import {
   updateChildProfile,
 } from "@/lib/api/children";
 import { useAuth } from "@/lib/auth";
-import { ProfileAvatar } from "@/components/ui/profile-avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface EditChildDialogProps {
   child: ChildProfile;
@@ -136,11 +136,18 @@ export default function EditChildDialog({
           <div className="space-y-2">
             <Label>Photo actuelle</Label>
             <div className="flex items-center space-x-4">
-              <ProfileAvatar
-                imageUrl={child.photo}
-                name={`${child.prenom} ${child.nom}`}
-                size="lg"
-              />
+              <Avatar className="h-20 w-20">
+                {child.photo ? (
+                  <AvatarImage
+                    src={`http://localhost:5001${child.photo}`}
+                    alt={child.prenom}
+                  />
+                ) : (
+                  <AvatarFallback>
+                    {child.prenom.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                )}
+              </Avatar>
             </div>
           </div>
           <div className="space-y-2">

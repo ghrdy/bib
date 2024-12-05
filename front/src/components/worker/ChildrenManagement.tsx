@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -24,7 +20,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { UserPlus, Pencil, Trash2 } from "lucide-react";
-import { ProfileAvatar } from "@/components/ui/profile-avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import AddChildDialog from "./AddChildDialog";
 import EditChildDialog from "./EditChildDialog";
 import {
@@ -106,10 +102,18 @@ export default function ChildrenManagement() {
             {children.map((child) => (
               <TableRow key={child._id}>
                 <TableCell>
-                  <ProfileAvatar
-                    imageUrl={child.photo}
-                    name={`${child.prenom} ${child.nom}`}
-                  />
+                  <Avatar>
+                    {child.photo ? (
+                      <AvatarImage
+                        src={`http://localhost:5001${child.photo}`}
+                        alt={child.prenom}
+                      />
+                    ) : (
+                      <AvatarFallback>
+                        {child.prenom.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
                 </TableCell>
                 <TableCell>{`${child.prenom} ${child.nom}`}</TableCell>
                 <TableCell>{child.classeSuivie}</TableCell>
