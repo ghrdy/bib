@@ -116,7 +116,11 @@ export default function ChildrenManagement() {
                     {child.photo ? (
                       <AvatarImage 
                         src={`http://localhost:5001${child.photo}`} 
-                        alt={`${child.prenom} ${child.nom}`} 
+                        alt={`${child.prenom} ${child.nom}`}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="50%" y="50%" text-anchor="middle" dy=".3em">${getInitials(child.prenom, child.nom)}</text></svg>`;
+                        }}
                       />
                     ) : (
                       <AvatarFallback>

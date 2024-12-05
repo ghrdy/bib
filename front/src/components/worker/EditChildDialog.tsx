@@ -77,6 +77,10 @@ export default function EditChildDialog({
     }
   };
 
+  const getInitials = (prenom: string, nom: string) => {
+    return `${prenom.charAt(0)}${nom.charAt(0)}`.toUpperCase();
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
@@ -141,10 +145,14 @@ export default function EditChildDialog({
                   <AvatarImage
                     src={`http://localhost:5001${child.photo}`}
                     alt={`${child.prenom} ${child.nom}`}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="50%" y="50%" text-anchor="middle" dy=".3em">${getInitials(child.prenom, child.nom)}</text></svg>`;
+                    }}
                   />
                 ) : (
                   <AvatarFallback>
-                    {`${child.prenom.charAt(0)}${child.nom.charAt(0)}`.toUpperCase()}
+                    {getInitials(child.prenom, child.nom)}
                   </AvatarFallback>
                 )}
               </Avatar>
