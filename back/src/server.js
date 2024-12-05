@@ -37,8 +37,8 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Serve static files from the uploads directory
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+// Protected route for serving static files from the uploads directory
+app.use("/uploads", authenticateToken, express.static(path.join(__dirname, "../uploads")));
 
 // MongoDB connection
 mongoose.connect("mongodb://127.0.0.1:27017/dev");
