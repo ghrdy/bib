@@ -96,7 +96,7 @@ export default function ChildrenManagement() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Nom</TableHead>
+              <TableHead>Prénom / Nom</TableHead>
               <TableHead>Classe</TableHead>
               <TableHead>Date de naissance</TableHead>
               <TableHead>Actions</TableHead>

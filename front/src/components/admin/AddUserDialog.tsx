@@ -32,10 +32,9 @@ export default function AddUserDialog({
 }: AddUserDialogProps) {
   const { accessToken } = useAuth();
   const [formData, setFormData] = useState({
-    nom: "",
     prenom: "",
+    nom: "",
     email: "",
-    password: "",
     role: "",
   });
 
@@ -51,7 +50,7 @@ export default function AddUserDialog({
       toast.success("User added successfully!");
       onUserAdded();
       onOpenChange(false);
-      setFormData({ nom: "", prenom: "", email: "", password: "", role: "" });
+      setFormData({ prenom: "", nom: "", email: "", role: "" });
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Failed to create user"
@@ -65,30 +64,28 @@ export default function AddUserDialog({
         <DialogHeader>
           <DialogTitle>Ajouter un nouvel utilisateur</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="firstName">Prénom</Label>
-              <Input
-                id="firstName"
-                value={formData.prenom}
-                onChange={(e) =>
-                  setFormData({ ...formData, prenom: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="lastName">Nom</Label>
-              <Input
-                id="lastName"
-                value={formData.nom}
-                onChange={(e) =>
-                  setFormData({ ...formData, nom: e.target.value })
-                }
-                required
-              />
-            </div>
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-2">
+            <Label htmlFor="prenom">Prénom</Label>
+            <Input
+              id="prenom"
+              value={formData.prenom}
+              onChange={(e) =>
+                setFormData({ ...formData, prenom: e.target.value })
+              }
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="nom">Nom</Label>
+            <Input
+              id="nom"
+              value={formData.nom}
+              onChange={(e) =>
+                setFormData({ ...formData, nom: e.target.value })
+              }
+              required
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Adresse Mail</Label>
@@ -98,18 +95,6 @@ export default function AddUserDialog({
               value={formData.email}
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
-              }
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Mot de passe</Label>
-            <Input
-              id="password"
-              type="password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
               }
               required
             />

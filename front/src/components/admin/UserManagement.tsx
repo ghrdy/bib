@@ -93,7 +93,7 @@ export default function UserManagement() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nom / Prénom</TableHead>
+                <TableHead>Prénom / Nom</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Rôle</TableHead>
                 <TableHead className="text-right">Actions</TableHead>

@@ -12,7 +12,7 @@ export interface CreateUserData {
   nom: string;
   prenom: string;
   email: string;
-  password: string;
+  password?: string;
   role: string;
 }
 
