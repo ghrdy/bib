@@ -1,4 +1,9 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,13 +26,17 @@ interface AddLoanDialogProps {
   onLoanAdded: () => void;
 }
 
-export default function AddLoanDialog({ open, onOpenChange, onLoanAdded }: AddLoanDialogProps) {
+export default function AddLoanDialog({
+  open,
+  onOpenChange,
+  onLoanAdded,
+}: AddLoanDialogProps) {
   const { accessToken } = useAuth();
   const [children, setChildren] = useState<ChildProfile[]>([]);
   const [formData, setFormData] = useState({
-    bookTitle: '',
-    userId: '',
-    returnDate: '',
+    bookTitle: "",
+    userId: "",
+    returnDate: "",
   });
 
   useEffect(() => {
@@ -37,7 +46,7 @@ export default function AddLoanDialog({ open, onOpenChange, onLoanAdded }: AddLo
         const fetchedChildren = await getChildProfiles(accessToken);
         setChildren(fetchedChildren);
       } catch (error) {
-        toast.error('Failed to fetch children profiles');
+        toast.error("Failed to fetch children profiles");
       }
     };
 
@@ -48,10 +57,10 @@ export default function AddLoanDialog({ open, onOpenChange, onLoanAdded }: AddLo
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       if (!accessToken) {
-        throw new Error('No access token available');
+        throw new Error("No access token available");
       }
 
       await createBookLoan(formData, accessToken);
@@ -59,12 +68,14 @@ export default function AddLoanDialog({ open, onOpenChange, onLoanAdded }: AddLo
       onLoanAdded();
       onOpenChange(false);
       setFormData({
-        bookTitle: '',
-        userId: '',
-        returnDate: '',
+        bookTitle: "",
+        userId: "",
+        returnDate: "",
       });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to create book loan');
+      toast.error(
+        error instanceof Error ? error.message : "Failed to create book loan"
+      );
     }
   };
 
@@ -72,17 +83,19 @@ export default function AddLoanDialog({ open, onOpenChange, onLoanAdded }: AddLo
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>New Book Loan</DialogTitle>
+          <DialogTitle>Nouvel emprunt</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="child">Child</Label>
+            <Label htmlFor="child">Enfant</Label>
             <Select
               value={formData.userId}
-              onValueChange={(value) => setFormData({ ...formData, userId: value })}
+              onValueChange={(value) =>
+                setFormData({ ...formData, userId: value })
+              }
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select a child" />
+                <SelectValue placeholder="Choisir un enfant" />
               </SelectTrigger>
               <SelectContent>
                 {children.map((child) => (
@@ -94,25 +107,31 @@ export default function AddLoanDialog({ open, onOpenChange, onLoanAdded }: AddLo
             </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="bookTitle">Book Title</Label>
+            <Label htmlFor="bookTitle">Titre du Livre</Label>
             <Input
               id="bookTitle"
               value={formData.bookTitle}
-              onChange={(e) => setFormData({ ...formData, bookTitle: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, bookTitle: e.target.value })
+              }
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="returnDate">Return Date</Label>
+            <Label htmlFor="returnDate">Date de retour</Label>
             <Input
               id="returnDate"
               type="date"
               value={formData.returnDate}
-              onChange={(e) => setFormData({ ...formData, returnDate: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, returnDate: e.target.value })
+              }
               required
             />
           </div>
-          <Button type="submit" className="w-full">Create Loan</Button>
+          <Button type="submit" className="w-full">
+            Créer un emprunt
+          </Button>
         </form>
       </DialogContent>
     </Dialog>

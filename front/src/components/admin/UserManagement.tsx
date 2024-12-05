@@ -148,8 +148,8 @@ export default function UserManagement() {
           <AlertDialogHeader>
             <AlertDialogTitle>Etes-vous sûr?</AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est définitive. Le compte sera supprimé du système et
-              les données liées seront perdues.
+              Cette action est définitive. L'utilisateur sera supprimé du
+              système et les données liées seront perdues.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

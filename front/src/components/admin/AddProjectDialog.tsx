@@ -1,4 +1,9 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,30 +18,41 @@ interface AddProjectDialogProps {
   onProjectAdded: () => void;
 }
 
-export default function AddProjectDialog({ open, onOpenChange, onProjectAdded }: AddProjectDialogProps) {
+export default function AddProjectDialog({
+  open,
+  onOpenChange,
+  onProjectAdded,
+}: AddProjectDialogProps) {
   const { accessToken } = useAuth();
   const [formData, setFormData] = useState({
-    nom: '',
+    nom: "",
     annee: new Date().getFullYear(),
-    image: '',
+    image: "",
     animateurs: [],
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       if (!accessToken) {
-        throw new Error('No access token available');
+        throw new Error("No access token available");
       }
 
       await createProject(formData, accessToken);
       toast.success("Project added successfully!");
       onProjectAdded();
       onOpenChange(false);
-      setFormData({ nom: '', annee: new Date().getFullYear(), image: '', animateurs: [] });
+      setFormData({
+        nom: "",
+        annee: new Date().getFullYear(),
+        image: "",
+        animateurs: [],
+      });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to create project');
+      toast.error(
+        error instanceof Error ? error.message : "Failed to create project"
+      );
     }
   };
 
@@ -44,38 +60,46 @@ export default function AddProjectDialog({ open, onOpenChange, onProjectAdded }:
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Project</DialogTitle>
+          <DialogTitle>Ajouter un nouveau projet</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Project Name</Label>
+            <Label htmlFor="name">Nom du projet</Label>
             <Input
               id="name"
               value={formData.nom}
-              onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, nom: e.target.value })
+              }
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="year">Year</Label>
+            <Label htmlFor="year">Année</Label>
             <Input
               id="year"
               type="number"
               value={formData.annee}
-              onChange={(e) => setFormData({ ...formData, annee: parseInt(e.target.value) })}
+              onChange={(e) =>
+                setFormData({ ...formData, annee: parseInt(e.target.value) })
+              }
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="image">Image URL</Label>
+            <Label htmlFor="image">URL de l'image</Label>
             <Input
               id="image"
               type="url"
               value={formData.image}
-              onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, image: e.target.value })
+              }
             />
           </div>
-          <Button type="submit" className="w-full">Add Project</Button>
+          <Button type="submit" className="w-full">
+            Ajouter le projet
+          </Button>
         </form>
       </DialogContent>
     </Dialog>

@@ -1,4 +1,9 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,24 +19,28 @@ interface AddChildDialogProps {
   onChildAdded: () => void;
 }
 
-export default function AddChildDialog({ open, onOpenChange, onChildAdded }: AddChildDialogProps) {
+export default function AddChildDialog({
+  open,
+  onOpenChange,
+  onChildAdded,
+}: AddChildDialogProps) {
   const { accessToken, user } = useAuth();
   const [formData, setFormData] = useState({
-    nom: '',
-    prenom: '',
-    dateNaissance: '',
-    classeSuivie: '',
-    noteObservation: '',
+    nom: "",
+    prenom: "",
+    dateNaissance: "",
+    classeSuivie: "",
+    noteObservation: "",
     photo: null as File | null,
-    parentId: user?.id || '',
+    parentId: user?.id || "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       if (!accessToken) {
-        throw new Error('No access token available');
+        throw new Error("No access token available");
       }
 
       const data = {
@@ -44,16 +53,20 @@ export default function AddChildDialog({ open, onOpenChange, onChildAdded }: Add
       onChildAdded();
       onOpenChange(false);
       setFormData({
-        nom: '',
-        prenom: '',
-        dateNaissance: '',
-        classeSuivie: '',
-        noteObservation: '',
+        nom: "",
+        prenom: "",
+        dateNaissance: "",
+        classeSuivie: "",
+        noteObservation: "",
         photo: null,
-        parentId: user?.id || '',
+        parentId: user?.id || "",
       });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to create child profile');
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to create child profile"
+      );
     }
   };
 
@@ -67,46 +80,54 @@ export default function AddChildDialog({ open, onOpenChange, onChildAdded }: Add
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Add New Child</DialogTitle>
+          <DialogTitle>Ajouter un enfant</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName">Prénom</Label>
               <Input
                 id="firstName"
                 value={formData.prenom}
-                onChange={(e) => setFormData({ ...formData, prenom: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, prenom: e.target.value })
+                }
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName">Nom</Label>
               <Input
                 id="lastName"
                 value={formData.nom}
-                onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, nom: e.target.value })
+                }
                 required
               />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="birthDate">Birth Date</Label>
+              <Label htmlFor="birthDate">Date de naissance</Label>
               <Input
                 id="birthDate"
                 type="date"
                 value={formData.dateNaissance}
-                onChange={(e) => setFormData({ ...formData, dateNaissance: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, dateNaissance: e.target.value })
+                }
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="class">Class</Label>
+              <Label htmlFor="class">Classe</Label>
               <Input
                 id="class"
                 value={formData.classeSuivie}
-                onChange={(e) => setFormData({ ...formData, classeSuivie: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, classeSuivie: e.target.value })
+                }
                 required
               />
             </div>
@@ -121,14 +142,18 @@ export default function AddChildDialog({ open, onOpenChange, onChildAdded }: Add
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="notes">Notes/Observations</Label>
+            <Label htmlFor="notes">Notes / Observations</Label>
             <Textarea
               id="notes"
               value={formData.noteObservation}
-              onChange={(e) => setFormData({ ...formData, noteObservation: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, noteObservation: e.target.value })
+              }
             />
           </div>
-          <Button type="submit" className="w-full">Add Child</Button>
+          <Button type="submit" className="w-full">
+            Ajouter l'enfant
+          </Button>
         </form>
       </DialogContent>
     </Dialog>
