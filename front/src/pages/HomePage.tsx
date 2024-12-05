@@ -8,9 +8,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Library, BookMarked, UserCheck } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/lib/auth";
 import Logo from "../assets/Logo.svg?react";
 
 export default function HomePage() {
+  const { isAuthenticated } = useAuth();
   return (
     <div className="min-h-[80vh] flex flex-col justify-center space-y-12">
       <section className="text-center space-y-6">
@@ -25,14 +27,15 @@ export default function HomePage() {
           opérations de bibliothèque et améliorer l'expérience de lecture pour
           tous.
         </p>
-        <div className="flex justify-center gap-4">
-          <Link to="/login">
-            <Button size="lg" className="gap-2">
-              Commencer
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
+        {!isAuthenticated && (
+          <div className="flex justify-center gap-4">
+            <Link to="/login">
+              <Button size="lg" className="gap-2">
+                Commencer
+              </Button>
+            </Link>
+          </div>
+        )}
       </section>
 
       <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4">
