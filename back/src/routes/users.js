@@ -21,12 +21,26 @@ router.post("/login", async (req, res) => {
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ id: user._id, role: user.role }, secretKey, {
-      expiresIn: "15m",
-    });
+    const token = jwt.sign(
+      {
+        id: user._id,
+        role: user.role,
+        nom: user.nom, // Ajout du nom
+        prenom: user.prenom, // Ajout du prénom
+      },
+      secretKey,
+      {
+        expiresIn: "15m",
+      }
+    );
 
     const refreshToken = jwt.sign(
-      { id: user._id, role: user.role },
+      {
+        id: user._id,
+        role: user.role,
+        nom: user.nom, // Ajout du nom
+        prenom: user.prenom, // Ajout du prénom
+      },
       refreshTokenSecret,
       {
         expiresIn: "6h",
@@ -174,9 +188,18 @@ router.post("/token", async (req, res) => {
       if (err)
         return res.status(403).json({ message: "Invalid refresh token" });
 
-      const newToken = jwt.sign({ id: user.id, role: user.role }, secretKey, {
-        expiresIn: "15m",
-      });
+      const newToken = jwt.sign(
+        {
+          id: user.id,
+          role: user.role,
+          nom: user.nom,
+          prenom: user.prenom,
+        },
+        secretKey,
+        {
+          expiresIn: "15m",
+        }
+      );
 
       res.cookie("accessToken", newToken, {
         httpOnly: false,
