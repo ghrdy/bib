@@ -2,21 +2,21 @@ import { toast } from "sonner";
 
 export interface Project {
   _id: string;
-  image: string;
+  image: File | null;
   nom: string;
   annee: number;
   animateurs: string[];
 }
 
 export interface CreateProjectData {
-  image: string;
+  image: File | null;
   nom: string;
   annee: number;
   animateurs: string[];
 }
 
 export interface UpdateProjectData {
-  image?: string;
+  image?: File | null;
   nom?: string;
   annee?: number;
   animateurs?: string[];

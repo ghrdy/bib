@@ -29,7 +29,7 @@ export default function EditProjectDialog({
   const [formData, setFormData] = useState({
     nom: project.nom,
     annee: project.annee,
-    image: project.image,
+    image: null as File | null,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,6 +54,12 @@ export default function EditProjectDialog({
       toast.error(
         error instanceof Error ? error.message : "Failed to update project"
       );
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFormData({ ...formData, image: e.target.files[0] });
     }
   };
 
@@ -91,11 +97,9 @@ export default function EditProjectDialog({
             <Label htmlFor="image">URL de l'image</Label>
             <Input
               id="image"
-              type="url"
-              value={formData.image}
-              onChange={(e) =>
-                setFormData({ ...formData, image: e.target.value })
-              }
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
             />
           </div>
           <Button type="submit" className="w-full">

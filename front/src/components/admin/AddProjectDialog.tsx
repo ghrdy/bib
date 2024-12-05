@@ -27,7 +27,7 @@ export default function AddProjectDialog({
   const [formData, setFormData] = useState({
     nom: "",
     annee: new Date().getFullYear(),
-    image: "",
+    image: null as File | null,
     animateurs: [],
   });
 
@@ -39,20 +39,31 @@ export default function AddProjectDialog({
         throw new Error("No access token available");
       }
 
-      await createProject(formData, accessToken);
+      const data = {
+        ...formData,
+        image: formData.image || null,
+      };
+
+      await createProject(data, accessToken);
       toast.success("Project added successfully!");
       onProjectAdded();
       onOpenChange(false);
       setFormData({
         nom: "",
         annee: new Date().getFullYear(),
-        image: "",
+        image: null,
         animateurs: [],
       });
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Failed to create project"
       );
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFormData({ ...formData, image: e.target.files[0] });
     }
   };
 
@@ -87,14 +98,12 @@ export default function AddProjectDialog({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="image">URL de l'image</Label>
+            <Label htmlFor="image">Image</Label>
             <Input
               id="image"
-              type="url"
-              value={formData.image}
-              onChange={(e) =>
-                setFormData({ ...formData, image: e.target.value })
-              }
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
             />
           </div>
           <Button type="submit" className="w-full">
