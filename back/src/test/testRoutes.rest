@@ -1,0 +1,168 @@
+### Login
+POST http://localhost:5001/api/users/login
+Content-Type: application/json
+
+{
+  "email": "test@free.fr",
+  "password": "password"
+}
+
+
+### Login non Admin
+POST http://localhost:5001/api/users/login
+Content-Type: application/json
+
+{
+  "email": "jane.doe@example.com",
+  "password": "newpassword"
+}
+
+### Create a new user (Admin only)
+POST http://localhost:5001/api/users/add
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNDAwMjQ4Y2FkOThlZTBhYzM3NSIsInJvbGUiOiJyZWZlcmVudCIsImlhdCI6MTczMTU5Mjk0NywiZXhwIjoxNzMxNTk2NTQ3fQ.-vBuEqWjdMMjO7t28vsQoetP7lOODYKdfrmGL5qkS9g
+
+{
+  "nom": "oe",
+  "prenom": "oee",
+  "email": "tim.hrdy.1@gmail.com",
+  "password": "password",
+  "role": "admin"
+}
+
+### Get all users (Admin only)
+GET http://localhost:5001/api/users
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNWM0ZjlhNGJiN2JmNjY2NjI2MiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczMTU5MTUzMSwiZXhwIjoxNzMxNTk1MTMxfQ.5MKJUf-BxQL2EBJzQOVahaHZx4DedGbVozI1neZBau0
+
+### Update a user (Admin only)
+PUT http://localhost:5001/api/users/6735f400248cad98ee0ac375
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNWM0ZjlhNGJiN2JmNjY2NjI2MiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczMTU5MTUzMSwiZXhwIjoxNzMxNTk1MTMxfQ.5MKJUf-BxQL2EBJzQOVahaHZx4DedGbVozI1neZBau0
+
+{
+  "nom": "Doe",
+  "prenom": "Jane",
+  "email": "jane.doe@example.com",
+  "password": "newpassword",
+  "role": "referent"
+}
+
+### Delete a user (Admin only)
+DELETE http://localhost:5001/api/users/6735fd8043f1583fe581afa2
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNWM0ZjlhNGJiN2JmNjY2NjI2MiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczMTU5MTY4MSwiZXhwIjoxNzMxNTk1MjgxfQ.DwGc3J5u1YRPWjnXbRAcX-yJcRkiOR5zDZjMsxGCZn0
+
+### Create a new project (Admin only)
+POST http://localhost:5001/api/projects
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNWM0ZjlhNGJiN2JmNjY2NjI2MiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczMTU5MTY4MSwiZXhwIjoxNzMxNTk1MjgxfQ.DwGc3J5u1YRPWjnXbRAcX-yJcRkiOR5zDZjMsxGCZn0
+
+{
+  "image": "image_url",
+  "nom": "Project Name",
+  "annee": 2023
+}
+
+### Get all projects
+GET http://localhost:5001/api/projects
+Authorization: Bearer 
+
+### Get a single project
+GET http://localhost:5001/api/projects/555555555555555
+Authorization: Bearer 
+
+### Update a project (Admin only)
+PUT http://localhost:5001/api/projects/555555555555555
+Content-Type: application/json
+Authorization: Bearer 
+
+{
+  "image": "new_image_url",
+  "nom": "Updated Project Name",
+  "annee": 2024
+}
+
+### Delete a project (Admin only)
+DELETE http://localhost:5001/api/projects/555555555555
+Authorization: Bearer 
+
+
+### Get all images
+GET http://localhost:5001/api/upload
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNWM0ZjlhNGJiN2JmNjY2NjI2MiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczMTYzMTQyNSwiZXhwIjoxNzMxNjMyMzI1fQ.cWZHYhrs0FINHUP_BcN3uU4GGEzIlYLtvmFU-BYIsc4
+
+### Create a new child profile
+POST http://localhost:5001/api/childProfiles
+Content-Type: multipart/form-data
+Authorization: Bearer 
+
+{
+  "nom": "Child",
+  "prenom": "Profile",
+  "dateNaissance": "2010-01-01",
+  "classeSuivie": "5th Grade",
+  "noteObservation": "Good student",
+  "parentId": "555555555555555",
+  "photo": "path/to/photo.jpg"
+}
+
+### Get all child profiles
+GET http://localhost:5001/api/childProfiles
+Authorization: Bearer 
+
+### Get a single child profile
+GET http://localhost:5001/api/childProfiles/555555555555555
+Authorization: Bearer 
+
+### Update a child profile
+PUT http://localhost:5001/api/childProfiles/555555555555555
+Content-Type: multipart/form-data
+Authorization: Bearer 
+
+{
+  "nom": "Updated Child",
+  "prenom": "Profile",
+  "dateNaissance": "2010-01-01",
+  "classeSuivie": "6th Grade",
+  "noteObservation": "Excellent student",
+  "parentId": "555555555555555",
+  "photo": "path/to/new_photo.jpg"
+}
+
+### Delete a child profile
+DELETE http://localhost:5001/api/childProfiles/555555555555
+Authorization: Bearer 
+
+### Create a new book loan
+POST http://localhost:5001/api/bookLoans
+Content-Type: application/json
+Authorization: Bearer 
+
+{
+  "bookTitle": "Book Title",
+  "userId": "555555555555555",
+  "returnDate": "2023-12-31"
+}
+
+### Get all book loans
+GET http://localhost:5001/api/bookLoans
+Authorization: Bearer 
+
+### Get a single book loan
+GET http://localhost:5001/api/bookLoans/555555555555555
+Authorization: Bearer 
+
+### Update a book loan
+PUT http://localhost:5001/api/bookLoans/555555555555555
+Content-Type: application/json
+Authorization: Bearer 
+
+{
+  "bookTitle": "Updated Book Title",
+  "userId": "555555555555555",
+  "returnDate": "2024-01-31"
+}
+
+### Delete a book loan
+DELETE http://localhost:5001/api/bookLoans/{{bookLoanId}}
+Authorization: Bearer 
