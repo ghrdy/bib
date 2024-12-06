@@ -54,7 +54,7 @@ export default function AddChildDialog({
       }
 
       await createChildProfile(formDataToSend, accessToken);
-      toast.success("Child profile added successfully!");
+      toast.success("Le profil enfant est ajouté");
       onChildAdded();
       onOpenChange(false);
       setFormData({

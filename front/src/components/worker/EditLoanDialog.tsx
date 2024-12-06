@@ -76,7 +76,7 @@ export default function EditLoanDialog({
       }
 
       await updateBookLoan(loan._id, updateData, accessToken);
-      toast.success("Book loan updated successfully!");
+      toast.success("L'emprunt a été modifié");
       onLoanUpdated();
       onOpenChange(false);
     } catch (error) {

@@ -64,7 +64,7 @@ export default function AddLoanDialog({
       }
 
       await createBookLoan(formData, accessToken);
-      toast.success("Book loan added successfully!");
+      toast.success("L'emprunt a été créé");
       onLoanAdded();
       onOpenChange(false);
       setFormData({

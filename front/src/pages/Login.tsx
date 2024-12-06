@@ -52,7 +52,7 @@ export default function Login() {
       };
 
       login(user, data.token, data.reftoken);
-      toast.success("Login successful!");
+      toast.success("Connexion réussie");
       navigate("/");
     } catch (err) {
       if (err instanceof Error) {

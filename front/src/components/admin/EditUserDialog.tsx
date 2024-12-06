@@ -61,7 +61,7 @@ export default function EditUserDialog({
       }
 
       await updateUser(user._id, updateData, accessToken);
-      toast.success("User updated successfully!");
+      toast.success("L'utilisateur a été modifié");
       onUserUpdated();
       onOpenChange(false);
     } catch (error) {

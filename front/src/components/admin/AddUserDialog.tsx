@@ -47,7 +47,7 @@ export default function AddUserDialog({
       }
 
       await createUser(formData, accessToken);
-      toast.success("User added successfully!");
+      toast.success("L'utilisateur est ajouté");
       onUserAdded();
       onOpenChange(false);
       setFormData({ prenom: "", nom: "", email: "", role: "" });

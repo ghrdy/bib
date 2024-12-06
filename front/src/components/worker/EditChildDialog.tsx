@@ -59,7 +59,7 @@ export default function EditChildDialog({
       }
 
       await updateChildProfile(child._id, formDataToSend, accessToken);
-      toast.success("Child profile updated successfully!");
+      toast.success("Le profil enfant a été modifié");
       onChildUpdated();
       onOpenChange(false);
     } catch (error) {

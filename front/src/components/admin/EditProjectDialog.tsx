@@ -49,7 +49,7 @@ export default function EditProjectDialog({
       }
 
       await updateProject(project._id, formDataToSend, accessToken);
-      toast.success("Project updated successfully!");
+      toast.success("Le projet a été mis à jour");
       onProjectUpdated();
       onOpenChange(false);
     } catch (error) {

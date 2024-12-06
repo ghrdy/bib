@@ -70,7 +70,7 @@ export default function UserManagement() {
       if (!userToDelete || !accessToken) return;
 
       await deleteUser(userToDelete._id, accessToken);
-      toast.success("User deleted successfully");
+      toast.success("L'utilisateur a été supprimé");
       fetchUsers();
     } catch (error) {
       toast.error("Failed to delete user");

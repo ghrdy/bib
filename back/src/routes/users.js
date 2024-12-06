@@ -17,11 +17,15 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user)
-      return res.status(400).json({ message: "Utilisateur introuvable" });
+      return res
+        .status(400)
+        .json({ message: "Utilisateur introuvable / Mot de passe invalide" });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res
+        .status(400)
+        .json({ message: "Utilisateur introuvable / Mot de passe invalide" });
 
     const token = jwt.sign(
       {
@@ -181,7 +185,9 @@ router.put("/:id", isAdmin, async (req, res) => {
     if (updatedUser) {
       res.json(updatedUser);
     } else {
-      res.status(404).json({ message: "Utilisateur introuvable" });
+      res
+        .status(404)
+        .json({ message: "Utilisateur introuvable / Mot de passe invalide" });
     }
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -193,9 +199,11 @@ router.delete("/:id", isAdmin, async (req, res) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
     if (deletedUser) {
-      res.json({ message: "User deleted" });
+      res.json({ message: "Utilisateur supprimé" });
     } else {
-      res.status(404).json({ message: "Utilisateur introuvable" });
+      res
+        .status(404)
+        .json({ message: "Utilisateur introuvable / Mot de passe invalide" });
     }
   } catch (err) {
     res.status(500).json({ message: err.message });
