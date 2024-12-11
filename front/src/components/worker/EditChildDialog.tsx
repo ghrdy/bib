@@ -4,6 +4,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,6 +44,7 @@ export default function EditChildDialog({
     dateNaissance: child.dateNaissance.split("T")[0],
     classeSuivie: child.classeSuivie,
     noteObservation: child.noteObservation,
+    status: child.status,
     photo: null as File | null,
   });
 
@@ -50,6 +58,7 @@ export default function EditChildDialog({
       formDataToSend.append("dateNaissance", formData.dateNaissance);
       formDataToSend.append("classeSuivie", formData.classeSuivie);
       formDataToSend.append("noteObservation", formData.noteObservation);
+      formDataToSend.append("status", formData.status);
       if (formData.photo) {
         formDataToSend.append("photo", formData.photo);
       }
@@ -159,6 +168,29 @@ export default function EditChildDialog({
               onChange={handleFileChange}
             />
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="status">Status</Label>
+            <Select
+              value={formData.status}
+              onValueChange={(value) =>
+                setFormData({
+                  ...formData,
+                  status: value as "possible" | "retour" | "restreint",
+                })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Moddifier le Status emprunt" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="possible">Emprunt possible</SelectItem>
+                <SelectItem value="retour">En attente de retour</SelectItem>
+                <SelectItem value="restreint">Restreint</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="notes">Notes / Observations</Label>
             <Input

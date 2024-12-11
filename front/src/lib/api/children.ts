@@ -9,6 +9,7 @@ export interface ChildProfile {
   noteObservation: string;
   photo: string | null;
   parentId: string;
+  status: string;
 }
 
 export interface CreateChildProfileData extends FormData {}

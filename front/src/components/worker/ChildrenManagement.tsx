@@ -95,6 +95,7 @@ export default function ChildrenManagement() {
               <TableHead>Prénom / Nom</TableHead>
               <TableHead>Classe</TableHead>
               <TableHead>Date de naissance</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -120,6 +121,7 @@ export default function ChildrenManagement() {
                 <TableCell>
                   {new Date(child.dateNaissance).toLocaleDateString()}
                 </TableCell>
+                <TableCell>Emprunt</TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"

@@ -4,6 +4,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,6 +39,7 @@ export default function AddChildDialog({
     noteObservation: "",
     photo: null as File | null,
     parentId: user?.id || "",
+    status: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,6 +57,7 @@ export default function AddChildDialog({
       formDataToSend.append("classeSuivie", formData.classeSuivie);
       formDataToSend.append("noteObservation", formData.noteObservation);
       formDataToSend.append("parentId", formData.parentId);
+      formDataToSend.append("status", formData.status);
       if (formData.photo) {
         formDataToSend.append("photo", formData.photo);
       }
@@ -65,6 +74,7 @@ export default function AddChildDialog({
         noteObservation: "",
         photo: null,
         parentId: user?.id || "",
+        status: "",
       });
     } catch (error) {
       toast.error(
@@ -146,6 +156,26 @@ export default function AddChildDialog({
               onChange={handleFileChange}
             />
           </div>
+
+          <div className="space-y-2 mb-4">
+            <Label htmlFor="status">Status</Label>
+            <Select
+              value={formData.status}
+              onValueChange={(value) =>
+                setFormData({ ...formData, status: value })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Choisir le status emprunt" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="possible">Emprunt possible</SelectItem>
+                <SelectItem value="retour">En attente de retour</SelectItem>
+                <SelectItem value="restreint">Restreint</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="notes">Notes / Observations</Label>
             <Input
