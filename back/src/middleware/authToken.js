@@ -7,7 +7,7 @@ const authenticateToken = (req, res, next) => {
   }
 
   jwt.verify(token, "your_secret_key", (err, user) => {
-    if (err) return res.status(403).json({ message: "Invalid token" });
+    if (err) return res.status(403).json({ message: "Connexion expirée" });
     req.user = user;
     next();
   });

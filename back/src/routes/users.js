@@ -6,10 +6,13 @@ import RefreshToken from "../models/RefreshToken.js";
 import authToken from "../middleware/authToken.js";
 import isAdmin from "../middleware/isAdmin.js";
 import nodemailer from "nodemailer"; // Ajouter cette ligne pour utiliser nodemailer
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const router = express.Router();
-const secretKey = "your_secret_key"; // Replace with your actual secret key
-const refreshTokenSecret = "your_refresh_secret_key";
+const secretKey = process.env.SECRET_KEY; // Replace with your actual secret key
+const refreshTokenSecret = process.env.REFRESH_SECRET_KEY;
 
 // Login a user
 router.post("/login", async (req, res) => {
@@ -92,7 +95,7 @@ router.get("/status", async (req, res) => {
       role: decoded.role,
     });
   } catch (err) {
-    return res.json({ message: "Invalid token", loggedIn: false });
+    return res.json({ message: "Connexion expirée", loggedIn: false });
   }
 });
 
@@ -135,13 +138,13 @@ router.post("/add", isAdmin, async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "tim.hrdy.1@gmail.com",
-        pass: "cwsc oywb robk hpsj",
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS,
       },
     });
 
     const mailOptions = {
-      from: "tim.hrdy.1@gmail.com",
+      from: process.env.GMAIL_USER,
       to: savedUser.email,
       subject: "Création de compte : Un Livre Pour Tous",
       html: `<p>Cliquez sur le lien pour définir votre mot de passe. : </p>

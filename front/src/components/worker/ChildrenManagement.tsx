@@ -79,6 +79,31 @@ export default function ChildrenManagement() {
     }
   };
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "possible":
+        return "bg-green-500";
+      case "retour":
+        return "bg-orange-500";
+      case "restreint":
+        return "bg-red-500";
+      default:
+        return "bg-gray-500";
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "possible":
+        return "Emprunt possible";
+      case "retour":
+        return "En attente de retour";
+      case "restreint":
+        return "Restreint";
+      default:
+        return "Inconnu";
+    }
+  };
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -121,7 +146,16 @@ export default function ChildrenManagement() {
                 <TableCell>
                   {new Date(child.dateNaissance).toLocaleDateString()}
                 </TableCell>
-                <TableCell>Emprunt</TableCell>
+                <TableCell>
+                  <div
+                    className={`w-32 h-8 flex items-center justify-center text-sm font-medium text-white rounded text-center leading-tight ${getStatusColor(
+                      child.status
+                    )}`}
+                    style={{ lineHeight: "1" }}
+                  >
+                    {getStatusText(child.status)}
+                  </div>
+                </TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"
