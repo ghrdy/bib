@@ -1,5 +1,6 @@
 import express from "express";
 import BookLoan from "../models/BookLoan.js";
+import Livre from "../models/Livre.js";
 import authToken from "../middleware/authToken.js";
 
 const router = express.Router();
@@ -19,8 +20,8 @@ router.use(authToken);
 
 // Create a new book loan
 router.post("/", canManageBookLoans, async (req, res) => {
-  const { bookTitle, userId, returnDate } = req.body;
-  const newBookLoan = new BookLoan({ bookTitle, userId, returnDate });
+  const { bookId, userId, returnDate } = req.body;
+  const newBookLoan = new BookLoan({ bookId, userId, returnDate });
   try {
     const savedBookLoan = await newBookLoan.save();
     res.status(201).json(savedBookLoan);
@@ -32,7 +33,9 @@ router.post("/", canManageBookLoans, async (req, res) => {
 // Get all book loans
 router.get("/", canManageBookLoans, async (req, res) => {
   try {
-    const bookLoans = await BookLoan.find();
+    const bookLoans = await BookLoan.find()
+      .populate("bookId")
+      .populate("userId");
     res.json(bookLoans);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -42,7 +45,9 @@ router.get("/", canManageBookLoans, async (req, res) => {
 // Get a single book loan
 router.get("/:id", canManageBookLoans, async (req, res) => {
   try {
-    const bookLoan = await BookLoan.findById(req.params.id);
+    const bookLoan = await BookLoan.findById(req.params.id)
+      .populate("livreId")
+      .populate("userId");
     if (bookLoan) {
       res.json(bookLoan);
     } else {
@@ -55,13 +60,15 @@ router.get("/:id", canManageBookLoans, async (req, res) => {
 
 // Update a book loan
 router.put("/:id", canManageBookLoans, async (req, res) => {
-  const { bookTitle, userId, returnDate } = req.body;
+  const { bookId, userId, returnDate } = req.body;
   try {
     const updatedBookLoan = await BookLoan.findByIdAndUpdate(
       req.params.id,
-      { bookTitle, userId, returnDate },
+      { bookId, userId, returnDate },
       { new: true }
-    );
+    )
+      .populate("livreId")
+      .populate("userId");
     if (updatedBookLoan) {
       res.json(updatedBookLoan);
     } else {
