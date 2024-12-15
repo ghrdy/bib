@@ -11,4 +11,4 @@ const livreSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Livre", livreSchema);
+export default mongoose.model("Book", livreSchema);

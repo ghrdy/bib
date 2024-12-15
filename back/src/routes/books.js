@@ -1,5 +1,5 @@
 import express from "express";
-import Livre from "../models/Livre.js";
+import Book from "../models/Book.js";
 import authToken from "../middleware/authToken.js";
 import isAdmin from "../middleware/isAdmin.js";
 import imageUpload from "../middleware/imageUpload.js";
@@ -14,7 +14,7 @@ router.post("/", isAdmin, imageUpload, async (req, res) => {
   const { titre } = req.body;
   const photo = req.file ? `/uploads/${req.file.filename}` : null;
 
-  const newLivre = new Livre({
+  const newLivre = new Book({
     titre,
     photo,
   });
@@ -30,7 +30,7 @@ router.post("/", isAdmin, imageUpload, async (req, res) => {
 // Get all books
 router.get("/", async (req, res) => {
   try {
-    const livres = await Livre.find();
+    const livres = await Book.find();
     res.json(livres);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -40,11 +40,11 @@ router.get("/", async (req, res) => {
 // Get a single book
 router.get("/:id", async (req, res) => {
   try {
-    const livre = await Livre.findById(req.params.id);
+    const livre = await Book.findById(req.params.id);
     if (livre) {
       res.json(livre);
     } else {
-      res.status(404).json({ message: "Livre not found" });
+      res.status(404).json({ message: "Livre non trouvé" });
     }
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -62,7 +62,7 @@ router.put("/:id", isAdmin, imageUpload, async (req, res) => {
       updateData.photo = photo;
     }
 
-    const updatedLivre = await Livre.findByIdAndUpdate(
+    const updatedLivre = await Book.findByIdAndUpdate(
       req.params.id,
       updateData,
       { new: true }
@@ -80,11 +80,11 @@ router.put("/:id", isAdmin, imageUpload, async (req, res) => {
 // Delete a book
 router.delete("/:id", isAdmin, async (req, res) => {
   try {
-    const deletedLivre = await Livre.findByIdAndDelete(req.params.id);
+    const deletedLivre = await Book.findByIdAndDelete(req.params.id);
     if (deletedLivre) {
-      res.json({ message: "Livre deleted" });
+      res.json({ message: "Livre supprimé" });
     } else {
-      res.status(404).json({ message: "Livre not found" });
+      res.status(404).json({ message: "Livre introuvable" });
     }
   } catch (err) {
     res.status(500).json({ message: err.message });

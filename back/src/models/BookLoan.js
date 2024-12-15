@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const bookLoanSchema = new mongoose.Schema({
   bookId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Livre",
+    ref: "Book",
     required: true,
   },
   userId: {

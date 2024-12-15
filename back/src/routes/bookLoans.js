@@ -1,6 +1,6 @@
 import express from "express";
 import BookLoan from "../models/BookLoan.js";
-import Livre from "../models/Livre.js";
+import Book from "../models/Book.js";
 import authToken from "../middleware/authToken.js";
 
 const router = express.Router();
