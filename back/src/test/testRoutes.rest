@@ -64,16 +64,16 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNWM0ZjlhNGJi
 
 ### Get all projects
 GET http://localhost:5001/api/projects
-Authorization: Bearer 
+Authorization:  
 
 ### Get a single project
 GET http://localhost:5001/api/projects/555555555555555
-Authorization: Bearer 
+Authorization:  
 
 ### Update a project (Admin only)
 PUT http://localhost:5001/api/projects/555555555555555
 Content-Type: application/json
-Authorization: Bearer 
+Authorization:  
 
 {
   "image": "new_image_url",
@@ -83,7 +83,7 @@ Authorization: Bearer
 
 ### Delete a project (Admin only)
 DELETE http://localhost:5001/api/projects/555555555555
-Authorization: Bearer 
+Authorization:  
 
 
 ### Get all images
@@ -94,7 +94,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNWM0ZjlhNGJi
 ### Create a new child profile
 POST http://localhost:5001/api/childProfiles
 Content-Type: multipart/form-data
-Authorization: Bearer 
+Authorization:  
 
 {
   "nom": "Child",
@@ -108,16 +108,16 @@ Authorization: Bearer
 
 ### Get all child profiles
 GET http://localhost:5001/api/childProfiles
-Authorization: Bearer 
+Authorization:  
 
 ### Get a single child profile
 GET http://localhost:5001/api/childProfiles/555555555555555
-Authorization: Bearer 
+Authorization:  
 
 ### Update a child profile
 PUT http://localhost:5001/api/childProfiles/555555555555555
 Content-Type: multipart/form-data
-Authorization: Bearer 
+Authorization:  
 
 {
   "nom": "Updated Child",
@@ -131,12 +131,12 @@ Authorization: Bearer
 
 ### Delete a child profile
 DELETE http://localhost:5001/api/childProfiles/555555555555
-Authorization: Bearer 
+Authorization:  
 
 ### Create a new book loan
 POST http://localhost:5001/api/bookLoans
 Content-Type: application/json
-Authorization: Bearer 
+Authorization:  
 
 {
   "bookTitle": "Book Title",
@@ -146,16 +146,16 @@ Authorization: Bearer
 
 ### Get all book loans
 GET http://localhost:5001/api/bookLoans
-Authorization: Bearer 
+Authorization:  
 
 ### Get a single book loan
 GET http://localhost:5001/api/bookLoans/555555555555555
-Authorization: Bearer 
+Authorization:  
 
 ### Update a book loan
 PUT http://localhost:5001/api/bookLoans/555555555555555
 Content-Type: application/json
-Authorization: Bearer 
+Authorization:  
 
 {
   "bookTitle": "Updated Book Title",
@@ -164,5 +164,37 @@ Authorization: Bearer
 }
 
 ### Delete a book loan
-DELETE http://localhost:5001/api/bookLoans/{{bookLoanId}}
-Authorization: Bearer 
+DELETE http://localhost:5001/api/bookLoans/xxxxx
+Authorization:  
+
+### Create a new book
+POST http://localhost:5001/api/books
+Content-Type: application/json
+Authorization:  
+
+{
+  "titre": "Le Petit Prince",
+  "photo": "path/to/le_petit_prince.jpg"
+}
+
+### Get all books
+GET http://localhost:5001/api/books
+Authorization:  
+
+### Get a single book
+GET http://localhost:5001/api/books/xxxxx
+Authorization:  
+
+### Update a book
+PUT http://localhost:5001/api/books/xxxxx
+Content-Type: application/json
+Authorization:  
+
+{
+  "titre": "Le Petit Prince (Updated)",
+  "photo": "path/to/le_petit_prince_updated.jpg"
+}
+
+### Delete a book
+DELETE http://localhost:5001/api/books/xxxxx
+Authorization:  

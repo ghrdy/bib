@@ -9,11 +9,11 @@ import nodemailer from "nodemailer"; // Ajouter cette ligne pour utiliser nodema
 import dotenv from "dotenv";
 
 dotenv.config();
-
 const router = express.Router();
 const secretKey = process.env.SECRET_KEY; // Replace with your actual secret key
 const refreshTokenSecret = process.env.REFRESH_SECRET_KEY;
 
+console.log(process.env.SECRET_KEY);
 // Login a user
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;

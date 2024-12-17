@@ -6,6 +6,7 @@ import userRoutes from "./routes/users.js";
 import projectRoutes from "./routes/projects.js";
 import childProfileRoutes from "./routes/childProfiles.js";
 import bookLoanRoutes from "./routes/bookLoans.js";
+import bookRoutes from "./routes/books.js";
 import uploadRoutes from "./routes/upload.js";
 import cookieParser from "cookie-parser";
 import path from "path";
@@ -31,14 +32,18 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Create uploads directory if it doesn't exist
-import fs from 'fs';
+import fs from "fs";
 const uploadsDir = path.join(__dirname, "../uploads");
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
 // Protected route for serving static files from the uploads directory
-app.use("/uploads", authenticateToken, express.static(path.join(__dirname, "../uploads")));
+app.use(
+  "/uploads",
+  authenticateToken,
+  express.static(path.join(__dirname, "../uploads"))
+);
 
 // MongoDB connection
 mongoose.connect("mongodb://127.0.0.1:27017/dev");
@@ -53,6 +58,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/childProfiles", childProfileRoutes);
+app.use("/api/books", bookRoutes);
 app.use("/api/bookLoans", bookLoanRoutes);
 
 // Start server
