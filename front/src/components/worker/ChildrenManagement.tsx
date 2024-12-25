@@ -19,10 +19,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { UserPlus, Pencil, Trash2 } from "lucide-react";
+import { UserPlus, Pencil, Trash2, BookOpen } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import AddChildDialog from "./AddChildDialog";
 import EditChildDialog from "./EditChildDialog";
+import ChildLoansDialog from "./BookLoans";
 import {
   ChildProfile,
   getChildProfiles,
@@ -37,6 +38,7 @@ export default function ChildrenManagement() {
   const [showAddChild, setShowAddChild] = useState(false);
   const [selectedChild, setSelectedChild] = useState<ChildProfile | null>(null);
   const [showEditChild, setShowEditChild] = useState(false);
+  const [showLoansDialog, setShowLoansDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [childToDelete, setChildToDelete] = useState<ChildProfile | null>(null);
 
@@ -57,6 +59,11 @@ export default function ChildrenManagement() {
   const handleEditChild = (child: ChildProfile) => {
     setSelectedChild(child);
     setShowEditChild(true);
+  };
+
+  const handleViewLoans = (child: ChildProfile) => {
+    setSelectedChild(child);
+    setShowLoansDialog(true);
   };
 
   const handleDeleteChild = (child: ChildProfile) => {
@@ -104,6 +111,7 @@ export default function ChildrenManagement() {
         return "Inconnu";
     }
   };
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -160,6 +168,13 @@ export default function ChildrenManagement() {
                   <Button
                     variant="ghost"
                     size="icon"
+                    onClick={() => handleViewLoans(child)}
+                  >
+                    <BookOpen className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={() => handleEditChild(child)}
                   >
                     <Pencil className="h-4 w-4" />
@@ -185,12 +200,19 @@ export default function ChildrenManagement() {
       />
 
       {selectedChild && (
-        <EditChildDialog
-          child={selectedChild}
-          open={showEditChild}
-          onOpenChange={setShowEditChild}
-          onChildUpdated={fetchChildren}
-        />
+        <>
+          <EditChildDialog
+            child={selectedChild}
+            open={showEditChild}
+            onOpenChange={setShowEditChild}
+            onChildUpdated={fetchChildren}
+          />
+          <ChildLoansDialog
+            child={selectedChild}
+            open={showLoansDialog}
+            onOpenChange={setShowLoansDialog}
+          />
+        </>
       )}
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>

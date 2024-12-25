@@ -1,12 +1,9 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -15,6 +12,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { BookPlus, Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
+import { useAuth } from "@/lib/auth";
+import {
+  BookLoan,
+  getBookLoans,
+  createBookLoan,
+  deleteBookLoan,
+} from "@/lib/api/bookLoans";
+import { ChildProfile } from "@/lib/api/children";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,39 +36,67 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { BookPlus, Pencil, Trash2 } from "lucide-react";
-import AddLoanDialog from "./AddLoanDialog";
-import EditLoanDialog from "./EditLoanDialog";
-import { BookLoan, getBookLoans, deleteBookLoan } from "@/lib/api/bookLoans";
-import { useAuth } from "@/lib/auth";
-import { toast } from "sonner";
 
-export default function BookLoans() {
+interface ChildLoansDialogProps {
+  child: ChildProfile;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export default function ChildLoansDialog({
+  child,
+  open,
+  onOpenChange,
+}: ChildLoansDialogProps) {
   const { accessToken } = useAuth();
   const [loans, setLoans] = useState<BookLoan[]>([]);
   const [showAddLoan, setShowAddLoan] = useState(false);
-  const [selectedLoan, setSelectedLoan] = useState<BookLoan | null>(null);
-  const [showEditLoan, setShowEditLoan] = useState(false);
+  const [newLoan, setNewLoan] = useState({
+    bookTitle: "",
+    returnDate: "",
+  });
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [loanToDelete, setLoanToDelete] = useState<BookLoan | null>(null);
 
   const fetchLoans = async () => {
     try {
       if (!accessToken) return;
-      const fetchedLoans = await getBookLoans(accessToken);
-      setLoans(fetchedLoans);
+      const allLoans = await getBookLoans(accessToken);
+      // Filter loans for this specific child
+      const childLoans = allLoans.filter((loan) => loan.userId === child._id);
+      setLoans(childLoans);
     } catch (error) {
-      toast.error("Échec du chargement des emprunts");
+      toast.error("Failed to fetch loans");
     }
   };
 
   useEffect(() => {
-    fetchLoans();
-  }, [accessToken]);
+    if (open) {
+      fetchLoans();
+    }
+  }, [open, accessToken, child._id]);
 
-  const handleEditLoan = (loan: BookLoan) => {
-    setSelectedLoan(loan);
-    setShowEditLoan(true);
+  const handleAddLoan = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (!accessToken) return;
+
+      await createBookLoan(
+        {
+          bookTitle: newLoan.bookTitle,
+          userId: child._id,
+          returnDate: newLoan.returnDate,
+        },
+        accessToken
+      );
+
+      toast.success("Loan added successfully");
+      setNewLoan({ bookTitle: "", returnDate: "" });
+      setShowAddLoan(false);
+      fetchLoans();
+    } catch (error) {
+      toast.error("Failed to add loan");
+    }
   };
 
   const handleDeleteLoan = (loan: BookLoan) => {
@@ -70,10 +109,10 @@ export default function BookLoans() {
       if (!loanToDelete || !accessToken) return;
 
       await deleteBookLoan(loanToDelete._id, accessToken);
-      toast.success("Emprunt supprimé avec succès");
+      toast.success("Loan deleted successfully");
       fetchLoans();
     } catch (error) {
-      toast.error("Échec de la suppression");
+      toast.error("Failed to delete loan");
     } finally {
       setShowDeleteDialog(false);
       setLoanToDelete(null);
@@ -81,69 +120,96 @@ export default function BookLoans() {
   };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <Button onClick={() => setShowAddLoan(true)}>
-          <BookPlus className="mr-2 h-4 w-4" />
-          Nouvel emprunt
-        </Button>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Titre du livre</TableHead>
-              <TableHead>Date d'emprunt</TableHead>
-              <TableHead>Date de retour</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loans.map((loan) => (
-              <TableRow key={loan._id}>
-                <TableCell>{loan.bookTitle}</TableCell>
-                <TableCell>
-                  {new Date(loan.loanDate).toLocaleDateString()}
-                </TableCell>
-                <TableCell>
-                  {new Date(loan.returnDate).toLocaleDateString()}
-                </TableCell>
-                <TableCell>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleEditLoan(loan)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDeleteLoan(loan)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </CardContent>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>
+              Emprunts de {child.prenom} {child.nom}
+            </DialogTitle>
+          </DialogHeader>
 
-      <AddLoanDialog
-        open={showAddLoan}
-        onOpenChange={setShowAddLoan}
-        onLoanAdded={fetchLoans}
-      />
+          <div className="space-y-4">
+            {!showAddLoan ? (
+              <Button onClick={() => setShowAddLoan(true)}>
+                <BookPlus className="mr-2 h-4 w-4" />
+                Nouvel emprunt
+              </Button>
+            ) : (
+              <form onSubmit={handleAddLoan} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="bookTitle">Titre du livre</Label>
+                    <Input
+                      id="bookTitle"
+                      value={newLoan.bookTitle}
+                      onChange={(e) =>
+                        setNewLoan({ ...newLoan, bookTitle: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="returnDate">Date de retour</Label>
+                    <Input
+                      id="returnDate"
+                      type="date"
+                      value={newLoan.returnDate}
+                      onChange={(e) =>
+                        setNewLoan({ ...newLoan, returnDate: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end space-x-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowAddLoan(false)}
+                  >
+                    Annuler
+                  </Button>
+                  <Button type="submit">Ajouter</Button>
+                </div>
+              </form>
+            )}
 
-      {selectedLoan && (
-        <EditLoanDialog
-          loan={selectedLoan}
-          open={showEditLoan}
-          onOpenChange={setShowEditLoan}
-          onLoanUpdated={fetchLoans}
-        />
-      )}
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Titre du livre</TableHead>
+                  <TableHead>Date d'emprunt</TableHead>
+                  <TableHead>Date de retour</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {loans.map((loan) => (
+                  <TableRow key={loan._id}>
+                    <TableCell>{loan.bookTitle}</TableCell>
+                    <TableCell>
+                      {new Date(loan.loanDate).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      {new Date(loan.returnDate).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteLoan(loan)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
@@ -162,6 +228,6 @@ export default function BookLoans() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Card>
+    </>
   );
 }
