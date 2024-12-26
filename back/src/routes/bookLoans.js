@@ -46,7 +46,7 @@ router.get("/", canManageBookLoans, async (req, res) => {
 router.get("/:id", canManageBookLoans, async (req, res) => {
   try {
     const bookLoan = await BookLoan.findById(req.params.id)
-      .populate("livreId")
+      .populate("bookId")
       .populate("userId");
     if (bookLoan) {
       res.json(bookLoan);
@@ -67,7 +67,7 @@ router.put("/:id", canManageBookLoans, async (req, res) => {
       { bookId, userId, returnDate },
       { new: true }
     )
-      .populate("livreId")
+      .populate("bookId")
       .populate("userId");
     if (updatedBookLoan) {
       res.json(updatedBookLoan);
