@@ -16,11 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useState } from "react";
-import {
-  ChildProfile,
-  UpdateChildProfileData,
-  updateChildProfile,
-} from "@/lib/api/children";
+import { ChildProfile, updateChildProfile } from "@/lib/api/children";
 import { useAuth } from "@/lib/auth";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 

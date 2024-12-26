@@ -1,11 +1,11 @@
-import { createContext, useContext, useEffect, ReactNode } from 'react';
-import { useAuth } from '@/lib/auth';
-import { useNavigate } from 'react-router-dom';
+import { createContext, useEffect, ReactNode } from "react";
+import { useAuth } from "@/lib/auth";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext<null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { accessToken, refreshToken, logout } = useAuth();
+  const { refreshToken, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,21 +13,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!refreshToken) return;
 
       try {
-        const response = await fetch('http://localhost:5001/api/users/token', {
-          method: 'POST',
-          credentials: 'include',
+        const response = await fetch("http://localhost:5001/api/users/token", {
+          method: "POST",
+          credentials: "include",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         });
 
         if (!response.ok) {
-          throw new Error('Token refresh failed');
+          throw new Error("Token refresh failed");
         }
       } catch (error) {
-        console.error('Token refresh failed:', error);
+        console.error("Token refresh failed:", error);
         logout();
-        navigate('/login');
+        navigate("/login");
       }
     };
 
@@ -40,9 +40,5 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(intervalId);
   }, [refreshToken, logout, navigate]);
 
-  return (
-    <AuthContext.Provider value={null}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={null}>{children}</AuthContext.Provider>;
 }

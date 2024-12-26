@@ -1,5 +1,4 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from "@/components/ui/card";
 import UserManagement from "@/components/admin/UserManagement";
 import ProjectManagement from "@/components/admin/ProjectManagement";
 

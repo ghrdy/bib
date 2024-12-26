@@ -1,5 +1,3 @@
-import { toast } from "sonner";
-
 export interface User {
   _id: string;
   nom: string;

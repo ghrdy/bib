@@ -1,5 +1,3 @@
-import { toast } from "sonner";
-
 export interface Project {
   _id: string;
   image: string | null;
