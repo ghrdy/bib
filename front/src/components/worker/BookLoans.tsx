@@ -89,9 +89,13 @@ export default function ChildLoansDialog({
   useEffect(() => {
     if (open) {
       fetchLoans();
-      fetchBooks();
     }
   }, [open, accessToken, child._id]);
+
+  const handleAddLoanClick = async () => {
+    setShowAddLoan(true);
+    await fetchBooks();
+  };
 
   const handleAddLoan = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -153,7 +157,7 @@ export default function ChildLoansDialog({
 
           <div className="space-y-4">
             {!showAddLoan ? (
-              <Button onClick={() => setShowAddLoan(true)}>
+              <Button onClick={handleAddLoanClick}>
                 <BookPlus className="mr-2 h-4 w-4" />
                 Nouvel emprunt
               </Button>
