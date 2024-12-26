@@ -23,8 +23,8 @@ export interface UpdateBookLoanData {
 
 const API_URL = 'http://localhost:5001/api';
 
-export async function getBookLoans(token: string): Promise<BookLoan[]> {
-  const response = await fetch(`${API_URL}/bookLoans`, {
+export async function getBookLoansByUserId(userId: string, token: string): Promise<BookLoan[]> {
+  const response = await fetch(`${API_URL}/bookLoans/${userId}`, {
     headers: {
       'Cookie': `accessToken=${token}`,
     },
@@ -35,7 +35,9 @@ export async function getBookLoans(token: string): Promise<BookLoan[]> {
     throw new Error('Failed to fetch book loans');
   }
 
-  return response.json();
+  const data = await response.json();
+  console.log(`API response data for user ${userId}:`, data); // Log the API response data
+  return data;
 }
 
 export async function createBookLoan(data: CreateBookLoanData, token: string): Promise<BookLoan> {

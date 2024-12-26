@@ -20,7 +20,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import {
   BookLoan,
-  getBookLoans,
+  getBookLoansByUserId,
   createBookLoan,
   deleteBookLoan,
 } from "@/lib/api/bookLoans";
@@ -69,10 +69,10 @@ export default function ChildLoansDialog({
   const fetchLoans = async () => {
     try {
       if (!accessToken) return;
-      const allLoans = await getBookLoans(accessToken);
+      const Loans = await getBookLoansByUserId(child._id, accessToken);
+      console.log("Fetched loans:", Loans); // Log the fetched loans
       // Filter loans for this specific child
-      const childLoans = allLoans.filter((loan) => loan.userId === child._id);
-      setLoans(childLoans);
+      setLoans(Loans);
     } catch (error) {
       toast.error("Failed to fetch loans");
     }

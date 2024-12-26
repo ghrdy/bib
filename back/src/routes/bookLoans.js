@@ -33,27 +33,27 @@ router.post("/", canManageBookLoans, async (req, res) => {
 // Get all book loans
 router.get("/", canManageBookLoans, async (req, res) => {
   try {
-    const bookLoans = await BookLoan.find()
-      .populate("bookId")
-      .populate("userId");
+    const bookLoans = await BookLoan.find();
     res.json(bookLoans);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// Get a single book loan
-router.get("/:id", canManageBookLoans, async (req, res) => {
+// Get book loans by userId
+router.get("/:userId", canManageBookLoans, async (req, res) => {
   try {
-    const bookLoan = await BookLoan.findById(req.params.id)
-      .populate("bookId")
-      .populate("userId");
-    if (bookLoan) {
-      res.json(bookLoan);
+    const { userId } = req.params;
+    console.log(`Fetching book loans for userId: ${userId}`); // Log the userId being fetched
+    const bookLoans = await BookLoan.find({ userId }).populate("bookId");
+    if (bookLoans.length > 0) {
+      res.json(bookLoans);
     } else {
-      res.status(404).json({ message: "Book loan not found" });
+      console.log(`No book loans found for userId ${userId}`); // Log if not found
+      res.status(404).json({ message: "No book loans found for this user" });
     }
   } catch (err) {
+    console.error(`Error fetching book loans for userId ${userId}:`, err); // Log the error
     res.status(500).json({ message: err.message });
   }
 });
