@@ -13,7 +13,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BookPlus, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -25,6 +24,7 @@ import {
   createBookLoan,
   deleteBookLoan,
 } from "@/lib/api/bookLoans";
+import { Book, getBooks } from "@/lib/api/books";
 import { ChildProfile } from "@/lib/api/children";
 import {
   AlertDialog,
@@ -36,6 +36,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface ChildLoansDialogProps {
   child: ChildProfile;
@@ -50,9 +57,10 @@ export default function ChildLoansDialog({
 }: ChildLoansDialogProps) {
   const { accessToken } = useAuth();
   const [loans, setLoans] = useState<BookLoan[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [showAddLoan, setShowAddLoan] = useState(false);
   const [newLoan, setNewLoan] = useState({
-    bookTitle: "",
+    bookId: "",
     returnDate: "",
   });
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -70,9 +78,20 @@ export default function ChildLoansDialog({
     }
   };
 
+  const fetchBooks = async () => {
+    try {
+      if (!accessToken) return;
+      const fetchedBooks = await getBooks(accessToken);
+      setBooks(fetchedBooks);
+    } catch (error) {
+      toast.error("Failed to fetch books");
+    }
+  };
+
   useEffect(() => {
     if (open) {
       fetchLoans();
+      fetchBooks();
     }
   }, [open, accessToken, child._id]);
 
@@ -81,9 +100,14 @@ export default function ChildLoansDialog({
     try {
       if (!accessToken) return;
 
+      if (!newLoan.bookId) {
+        toast.error("Please select a book");
+        return;
+      }
+
       await createBookLoan(
         {
-          bookTitle: newLoan.bookTitle,
+          bookId: newLoan.bookId,
           userId: child._id,
           returnDate: newLoan.returnDate,
         },
@@ -91,7 +115,7 @@ export default function ChildLoansDialog({
       );
 
       toast.success("Loan added successfully");
-      setNewLoan({ bookTitle: "", returnDate: "" });
+      setNewLoan({ bookId: "", returnDate: "" });
       setShowAddLoan(false);
       fetchLoans();
     } catch (error) {
@@ -139,25 +163,35 @@ export default function ChildLoansDialog({
               <form onSubmit={handleAddLoan} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="bookTitle">Titre du livre</Label>
-                    <Input
-                      id="bookTitle"
-                      value={newLoan.bookTitle}
-                      onChange={(e) =>
-                        setNewLoan({ ...newLoan, bookTitle: e.target.value })
+                    <Label htmlFor="book">Livre</Label>
+                    <Select
+                      value={newLoan.bookId}
+                      onValueChange={(value) =>
+                        setNewLoan({ ...newLoan, bookId: value })
                       }
-                      required
-                    />
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choisir un livre" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {books.map((book) => (
+                          <SelectItem key={book._id} value={book._id}>
+                            {book.titre}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="returnDate">Date de retour</Label>
-                    <Input
+                    <input
                       id="returnDate"
                       type="date"
                       value={newLoan.returnDate}
                       onChange={(e) =>
                         setNewLoan({ ...newLoan, returnDate: e.target.value })
                       }
+                      className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                       required
                     />
                   </div>

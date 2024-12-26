@@ -2,6 +2,7 @@ import { toast } from "sonner";
 
 export interface BookLoan {
   _id: string;
+  bookId: string;
   bookTitle: string;
   userId: string;
   loanDate: string;
@@ -9,13 +10,13 @@ export interface BookLoan {
 }
 
 export interface CreateBookLoanData {
-  bookTitle: string;
+  bookId: string;
   userId: string;
   returnDate: string;
 }
 
 export interface UpdateBookLoanData {
-  bookTitle?: string;
+  bookId?: string;
   userId?: string;
   returnDate?: string;
 }
