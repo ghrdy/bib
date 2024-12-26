@@ -69,10 +69,8 @@ export default function ChildLoansDialog({
   const fetchLoans = async () => {
     try {
       if (!accessToken) return;
-      const Loans = await getBookLoansByUserId(child._id, accessToken);
-      console.log("Fetched loans:", Loans); // Log the fetched loans
-      // Filter loans for this specific child
-      setLoans(Loans);
+      const childLoans = await getBookLoansByUserId(child._id, accessToken);
+      setLoans(childLoans);
     } catch (error) {
       toast.error("Failed to fetch loans");
     }
@@ -209,38 +207,42 @@ export default function ChildLoansDialog({
               </form>
             )}
 
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Titre du livre</TableHead>
-                  <TableHead>Date d'emprunt</TableHead>
-                  <TableHead>Date de retour</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {loans.map((loan) => (
-                  <TableRow key={loan._id}>
-                    <TableCell>{loan.bookTitle}</TableCell>
-                    <TableCell>
-                      {new Date(loan.loanDate).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>
-                      {new Date(loan.returnDate).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDeleteLoan(loan)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
+            {loans.length === 0 ? (
+              <p>Aucun emprunt en cours</p>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Titre du livre</TableHead>
+                    <TableHead>Date d'emprunt</TableHead>
+                    <TableHead>Date de retour</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {loans.map((loan) => (
+                    <TableRow key={loan._id}>
+                      <TableCell>{loan.bookTitle}</TableCell>
+                      <TableCell>
+                        {new Date(loan.loanDate).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        {new Date(loan.returnDate).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteLoan(loan)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </div>
         </DialogContent>
       </Dialog>

@@ -36,7 +36,6 @@ export async function getBookLoansByUserId(userId: string, token: string): Promi
   }
 
   const data = await response.json();
-  console.log(`API response data for user ${userId}:`, data); // Log the API response data
   return data;
 }
 

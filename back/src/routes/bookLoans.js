@@ -46,12 +46,7 @@ router.get("/:userId", canManageBookLoans, async (req, res) => {
     const { userId } = req.params;
     console.log(`Fetching book loans for userId: ${userId}`); // Log the userId being fetched
     const bookLoans = await BookLoan.find({ userId }).populate("bookId");
-    if (bookLoans.length > 0) {
-      res.json(bookLoans);
-    } else {
-      console.log(`No book loans found for userId ${userId}`); // Log if not found
-      res.status(404).json({ message: "No book loans found for this user" });
-    }
+    res.json(bookLoans);
   } catch (err) {
     console.error(`Error fetching book loans for userId ${userId}:`, err); // Log the error
     res.status(500).json({ message: err.message });
