@@ -48,7 +48,7 @@ export default function AddProjectDialog({
       formDataToSend.append("animateurs", JSON.stringify(formData.animateurs));
 
       await createProject(formDataToSend, accessToken);
-      toast.success("Project added successfully!");
+      toast.success("Le projet a été créé avec succès");
       onProjectAdded();
       onOpenChange(false);
       setFormData({
@@ -59,7 +59,9 @@ export default function AddProjectDialog({
       });
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to create project"
+        error instanceof Error
+          ? error.message
+          : "Echec lors de la création du projet"
       );
     }
   };

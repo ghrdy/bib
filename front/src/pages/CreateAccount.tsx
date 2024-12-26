@@ -52,11 +52,13 @@ export default function CreateAccount() {
         throw new Error(errorData.message || "Failed to set password");
       }
 
-      toast.success("Password set successfully!");
+      toast.success("Le mot de passe a été défini avec succès");
       navigate("/login");
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to set password"
+        error instanceof Error
+          ? error.message
+          : "Echec lors de la définition du mot de passe"
       );
     }
   };

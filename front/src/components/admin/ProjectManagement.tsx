@@ -48,7 +48,7 @@ export default function ProjectManagement() {
       const fetchedProjects = await getProjects(accessToken);
       setProjects(fetchedProjects);
     } catch (error) {
-      toast.error("Failed to fetch projects");
+      toast.error("Echec lors de la récupération des projets");
     }
   };
 
@@ -71,10 +71,10 @@ export default function ProjectManagement() {
       if (!projectToDelete || !accessToken) return;
 
       await deleteProject(projectToDelete._id, accessToken);
-      toast.success("Project deleted successfully");
+      toast.success("Le projet a été supprimé avec succès");
       fetchProjects();
     } catch (error) {
-      toast.error("Failed to delete project");
+      toast.error("Echec lors de la suppression du projet");
     } finally {
       setShowDeleteDialog(false);
       setProjectToDelete(null);
@@ -106,9 +106,9 @@ export default function ProjectManagement() {
                   <TableCell>
                     <Avatar>
                       {project.image ? (
-                        <AvatarImage 
-                          src={`http://localhost:5001${project.image}`} 
-                          alt={project.nom} 
+                        <AvatarImage
+                          src={`http://localhost:5001${project.image}`}
+                          alt={project.nom}
                         />
                       ) : (
                         <AvatarFallback>

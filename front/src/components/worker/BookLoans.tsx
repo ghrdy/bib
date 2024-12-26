@@ -72,7 +72,7 @@ export default function ChildLoansDialog({
       const childLoans = await getBookLoansByUserId(child._id, accessToken);
       setLoans(childLoans);
     } catch (error) {
-      toast.error("Failed to fetch loans");
+      toast.error("Echech lors de la récupération des emprunts");
     }
   };
 
@@ -82,7 +82,7 @@ export default function ChildLoansDialog({
       const fetchedBooks = await getBooks(accessToken);
       setBooks(fetchedBooks);
     } catch (error) {
-      toast.error("Failed to fetch books");
+      toast.error("Echec lors de la récupération des livres");
     }
   };
 
@@ -103,7 +103,7 @@ export default function ChildLoansDialog({
       if (!accessToken) return;
 
       if (!newLoan.bookId) {
-        toast.error("Please select a book");
+        toast.error("Veuillez choisir un livre");
         return;
       }
 
@@ -116,12 +116,12 @@ export default function ChildLoansDialog({
         accessToken
       );
 
-      toast.success("Loan added successfully");
+      toast.success("L'emprunt a été ajouté avec succès");
       setNewLoan({ bookId: "", returnDate: "" });
       setShowAddLoan(false);
       fetchLoans();
     } catch (error) {
-      toast.error("Failed to add loan");
+      toast.error("Echech lors de l'ajout de l'emprunt");
     }
   };
 
@@ -135,10 +135,10 @@ export default function ChildLoansDialog({
       if (!loanToDelete || !accessToken) return;
 
       await deleteBookLoan(loanToDelete._id, accessToken);
-      toast.success("Loan deleted successfully");
+      toast.success("L'emprunt a été supprimé avec succès");
       fetchLoans();
     } catch (error) {
-      toast.error("Failed to delete loan");
+      toast.error("Echec de la suppression de l'emprunt");
     } finally {
       setShowDeleteDialog(false);
       setLoanToDelete(null);

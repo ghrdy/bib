@@ -66,7 +66,9 @@ export default function EditUserDialog({
       onOpenChange(false);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to update user"
+        error instanceof Error
+          ? error.message
+          : "Echec de la mise à jour de l'utilisateur"
       );
     }
   };

@@ -54,7 +54,9 @@ export default function EditProjectDialog({
       onOpenChange(false);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to update project"
+        error instanceof Error
+          ? error.message
+          : "Echec de la mise à jour du projet"
       );
     }
   };

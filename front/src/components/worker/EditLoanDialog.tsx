@@ -52,7 +52,7 @@ export default function EditLoanDialog({
         const fetchedChildren = await getChildProfiles(accessToken);
         setChildren(fetchedChildren);
       } catch (error) {
-        toast.error("Failed to fetch children profiles");
+        toast.error("Echec lors de la récupération des enfants");
       }
     };
 
@@ -81,7 +81,9 @@ export default function EditLoanDialog({
       onOpenChange(false);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to update book loan"
+        error instanceof Error
+          ? error.message
+          : "Echec de la modification de l'emprunt"
       );
     }
   };

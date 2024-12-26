@@ -52,7 +52,9 @@ export default function EditBookDialog({
       onOpenChange(false);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to update book"
+        error instanceof Error
+          ? error.message
+          : "Echec de la modification du livre"
       );
     }
   };

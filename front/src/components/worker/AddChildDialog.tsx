@@ -80,7 +80,7 @@ export default function AddChildDialog({
       toast.error(
         error instanceof Error
           ? error.message
-          : "Failed to create child profile"
+          : "Echech lors de l'ajout du profil enfant"
       );
     }
   };

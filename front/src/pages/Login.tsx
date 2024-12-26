@@ -58,7 +58,7 @@ export default function Login() {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError("An unknown error occurred");
+        setError("Une erreur est survenue");
       }
       toast.error("Connexion échouée!");
     }

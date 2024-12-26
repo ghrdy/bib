@@ -53,7 +53,9 @@ export default function AddUserDialog({
       setFormData({ prenom: "", nom: "", email: "", role: "" });
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to create user"
+        error instanceof Error
+          ? error.message
+          : "Echec lors de l'ajout de l'utilisateur"
       );
     }
   };

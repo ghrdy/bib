@@ -53,7 +53,9 @@ export default function AddBookDialog({
       });
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to create book"
+        error instanceof Error
+          ? error.message
+          : "Echec lors de l'ajout du livre"
       );
     }
   };

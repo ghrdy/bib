@@ -47,7 +47,7 @@ export default function UserManagement() {
       const fetchedUsers = await getUsers(accessToken);
       setUsers(fetchedUsers);
     } catch (error) {
-      toast.error("Failed to fetch users");
+      toast.error("Echec lors de la récupération des utilisateurs");
     }
   };
 
@@ -73,7 +73,7 @@ export default function UserManagement() {
       toast.success("L'utilisateur a été supprimé");
       fetchUsers();
     } catch (error) {
-      toast.error("Failed to delete user");
+      toast.error("Echec lors de la suppression de l'utilisateur");
     } finally {
       setShowDeleteDialog(false);
       setUserToDelete(null);
