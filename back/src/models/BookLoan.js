@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const bookLoanSchema = new mongoose.Schema({
-  bookId: {
+  book: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Book",
     required: true,
