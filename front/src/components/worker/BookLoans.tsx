@@ -60,7 +60,7 @@ export default function ChildLoansDialog({
   const [books, setBooks] = useState<Book[]>([]);
   const [showAddLoan, setShowAddLoan] = useState(false);
   const [newLoan, setNewLoan] = useState({
-    book: "",
+    bookId: "", // Changed to bookId
     returnDate: "",
   });
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -102,22 +102,28 @@ export default function ChildLoansDialog({
     try {
       if (!accessToken) return;
 
-      if (!newLoan.book) {
+      if (!newLoan.bookId) {
         toast.error("Veuillez choisir un livre");
+        return;
+      }
+
+      const selectedBook = books.find((book) => book._id === newLoan.bookId);
+      if (!selectedBook) {
+        toast.error("Livre non trouvé");
         return;
       }
 
       await createBookLoan(
         {
-          book: newLoan.book, // Changed from bookId
-          childId: child._id, // Changed from userId
+          book: selectedBook,
+          childId: child._id,
           returnDate: newLoan.returnDate,
         },
         accessToken
       );
 
       toast.success("L'emprunt a été ajouté avec succès");
-      setNewLoan({ book: "", returnDate: "" });
+      setNewLoan({ bookId: "", returnDate: "" });
       setShowAddLoan(false);
       fetchLoans();
     } catch (error) {
@@ -167,9 +173,9 @@ export default function ChildLoansDialog({
                   <div className="space-y-2">
                     <Label htmlFor="book">Livre</Label>
                     <Select
-                      value={newLoan.book}
+                      value={newLoan.bookId}
                       onValueChange={(value) =>
-                        setNewLoan({ ...newLoan, book: value })
+                        setNewLoan({ ...newLoan, bookId: value })
                       }
                     >
                       <SelectTrigger>
