@@ -44,7 +44,7 @@ router.get("/", canManageBookLoans, async (req, res) => {
 router.get("/:userId", canManageBookLoans, async (req, res) => {
   try {
     const { userId } = req.params;
-    console.log(`Fetching book loans for userId: ${userId}`); // Log the userId being fetched
+    console.log(`Fetching book loans for userId: ${userId}`); // Log the userId (child id) being fetched
     const bookLoans = await BookLoan.find({ userId }).populate("book");
     res.json(bookLoans);
   } catch (err) {

@@ -6,7 +6,7 @@ const bookLoanSchema = new mongoose.Schema({
     ref: "Book",
     required: true,
   },
-  userId: {
+  childId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,

@@ -117,7 +117,7 @@ export default function ChildLoansDialog({
       );
 
       toast.success("L'emprunt a été ajouté avec succès");
-      setNewLoan({ book: "", returnDate: "" });
+      setNewLoan({ childId: "", returnDate: "" });
       setShowAddLoan(false);
       fetchLoans();
     } catch (error) {
@@ -167,9 +167,9 @@ export default function ChildLoansDialog({
                   <div className="space-y-2">
                     <Label htmlFor="book">Livre</Label>
                     <Select
-                      value={newLoan.book}
+                      value={newLoan.bookId}
                       onValueChange={(value) =>
-                        setNewLoan({ ...newLoan, book: value })
+                        setNewLoan({ ...newLoan, bookId: value })
                       }
                     >
                       <SelectTrigger>
