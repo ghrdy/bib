@@ -35,6 +35,7 @@ import {
   ChildProfile,
   getChildProfiles,
   deleteChildProfile,
+  getChildProfile,
 } from "@/lib/api/children";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
@@ -59,6 +60,25 @@ export default function ChildrenManagement() {
       setFilteredChildren(fetchedChildren);
     } catch (error) {
       toast.error("Échec du chargement des profils");
+    }
+  };
+
+  const refreshChildStatus = async (childId: string) => {
+    try {
+      if (!accessToken) return;
+      const updatedChild = await getChildProfile(childId, accessToken);
+      setChildren((prevChildren) =>
+        prevChildren.map((child) =>
+          child._id === childId ? updatedChild : child
+        )
+      );
+      setFilteredChildren((prevFiltered) =>
+        prevFiltered.map((child) =>
+          child._id === childId ? updatedChild : child
+        )
+      );
+    } catch (error) {
+      console.error("Failed to refresh child status:", error);
     }
   };
 
@@ -91,6 +111,11 @@ export default function ChildrenManagement() {
   const handleDeleteChild = (child: ChildProfile) => {
     setChildToDelete(child);
     setShowDeleteDialog(true);
+  };
+
+  const handleLoansDialogClose = (childId: string) => {
+    setShowLoansDialog(false);
+    refreshChildStatus(childId);
   };
 
   const confirmDelete = async () => {
@@ -266,7 +291,11 @@ export default function ChildrenManagement() {
           <ChildLoansDialog
             child={selectedChild}
             open={showLoansDialog}
-            onOpenChange={setShowLoansDialog}
+            onOpenChange={(open) => {
+              if (!open) {
+                handleLoansDialogClose(selectedChild._id);
+              }
+            }}
           />
         </>
       )}

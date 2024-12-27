@@ -31,6 +31,21 @@ export async function getChildProfiles(token: string): Promise<ChildProfile[]> {
   return response.json();
 }
 
+export async function getChildProfile(id: string, token: string): Promise<ChildProfile> {
+  const response = await fetch(`${API_URL}/childProfiles/${id}`, {
+    headers: {
+      'Cookie': `accessToken=${token}`,
+    },
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch child profile');
+  }
+
+  return response.json();
+}
+
 export async function createChildProfile(data: CreateChildProfileData, token: string): Promise<ChildProfile> {
   const response = await fetch(`${API_URL}/childProfiles`, {
     method: 'POST',
