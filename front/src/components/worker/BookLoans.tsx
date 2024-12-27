@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { BookPlus, Trash2 } from "lucide-react";
+import { BookPlus, Trash2, Pencil } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
@@ -23,6 +23,7 @@ import {
   getBookLoansByUserId,
   createBookLoan,
   deleteBookLoan,
+  updateBookLoan,
 } from "@/lib/api/bookLoans";
 import { Book, getBooks } from "@/lib/api/books";
 import { ChildProfile } from "@/lib/api/children";
@@ -43,6 +44,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ChildLoansDialogProps {
   child: ChildProfile;
@@ -59,8 +66,14 @@ export default function ChildLoansDialog({
   const [loans, setLoans] = useState<BookLoan[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
   const [showAddLoan, setShowAddLoan] = useState(false);
+  const [showEditLoan, setShowEditLoan] = useState(false);
+  const [selectedLoan, setSelectedLoan] = useState<BookLoan | null>(null);
   const [newLoan, setNewLoan] = useState({
-    bookId: "", // Changed to bookId
+    bookId: "",
+    returnDate: "",
+  });
+  const [editLoan, setEditLoan] = useState({
+    bookId: "",
     returnDate: "",
   });
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -72,7 +85,7 @@ export default function ChildLoansDialog({
       const childLoans = await getBookLoansByUserId(child._id, accessToken);
       setLoans(childLoans);
     } catch (error) {
-      toast.error("Echech lors de la récupération des emprunts");
+      toast.error("Echec lors de la récupération des emprunts");
     }
   };
 
@@ -95,6 +108,16 @@ export default function ChildLoansDialog({
   const handleAddLoanClick = async () => {
     setShowAddLoan(true);
     await fetchBooks();
+  };
+
+  const handleEditLoanClick = async (loan: BookLoan) => {
+    setSelectedLoan(loan);
+    setEditLoan({
+      bookId: loan.book._id,
+      returnDate: new Date(loan.returnDate).toISOString().split("T")[0],
+    });
+    await fetchBooks();
+    setShowEditLoan(true);
   };
 
   const handleAddLoan = async (e: React.FormEvent) => {
@@ -131,6 +154,40 @@ export default function ChildLoansDialog({
     }
   };
 
+  const handleEditLoan = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (!accessToken || !selectedLoan) return;
+
+      if (!editLoan.bookId) {
+        toast.error("Veuillez choisir un livre");
+        return;
+      }
+
+      const selectedBook = books.find((book) => book._id === editLoan.bookId);
+      if (!selectedBook) {
+        toast.error("Livre non trouvé");
+        return;
+      }
+
+      await updateBookLoan(
+        selectedLoan._id,
+        {
+          book: selectedBook,
+          returnDate: editLoan.returnDate,
+        },
+        accessToken
+      );
+
+      toast.success("L'emprunt a été modifié avec succès");
+      setShowEditLoan(false);
+      setSelectedLoan(null);
+      fetchLoans();
+    } catch (error) {
+      toast.error("Echec lors de la modification de l'emprunt");
+    }
+  };
+
   const handleDeleteLoan = (loan: BookLoan) => {
     setLoanToDelete(loan);
     setShowDeleteDialog(true);
@@ -162,12 +219,12 @@ export default function ChildLoansDialog({
           </DialogHeader>
 
           <div className="space-y-4">
-            {!showAddLoan ? (
+            {!showAddLoan && !showEditLoan ? (
               <Button onClick={handleAddLoanClick}>
                 <BookPlus className="mr-2 h-4 w-4" />
                 Nouvel emprunt
               </Button>
-            ) : (
+            ) : showAddLoan ? (
               <form onSubmit={handleAddLoan} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -215,6 +272,57 @@ export default function ChildLoansDialog({
                   <Button type="submit">Ajouter</Button>
                 </div>
               </form>
+            ) : (
+              <form onSubmit={handleEditLoan} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="book">Livre</Label>
+                    <Select
+                      value={editLoan.bookId}
+                      onValueChange={(value) =>
+                        setEditLoan({ ...editLoan, bookId: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choisir un livre" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {books.map((book) => (
+                          <SelectItem key={book._id} value={book._id}>
+                            {book.titre}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="returnDate">Date de retour</Label>
+                    <input
+                      id="returnDate"
+                      type="date"
+                      value={editLoan.returnDate}
+                      onChange={(e) =>
+                        setEditLoan({ ...editLoan, returnDate: e.target.value })
+                      }
+                      className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end space-x-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setShowEditLoan(false);
+                      setSelectedLoan(null);
+                    }}
+                  >
+                    Annuler
+                  </Button>
+                  <Button type="submit">Modifier</Button>
+                </div>
+              </form>
             )}
 
             {loans.length === 0 ? (
@@ -240,13 +348,37 @@ export default function ChildLoansDialog({
                         {new Date(loan.returnDate).toLocaleDateString()}
                       </TableCell>
                       <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDeleteLoan(loan)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleEditLoanClick(loan)}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Modifier</p>
+                            </TooltipContent>
+                          </Tooltip>
+
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleDeleteLoan(loan)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Supprimer</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </TableCell>
                     </TableRow>
                   ))}
