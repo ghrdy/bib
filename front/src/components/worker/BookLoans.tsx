@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { BookPlus, BookCheck, Pencil } from "lucide-react";
+import { BookPlus, BookCheck } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
@@ -65,6 +65,7 @@ export default function ChildLoansDialog({
   const [loans, setLoans] = useState<BookLoan[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
   const [showAddLoan, setShowAddLoan] = useState(false);
+  const [showNewLoanButton, setShowNewLoanButton] = useState(true);
   const [newLoan, setNewLoan] = useState({
     bookId: "",
     returnDate: "",
@@ -114,6 +115,8 @@ export default function ChildLoansDialog({
   useEffect(() => {
     if (open) {
       fetchLoans();
+      setShowNewLoanButton(true);
+      setShowAddLoan(false);
     }
   }, [open, accessToken, child._id]);
 
@@ -127,7 +130,14 @@ export default function ChildLoansDialog({
       return;
     }
     setShowAddLoan(true);
+    setShowNewLoanButton(false);
     await fetchBooks();
+  };
+
+  const handleCancelAddLoan = () => {
+    setShowAddLoan(false);
+    setShowNewLoanButton(true);
+    setNewLoan({ bookId: "", returnDate: "" });
   };
 
   const handleAddLoan = async (e: React.FormEvent) => {
@@ -158,6 +168,7 @@ export default function ChildLoansDialog({
       toast.success("L'emprunt a été ajouté avec succès");
       setNewLoan({ bookId: "", returnDate: "" });
       setShowAddLoan(false);
+      setShowNewLoanButton(true);
       fetchLoans();
     } catch (error) {
       toast.error("Echec lors de l'ajout de l'emprunt");
@@ -195,7 +206,7 @@ export default function ChildLoansDialog({
           </DialogHeader>
 
           <div className="space-y-4">
-            {loans.length === 0 && (
+            {showNewLoanButton && loans.length === 0 && (
               <Button onClick={handleAddLoanClick}>
                 <BookPlus className="mr-2 h-4 w-4" />
                 Nouvel emprunt
@@ -243,7 +254,7 @@ export default function ChildLoansDialog({
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setShowAddLoan(false)}
+                    onClick={handleCancelAddLoan}
                   >
                     Annuler
                   </Button>
