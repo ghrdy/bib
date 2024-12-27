@@ -19,6 +19,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { BookPlus, Pencil, Trash2 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import AddBookDialog from "./AddBookDialog";
@@ -26,10 +32,13 @@ import EditBookDialog from "./EditBookDialog";
 import { Book, getBooks, deleteBook } from "@/lib/api/books";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
+import { SearchBar } from "@/components/worker/SearchBar";
 
 export default function BooksManagement() {
   const { accessToken } = useAuth();
   const [books, setBooks] = useState<Book[]>([]);
+  const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [showAddBook, setShowAddBook] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [showEditBook, setShowEditBook] = useState(false);
@@ -41,6 +50,7 @@ export default function BooksManagement() {
       if (!accessToken) return;
       const fetchedBooks = await getBooks(accessToken);
       setBooks(fetchedBooks);
+      setFilteredBooks(fetchedBooks);
     } catch (error) {
       toast.error("Échec du chargement des livres");
     }
@@ -49,6 +59,13 @@ export default function BooksManagement() {
   useEffect(() => {
     fetchBooks();
   }, [accessToken]);
+
+  useEffect(() => {
+    const filtered = books.filter((book) =>
+      book.titre.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredBooks(filtered);
+  }, [searchQuery, books]);
 
   const handleEditBook = (book: Book) => {
     setSelectedBook(book);
@@ -78,10 +95,19 @@ export default function BooksManagement() {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <Button onClick={() => setShowAddBook(true)}>
-          <BookPlus className="mr-2 h-4 w-4" />
-          Ajouter un livre
-        </Button>
+        <div className="w-full flex justify-between gap-4">
+          <Button onClick={() => setShowAddBook(true)}>
+            <BookPlus className="mr-2 h-4 w-4" />
+            Ajouter un livre
+          </Button>
+          <div className="w-1/3">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Rechercher un livre..."
+            />
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         <Table>
@@ -93,7 +119,7 @@ export default function BooksManagement() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {books.map((book) => (
+            {filteredBooks.map((book) => (
               <TableRow key={book._id}>
                 <TableCell>
                   <Avatar>
@@ -111,20 +137,37 @@ export default function BooksManagement() {
                 </TableCell>
                 <TableCell>{book.titre}</TableCell>
                 <TableCell>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleEditBook(book)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDeleteBook(book)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleEditBook(book)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Modifier</p>
+                      </TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteBook(book)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Supprimer</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </TableCell>
               </TableRow>
             ))}

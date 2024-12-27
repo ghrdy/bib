@@ -19,16 +19,25 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { UserPlus, Pencil, Trash2 } from "lucide-react";
 import AddUserDialog from "./AddUserDialog";
 import EditUserDialog from "./EditUserDialog";
 import { getUsers, deleteUser, User } from "@/lib/api/users";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
+import { SearchBar } from "@/components/worker/SearchBar";
 
 export default function UserManagement() {
   const { accessToken } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [showAddUser, setShowAddUser] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showEditUser, setShowEditUser] = useState(false);
@@ -40,6 +49,7 @@ export default function UserManagement() {
       if (!accessToken) return;
       const fetchedUsers = await getUsers(accessToken);
       setUsers(fetchedUsers);
+      setFilteredUsers(fetchedUsers);
     } catch (error) {
       toast.error("Echec lors de la récupération des utilisateurs");
     }
@@ -48,6 +58,16 @@ export default function UserManagement() {
   useEffect(() => {
     fetchUsers();
   }, [accessToken]);
+
+  useEffect(() => {
+    const filtered = users.filter(
+      (user) =>
+        user.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.prenom.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredUsers(filtered);
+  }, [searchQuery, users]);
 
   const handleEditUser = (user: User) => {
     setSelectedUser(user);
@@ -78,10 +98,19 @@ export default function UserManagement() {
     <div className="space-y-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <Button onClick={() => setShowAddUser(true)}>
-            <UserPlus className="mr-2 h-4 w-4" />
-            Ajouter un utilisateur
-          </Button>
+          <div className="w-full flex justify-between gap-4">
+            <Button onClick={() => setShowAddUser(true)}>
+              <UserPlus className="mr-2 h-4 w-4" />
+              Ajouter un utilisateur
+            </Button>
+            <div className="w-1/3">
+              <SearchBar
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Rechercher un utilisateur..."
+              />
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <Table>
@@ -94,26 +123,43 @@ export default function UserManagement() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <TableRow key={user._id}>
                   <TableCell>{`${user.prenom} ${user.nom}`}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell className="capitalize">{user.role}</TableCell>
                   <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleEditUser(user)}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDeleteUser(user)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleEditUser(user)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Modifier</p>
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDeleteUser(user)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Supprimer</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </TableCell>
                 </TableRow>
               ))}

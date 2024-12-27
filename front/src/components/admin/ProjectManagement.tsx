@@ -19,6 +19,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { FolderPlus, Pencil, Trash2 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import AddProjectDialog from "./AddProjectDialog";
@@ -26,10 +32,13 @@ import EditProjectDialog from "./EditProjectDialog";
 import { Project, getProjects, deleteProject } from "@/lib/api/projects";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
+import { SearchBar } from "@/components/worker/SearchBar";
 
 export default function ProjectManagement() {
   const { accessToken } = useAuth();
   const [projects, setProjects] = useState<Project[]>([]);
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [showAddProject, setShowAddProject] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [showEditProject, setShowEditProject] = useState(false);
@@ -41,6 +50,7 @@ export default function ProjectManagement() {
       if (!accessToken) return;
       const fetchedProjects = await getProjects(accessToken);
       setProjects(fetchedProjects);
+      setFilteredProjects(fetchedProjects);
     } catch (error) {
       toast.error("Echec lors de la récupération des projets");
     }
@@ -49,6 +59,13 @@ export default function ProjectManagement() {
   useEffect(() => {
     fetchProjects();
   }, [accessToken]);
+
+  useEffect(() => {
+    const filtered = projects.filter((project) =>
+      project.nom.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredProjects(filtered);
+  }, [searchQuery, projects]);
 
   const handleEditProject = (project: Project) => {
     setSelectedProject(project);
@@ -79,10 +96,19 @@ export default function ProjectManagement() {
     <div className="space-y-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <Button onClick={() => setShowAddProject(true)}>
-            <FolderPlus className="mr-2 h-4 w-4" />
-            Ajouter un projet
-          </Button>
+          <div className="w-full flex justify-between gap-4">
+            <Button onClick={() => setShowAddProject(true)}>
+              <FolderPlus className="mr-2 h-4 w-4" />
+              Ajouter un projet
+            </Button>
+            <div className="w-1/3">
+              <SearchBar
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Rechercher un projet..."
+              />
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <Table>
@@ -95,7 +121,7 @@ export default function ProjectManagement() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {projects.map((project) => (
+              {filteredProjects.map((project) => (
                 <TableRow key={project._id}>
                   <TableCell>
                     <Avatar>
@@ -114,20 +140,37 @@ export default function ProjectManagement() {
                   <TableCell>{project.nom}</TableCell>
                   <TableCell>{project.annee}</TableCell>
                   <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleEditProject(project)}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDeleteProject(project)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleEditProject(project)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Modifier</p>
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDeleteProject(project)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Supprimer</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </TableCell>
                 </TableRow>
               ))}
