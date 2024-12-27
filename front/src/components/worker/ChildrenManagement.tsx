@@ -24,6 +24,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import AddChildDialog from "./AddChildDialog";
 import EditChildDialog from "./EditChildDialog";
 import ChildLoansDialog from "./BookLoans";
+import { SearchBar } from "./SearchBar";
 import {
   ChildProfile,
   getChildProfiles,
@@ -35,6 +36,8 @@ import { toast } from "sonner";
 export default function ChildrenManagement() {
   const { accessToken } = useAuth();
   const [children, setChildren] = useState<ChildProfile[]>([]);
+  const [filteredChildren, setFilteredChildren] = useState<ChildProfile[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [showAddChild, setShowAddChild] = useState(false);
   const [selectedChild, setSelectedChild] = useState<ChildProfile | null>(null);
   const [showEditChild, setShowEditChild] = useState(false);
@@ -47,6 +50,7 @@ export default function ChildrenManagement() {
       if (!accessToken) return;
       const fetchedChildren = await getChildProfiles(accessToken);
       setChildren(fetchedChildren);
+      setFilteredChildren(fetchedChildren);
     } catch (error) {
       toast.error("Échec du chargement des profils");
     }
@@ -55,6 +59,18 @@ export default function ChildrenManagement() {
   useEffect(() => {
     fetchChildren();
   }, [accessToken]);
+
+  useEffect(() => {
+    const filtered = children.filter((child) => {
+      const searchTerm = searchQuery.toLowerCase();
+      return (
+        child.nom.toLowerCase().includes(searchTerm) ||
+        child.prenom.toLowerCase().includes(searchTerm) ||
+        child.classeSuivie.toLowerCase().includes(searchTerm)
+      );
+    });
+    setFilteredChildren(filtered);
+  }, [searchQuery, children]);
 
   const handleEditChild = (child: ChildProfile) => {
     setSelectedChild(child);
@@ -115,10 +131,19 @@ export default function ChildrenManagement() {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <Button onClick={() => setShowAddChild(true)}>
-          <UserPlus className="mr-2 h-4 w-4" />
-          Ajouter
-        </Button>
+        <div className="flex items-center space-x-4 flex-1">
+          <Button onClick={() => setShowAddChild(true)}>
+            <UserPlus className="mr-2 h-4 w-4" />
+            Ajouter
+          </Button>
+          <div className="flex-1 max-w-sm">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Rechercher par nom, prénom ou classe..."
+            />
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         <Table>
@@ -133,7 +158,7 @@ export default function ChildrenManagement() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {children.map((child) => (
+            {filteredChildren.map((child) => (
               <TableRow key={child._id}>
                 <TableCell>
                   <Avatar>
