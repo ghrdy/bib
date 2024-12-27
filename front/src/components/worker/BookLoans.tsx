@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { BookPlus, Trash2, Pencil } from "lucide-react";
+import { BookPlus, BookCheck, Pencil } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
@@ -23,10 +23,9 @@ import {
   getBookLoansByUserId,
   createBookLoan,
   deleteBookLoan,
-  updateBookLoan,
 } from "@/lib/api/bookLoans";
 import { Book, getBooks } from "@/lib/api/books";
-import { ChildProfile } from "@/lib/api/children";
+import { ChildProfile, updateChildProfile } from "@/lib/api/children";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -66,26 +65,39 @@ export default function ChildLoansDialog({
   const [loans, setLoans] = useState<BookLoan[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
   const [showAddLoan, setShowAddLoan] = useState(false);
-  const [showEditLoan, setShowEditLoan] = useState(false);
-  const [selectedLoan, setSelectedLoan] = useState<BookLoan | null>(null);
   const [newLoan, setNewLoan] = useState({
     bookId: "",
     returnDate: "",
   });
-  const [editLoan, setEditLoan] = useState({
-    bookId: "",
-    returnDate: "",
-  });
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [loanToDelete, setLoanToDelete] = useState<BookLoan | null>(null);
+  const [showReturnDialog, setShowReturnDialog] = useState(false);
+  const [loanToReturn, setLoanToReturn] = useState<BookLoan | null>(null);
 
   const fetchLoans = async () => {
     try {
       if (!accessToken) return;
       const childLoans = await getBookLoansByUserId(child._id, accessToken);
       setLoans(childLoans);
+
+      // Update child status based on active loans
+      const hasActiveLoan = childLoans.length > 0;
+      if (hasActiveLoan && child.status === "possible") {
+        updateChildStatus("retour");
+      } else if (!hasActiveLoan && child.status === "retour") {
+        updateChildStatus("possible");
+      }
     } catch (error) {
       toast.error("Echec lors de la récupération des emprunts");
+    }
+  };
+
+  const updateChildStatus = async (newStatus: string) => {
+    try {
+      if (!accessToken) return;
+      const formData = new FormData();
+      formData.append("status", newStatus);
+      await updateChildProfile(child._id, formData, accessToken);
+    } catch (error) {
+      console.error("Failed to update child status:", error);
     }
   };
 
@@ -106,18 +118,16 @@ export default function ChildLoansDialog({
   }, [open, accessToken, child._id]);
 
   const handleAddLoanClick = async () => {
+    if (loans.length > 0) {
+      toast.error("L'enfant a déjà un emprunt en cours");
+      return;
+    }
+    if (child.status === "restreint") {
+      toast.error("L'enfant est restreint et ne peut pas emprunter");
+      return;
+    }
     setShowAddLoan(true);
     await fetchBooks();
-  };
-
-  const handleEditLoanClick = async (loan: BookLoan) => {
-    setSelectedLoan(loan);
-    setEditLoan({
-      bookId: loan.book._id,
-      returnDate: new Date(loan.returnDate).toISOString().split("T")[0],
-    });
-    await fetchBooks();
-    setShowEditLoan(true);
   };
 
   const handleAddLoan = async (e: React.FormEvent) => {
@@ -154,57 +164,23 @@ export default function ChildLoansDialog({
     }
   };
 
-  const handleEditLoan = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      if (!accessToken || !selectedLoan) return;
-
-      if (!editLoan.bookId) {
-        toast.error("Veuillez choisir un livre");
-        return;
-      }
-
-      const selectedBook = books.find((book) => book._id === editLoan.bookId);
-      if (!selectedBook) {
-        toast.error("Livre non trouvé");
-        return;
-      }
-
-      await updateBookLoan(
-        selectedLoan._id,
-        {
-          book: selectedBook,
-          returnDate: editLoan.returnDate,
-        },
-        accessToken
-      );
-
-      toast.success("L'emprunt a été modifié avec succès");
-      setShowEditLoan(false);
-      setSelectedLoan(null);
-      fetchLoans();
-    } catch (error) {
-      toast.error("Echec lors de la modification de l'emprunt");
-    }
+  const handleReturnBook = (loan: BookLoan) => {
+    setLoanToReturn(loan);
+    setShowReturnDialog(true);
   };
 
-  const handleDeleteLoan = (loan: BookLoan) => {
-    setLoanToDelete(loan);
-    setShowDeleteDialog(true);
-  };
-
-  const confirmDelete = async () => {
+  const confirmReturn = async () => {
     try {
-      if (!loanToDelete || !accessToken) return;
+      if (!loanToReturn || !accessToken) return;
 
-      await deleteBookLoan(loanToDelete._id, accessToken);
-      toast.success("L'emprunt a été supprimé avec succès");
+      await deleteBookLoan(loanToReturn._id, accessToken);
+      toast.success("Le livre a été retourné avec succès");
       fetchLoans();
     } catch (error) {
-      toast.error("Echec de la suppression de l'emprunt");
+      toast.error("Echec lors du retour du livre");
     } finally {
-      setShowDeleteDialog(false);
-      setLoanToDelete(null);
+      setShowReturnDialog(false);
+      setLoanToReturn(null);
     }
   };
 
@@ -219,12 +195,14 @@ export default function ChildLoansDialog({
           </DialogHeader>
 
           <div className="space-y-4">
-            {!showAddLoan && !showEditLoan ? (
+            {loans.length === 0 && (
               <Button onClick={handleAddLoanClick}>
                 <BookPlus className="mr-2 h-4 w-4" />
                 Nouvel emprunt
               </Button>
-            ) : showAddLoan ? (
+            )}
+
+            {showAddLoan && (
               <form onSubmit={handleAddLoan} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -272,62 +250,9 @@ export default function ChildLoansDialog({
                   <Button type="submit">Ajouter</Button>
                 </div>
               </form>
-            ) : (
-              <form onSubmit={handleEditLoan} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="book">Livre</Label>
-                    <Select
-                      value={editLoan.bookId}
-                      onValueChange={(value) =>
-                        setEditLoan({ ...editLoan, bookId: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Choisir un livre" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {books.map((book) => (
-                          <SelectItem key={book._id} value={book._id}>
-                            {book.titre}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="returnDate">Date de retour</Label>
-                    <input
-                      id="returnDate"
-                      type="date"
-                      value={editLoan.returnDate}
-                      onChange={(e) =>
-                        setEditLoan({ ...editLoan, returnDate: e.target.value })
-                      }
-                      className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-end space-x-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      setShowEditLoan(false);
-                      setSelectedLoan(null);
-                    }}
-                  >
-                    Annuler
-                  </Button>
-                  <Button type="submit">Modifier</Button>
-                </div>
-              </form>
             )}
 
-            {loans.length === 0 ? (
-              <p>Aucun emprunt en cours</p>
-            ) : (
+            {loans.length > 0 ? (
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -354,28 +279,13 @@ export default function ChildLoansDialog({
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => handleEditLoanClick(loan)}
+                                onClick={() => handleReturnBook(loan)}
                               >
-                                <Pencil className="h-4 w-4" />
+                                <BookCheck className="h-4 w-4" />
                               </Button>
                             </TooltipTrigger>
                             <TooltipContent>
-                              <p>Modifier</p>
-                            </TooltipContent>
-                          </Tooltip>
-
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => handleDeleteLoan(loan)}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Supprimer</p>
+                              <p>Retourner le livre</p>
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
@@ -384,24 +294,25 @@ export default function ChildLoansDialog({
                   ))}
                 </TableBody>
               </Table>
+            ) : (
+              <p>Aucun emprunt en cours</p>
             )}
           </div>
         </DialogContent>
       </Dialog>
 
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+      <AlertDialog open={showReturnDialog} onOpenChange={setShowReturnDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+            <AlertDialogTitle>Confirmer le retour</AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible. L'enregistrement de l'emprunt sera
-              définitivement supprimé.
+              Êtes-vous sûr de vouloir confirmer le retour de ce livre ?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Annuler</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>
-              Supprimer
+            <AlertDialogAction onClick={confirmReturn}>
+              Confirmer le retour
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
