@@ -226,7 +226,7 @@ export default function ChildLoansDialog({
                 <TableBody>
                   {loans.map((loan) => (
                     <TableRow key={loan._id}>
-                      <TableCell>{loan.bookTitle}</TableCell>
+                      <TableCell>{loan.book.titre}</TableCell>
                       <TableCell>
                         {new Date(loan.loanDate).toLocaleDateString()}
                       </TableCell>

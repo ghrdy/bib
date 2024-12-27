@@ -1,21 +1,23 @@
+import { Book } from "./books";
+
 export interface BookLoan {
   _id: string;
-  bookId: string;
+  book: Book;
   bookTitle: string;
-  userId: string;
+  childId: string;
   loanDate: string;
   returnDate: string;
 }
 
 export interface CreateBookLoanData {
-  book: string; 
+  book: Book; 
   childId: string; 
   returnDate: string;
 }
 
 export interface UpdateBookLoanData {
-  bookId?: string;
-  userId?: string;
+  book?: Book;
+  childId?: string;
   returnDate?: string;
 }
 
