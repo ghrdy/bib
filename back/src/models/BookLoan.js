@@ -8,7 +8,7 @@ const bookLoanSchema = new mongoose.Schema({
   },
   childId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "ChildProfile",
     required: true,
   },
   loanDate: {

@@ -20,8 +20,8 @@ router.use(authToken);
 
 // Create a new book loan
 router.post("/", canManageBookLoans, async (req, res) => {
-  const { book, userId, returnDate } = req.body;
-  const newBookLoan = new BookLoan({ book, userId, returnDate });
+  const { book, childId, returnDate } = req.body;
+  const newBookLoan = new BookLoan({ book, childId, returnDate });
   try {
     const savedBookLoan = await newBookLoan.save();
     res.status(201).json(savedBookLoan);
@@ -40,26 +40,26 @@ router.get("/", canManageBookLoans, async (req, res) => {
   }
 });
 
-// Get book loans by userId
-router.get("/:userId", canManageBookLoans, async (req, res) => {
+// Get book loans by childId
+router.get("/:childId", canManageBookLoans, async (req, res) => {
   try {
-    const { userId } = req.params;
-    console.log(`Fetching book loans for userId: ${userId}`); // Log the userId (child id) being fetched
-    const bookLoans = await BookLoan.find({ userId }).populate("book");
+    const { childId } = req.params;
+    console.log(`Fetching book loans for childId: ${childId}`);
+    const bookLoans = await BookLoan.find({ childId }).populate("book");
     res.json(bookLoans);
   } catch (err) {
-    console.error(`Error fetching book loans for userId ${userId}:`, err); // Log the error
+    console.error(`Error fetching book loans:`, err);
     res.status(500).json({ message: err.message });
   }
 });
 
 // Update a book loan
 router.put("/:id", canManageBookLoans, async (req, res) => {
-  const { book, userId, returnDate } = req.body;
+  const { book, childId, returnDate } = req.body;
   try {
     const updatedBookLoan = await BookLoan.findByIdAndUpdate(
       req.params.id,
-      { book, userId, returnDate },
+      { book, childId, returnDate },
       { new: true }
     );
     if (updatedBookLoan) {
