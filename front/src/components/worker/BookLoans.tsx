@@ -109,8 +109,8 @@ export default function ChildLoansDialog({
 
       await createBookLoan(
         {
-          bookId: newLoan.book,
-          userId: child._id,
+          book: newLoan.book, // Changed from bookId
+          childId: child._id, // Changed from userId
           returnDate: newLoan.returnDate,
         },
         accessToken
@@ -121,7 +121,7 @@ export default function ChildLoansDialog({
       setShowAddLoan(false);
       fetchLoans();
     } catch (error) {
-      toast.error("Echech lors de l'ajout de l'emprunt");
+      toast.error("Echec lors de l'ajout de l'emprunt");
     }
   };
 

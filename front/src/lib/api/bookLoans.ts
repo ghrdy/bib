@@ -8,8 +8,8 @@ export interface BookLoan {
 }
 
 export interface CreateBookLoanData {
-  bookId: string;
-  userId: string;
+  book: string; 
+  childId: string; 
   returnDate: string;
 }
 
