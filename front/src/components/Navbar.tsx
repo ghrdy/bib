@@ -1,3 +1,4 @@
+/// <reference types="vite-plugin-svgr/client" />
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
