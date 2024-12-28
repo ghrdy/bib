@@ -42,12 +42,14 @@ export default function SettingsPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Paramètres</h1>
         <p className="text-muted-foreground">
-          Gérer les utilisateurs et les projets
+          {user?.role === "admin"
+            ? "Gérer les utilisateurs et les projets"
+            : "Gérer vos préférences"}
         </p>
       </div>
 
-      {/* Mobile User Info Section */}
-      <div className="md:hidden space-y-4">
+      {/* User Info and Settings Section - Visible to all users */}
+      <div className="space-y-4">
         <div className="p-4 bg-card rounded-lg border">
           <h2 className="font-semibold mb-2">Profil</h2>
           <div className="space-y-1">
@@ -75,19 +77,23 @@ export default function SettingsPage() {
         </div>
       </div>
 
+      {/* Admin Section - Only visible to admin users */}
       {user?.role === "admin" && (
-        <Tabs defaultValue="users" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="users">Utilisateurs</TabsTrigger>
-            <TabsTrigger value="projects">Projets</TabsTrigger>
-          </TabsList>
-          <TabsContent value="users" className="space-y-4">
-            <UserManagement />
-          </TabsContent>
-          <TabsContent value="projects" className="space-y-4">
-            <ProjectManagement />
-          </TabsContent>
-        </Tabs>
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">Administration</h2>
+          <Tabs defaultValue="users" className="space-y-4">
+            <TabsList>
+              <TabsTrigger value="users">Utilisateurs</TabsTrigger>
+              <TabsTrigger value="projects">Projets</TabsTrigger>
+            </TabsList>
+            <TabsContent value="users" className="space-y-4">
+              <UserManagement />
+            </TabsContent>
+            <TabsContent value="projects" className="space-y-4">
+              <ProjectManagement />
+            </TabsContent>
+          </Tabs>
+        </div>
       )}
     </div>
   );

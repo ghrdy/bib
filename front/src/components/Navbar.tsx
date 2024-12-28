@@ -29,6 +29,19 @@ export default function Navbar() {
 
   const isActive = (path: string) => location.pathname === path;
 
+  const getRoleDisplay = (role: string) => {
+    switch (role) {
+      case "admin":
+        return "Administrateur";
+      case "referent":
+        return "Animateur Référent";
+      case "simple":
+        return "Animateur";
+      default:
+        return role;
+    }
+  };
+
   return (
     <>
       {/* Desktop Navigation */}
@@ -96,11 +109,7 @@ export default function Navbar() {
                   <div className="text-right">
                     <p className="text-sm font-medium">{`${user.prenom} ${user.nom}`}</p>
                     <p className="text-xs text-muted-foreground">
-                      {user.role === "admin"
-                        ? "Administrateur"
-                        : user.role === "referent"
-                        ? "Animateur Référent"
-                        : "Animateur"}
+                      {getRoleDisplay(user.role)}
                     </p>
                   </div>
                 )}
@@ -120,8 +129,6 @@ export default function Navbar() {
       {/* Mobile Navigation */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t z-50">
         <div className="flex justify-around items-center h-20 px-2">
-          {" "}
-          {/* Augmenté la hauteur */}
           <Link to="/" className="flex flex-col items-center">
             <Button
               variant="ghost"

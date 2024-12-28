@@ -22,9 +22,7 @@ function App() {
               <Route
                 path="children"
                 element={
-                  <ProtectedRoute
-                    allowedRoles={["admin", "referent", "simple"]}
-                  >
+                  <ProtectedRoute>
                     <ChildrenPage />
                   </ProtectedRoute>
                 }
@@ -32,9 +30,7 @@ function App() {
               <Route
                 path="books"
                 element={
-                  <ProtectedRoute
-                    allowedRoles={["admin", "referent", "simple"]}
-                  >
+                  <ProtectedRoute>
                     <BooksPage />
                   </ProtectedRoute>
                 }
@@ -42,7 +38,7 @@ function App() {
               <Route
                 path="settings"
                 element={
-                  <ProtectedRoute allowedRoles={["admin"]}>
+                  <ProtectedRoute>
                     <SettingsPage />
                   </ProtectedRoute>
                 }
