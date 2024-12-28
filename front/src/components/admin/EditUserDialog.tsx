@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User, UpdateUserData, updateUser } from "@/lib/api/users";
 import { useAuth } from "@/lib/auth";
 import { getProjects, Project } from "@/lib/api/projects";
@@ -40,8 +40,25 @@ export default function EditUserDialog({
     prenom: user.prenom,
     email: user.email,
     role: user.role,
+    projet: user.projet || "",
     password: "",
   });
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        if (!accessToken) return;
+        const fetchedProjects = await getProjects(accessToken);
+        setProjects(fetchedProjects);
+      } catch (error) {
+        toast.error("Échec du chargement des projets");
+      }
+    };
+
+    if (open) {
+      fetchProjects();
+    }
+  }, [open, accessToken]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +69,7 @@ export default function EditUserDialog({
         prenom: formData.prenom,
         email: formData.email,
         role: formData.role,
+        projet: formData.projet,
       };
 
       if (formData.password) {
@@ -151,6 +169,26 @@ export default function EditUserDialog({
                 <SelectItem value="admin">Administrateur</SelectItem>
                 <SelectItem value="referent">Animateur Référent</SelectItem>
                 <SelectItem value="simple">Animateur Simple</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="projet">Projet</Label>
+            <Select
+              value={formData.projet}
+              onValueChange={(value) =>
+                setFormData({ ...formData, projet: value })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Choisir un Projet" />
+              </SelectTrigger>
+              <SelectContent>
+                {projects.map((project) => (
+                  <SelectItem key={project._id} value={project._id}>
+                    {project.nom} ({project.annee})
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
