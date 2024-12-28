@@ -5,7 +5,11 @@ const userSchema = new mongoose.Schema({
   prenom: String,
   email: String,
   password: String,
-  projet: String,
+  projet: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Project",
+    default: null,
+  },
   role: {
     type: String,
     enum: ["admin", "referent", "simple"],

@@ -117,13 +117,14 @@ router.use(authToken);
 
 // Create a new user (Admin only)
 router.post("/add", isAdmin, async (req, res) => {
-  const { nom, prenom, email, role } = req.body;
+  const { nom, prenom, email, role, projet } = req.body;
   try {
     const newUser = new User({
       nom,
       prenom,
       email,
       role,
+      projet,
     });
     const savedUser = await newUser.save();
     res.status(201).json(savedUser);
@@ -175,14 +176,14 @@ router.get("/", isAdmin, async (req, res) => {
 
 // Update a user (Admin only)
 router.put("/:id", isAdmin, async (req, res) => {
-  const { nom, prenom, email, password, role } = req.body;
+  const { nom, prenom, email, password, role, projet } = req.body;
   try {
     const hashedPassword = password
       ? await bcrypt.hash(password, 10)
       : undefined;
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      { nom, prenom, email, password: hashedPassword, role },
+      { nom, prenom, email, password: hashedPassword, role, projet },
       { new: true }
     );
     if (updatedUser) {

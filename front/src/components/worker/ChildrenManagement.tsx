@@ -58,6 +58,10 @@ export default function ChildrenManagement() {
       const fetchedChildren = await getChildProfiles(accessToken);
       setChildren(fetchedChildren);
       setFilteredChildren(fetchedChildren);
+      // Refresh the status of each child
+      fetchedChildren.forEach((child) => {
+        refreshChildStatus(child._id);
+      });
     } catch (error) {
       toast.error("Échec du chargement des profils");
     }
