@@ -26,13 +26,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { UserPlus, Pencil, Trash2 } from "lucide-react";
-import AddUserDialog from "./AddUserDialog";
+import { AddUserDialog } from "./AddUserDialog";
 import EditUserDialog from "./EditUserDialog";
-import { getUsers, deleteUser, User } from "@/lib/api/users";
+import { User, getUsers, deleteUser } from "@/lib/api/users";
+import { Project, getProjects } from "@/lib/api/projects";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { SearchBar } from "@/components/worker/SearchBar";
-import { getProjects, Project } from "@/lib/api/projects";
 
 export default function UserManagement() {
   const { accessToken } = useAuth();
@@ -107,6 +107,12 @@ export default function UserManagement() {
     }
   };
 
+  const getProjectName = (projectId?: string) => {
+    if (!projectId) return "Aucun projet";
+    const project = projects.find((p) => p._id === projectId);
+    return project ? `${project.nom} (${project.annee})` : "Projet inconnu";
+  };
+
   return (
     <div className="space-y-4">
       <Card>
@@ -126,127 +132,60 @@ export default function UserManagement() {
           </div>
         </CardHeader>
         <CardContent>
-          {projects.map((project) => (
-            <div key={project._id}>
-              <h2 className="text-xl font-bold">{project.nom}</h2>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Prénom / Nom</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Rôle</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredUsers
-                    .filter(
-                      (user) => user.projet && user.projet._id === project._id
-                    )
-                    .map((user) => (
-                      <TableRow key={user._id}>
-                        <TableCell>{`${user.prenom} ${user.nom}`}</TableCell>
-                        <TableCell>{user.email}</TableCell>
-                        <TableCell className="capitalize">
-                          {user.role}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => handleEditUser(user)}
-                                >
-                                  <Pencil className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Modifier</p>
-                              </TooltipContent>
-                            </Tooltip>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Prénom / Nom</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Rôle</TableHead>
+                <TableHead>Projet</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredUsers.map((user) => (
+                <TableRow key={user._id}>
+                  <TableCell>{`${user.prenom} ${user.nom}`}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell className="capitalize">{user.role}</TableCell>
+                  <TableCell>{getProjectName(user.projet)}</TableCell>
+                  <TableCell className="text-right">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleEditUser(user)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Modifier</p>
+                        </TooltipContent>
+                      </Tooltip>
 
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => handleDeleteUser(user)}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Supprimer</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            </div>
-          ))}
-
-          <div>
-            <h2 className="text-xl font-bold">Utilisateurs sans projet</h2>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Prénom / Nom</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Rôle</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDeleteUser(user)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Supprimer</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredUsers
-                  .filter((user) => !user.projet)
-                  .map((user) => (
-                    <TableRow key={user._id}>
-                      <TableCell>{`${user.prenom} ${user.nom}`}</TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell className="capitalize">{user.role}</TableCell>
-                      <TableCell className="text-right">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => handleEditUser(user)}
-                              >
-                                <Pencil className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Modifier</p>
-                            </TooltipContent>
-                          </Tooltip>
-
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => handleDeleteUser(user)}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Supprimer</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </div>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
 

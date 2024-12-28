@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { User, UpdateUserData, updateUser } from "@/lib/api/users";
 import { useAuth } from "@/lib/auth";
+import { getProjects, Project } from "@/lib/api/projects";
 
 interface EditUserDialogProps {
   user: User;
@@ -33,6 +34,7 @@ export default function EditUserDialog({
   onUserUpdated,
 }: EditUserDialogProps) {
   const { accessToken } = useAuth();
+  const [projects, setProjects] = useState<Project[]>([]);
   const [formData, setFormData] = useState({
     nom: user.nom,
     prenom: user.prenom,

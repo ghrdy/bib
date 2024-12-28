@@ -1,11 +1,10 @@
-import { Project } from './projects';
 export interface User {
   _id: string;
   nom: string;
   prenom: string;
   email: string;
   role: 'admin' | 'referent' | 'simple';
-  projet: Project;
+  projet?: string;
 }
 
 export interface CreateUserData {
@@ -14,7 +13,7 @@ export interface CreateUserData {
   email: string;
   password?: string;
   role: string;
-  projet: Project
+  projet?: string;
 }
 
 export interface UpdateUserData {
@@ -23,7 +22,7 @@ export interface UpdateUserData {
   email?: string;
   password?: string;
   role?: string;
-  projet?: Project
+  projet?: string;
 }
 
 const API_URL = 'http://localhost:5001/api';

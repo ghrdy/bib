@@ -15,8 +15,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createUser } from "@/lib/api/users";
+import { getProjects, Project } from "@/lib/api/projects";
 import { useAuth } from "@/lib/auth";
 
 interface AddUserDialogProps {
@@ -25,18 +26,38 @@ interface AddUserDialogProps {
   onUserAdded: () => void;
 }
 
-export default function AddUserDialog({
+const initialFormData = {
+  prenom: "",
+  nom: "",
+  email: "",
+  role: "",
+  projet: "",
+};
+
+export function AddUserDialog({
   open,
   onOpenChange,
   onUserAdded,
 }: AddUserDialogProps) {
   const { accessToken } = useAuth();
-  const [formData, setFormData] = useState({
-    prenom: "",
-    nom: "",
-    email: "",
-    role: "",
-  });
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [formData, setFormData] = useState(initialFormData);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        if (!accessToken) return;
+        const fetchedProjects = await getProjects(accessToken);
+        setProjects(fetchedProjects);
+      } catch (error) {
+        toast.error("Échec du chargement des projets");
+      }
+    };
+
+    if (open) {
+      fetchProjects();
+    }
+  }, [open, accessToken]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +71,7 @@ export default function AddUserDialog({
       toast.success("L'utilisateur est ajouté");
       onUserAdded();
       onOpenChange(false);
-      setFormData({ prenom: "", nom: "", email: "", role: "" });
+      setFormData(initialFormData);
     } catch (error) {
       toast.error(
         error instanceof Error
@@ -66,7 +87,7 @@ export default function AddUserDialog({
         <DialogHeader>
           <DialogTitle>Ajouter un nouvel utilisateur</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="prenom">Prénom</Label>
             <Input
@@ -101,7 +122,7 @@ export default function AddUserDialog({
               required
             />
           </div>
-          <div className="space-y-2 mb-4">
+          <div className="space-y-2">
             <Label htmlFor="role">Rôle</Label>
             <Select
               value={formData.role}
@@ -119,6 +140,26 @@ export default function AddUserDialog({
               </SelectContent>
             </Select>
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="projet">Projet</Label>
+            <Select
+              value={formData.projet}
+              onValueChange={(value) =>
+                setFormData({ ...formData, projet: value })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Choisir un Projet" />
+              </SelectTrigger>
+              <SelectContent>
+                {projects.map((project) => (
+                  <SelectItem key={project._id} value={project._id}>
+                    {project.nom} ({project.annee})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <Button type="submit" className="w-full">
             Créer l'utilisateur
           </Button>
@@ -127,3 +168,5 @@ export default function AddUserDialog({
     </Dialog>
   );
 }
+
+export default AddUserDialog;
