@@ -73,14 +73,17 @@ export default function UserManagement() {
   }, [accessToken]);
 
   useEffect(() => {
-    const filtered = users.filter(
-      (user) =>
+    const filtered = users.filter((user) => {
+      const projectName = getProjectName(user.projet).toLowerCase();
+      return (
         user.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.prenom.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        projectName.includes(searchQuery.toLowerCase())
+      );
+    });
     setFilteredUsers(filtered);
-  }, [searchQuery, users]);
+  }, [searchQuery, users, projects]);
 
   const handleEditUser = (user: User) => {
     setSelectedUser(user);
