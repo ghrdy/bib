@@ -1,8 +1,42 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UserManagement from "@/components/admin/UserManagement";
 import ProjectManagement from "@/components/admin/ProjectManagement";
+import { useAuth } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
+import { LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export default function SettingsPage() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:5001/api/users/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      logout();
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  const getRoleDisplay = (role: string) => {
+    switch (role) {
+      case "admin":
+        return "Administrateur";
+      case "referent":
+        return "Animateur Référent";
+      case "simple":
+        return "Animateur";
+      default:
+        return role;
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -12,18 +46,49 @@ export default function SettingsPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="users" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="users">Utilisateurs</TabsTrigger>
-          <TabsTrigger value="projects">Projets</TabsTrigger>
-        </TabsList>
-        <TabsContent value="users" className="space-y-4">
-          <UserManagement />
-        </TabsContent>
-        <TabsContent value="projects" className="space-y-4">
-          <ProjectManagement />
-        </TabsContent>
-      </Tabs>
+      {/* Mobile User Info Section */}
+      <div className="md:hidden space-y-4">
+        <div className="p-4 bg-card rounded-lg border">
+          <h2 className="font-semibold mb-2">Profil</h2>
+          <div className="space-y-1">
+            <p>{`${user?.prenom} ${user?.nom}`}</p>
+            <p className="text-sm text-muted-foreground">
+              {user ? getRoleDisplay(user.role) : ""}
+            </p>
+          </div>
+        </div>
+
+        <div className="p-4 bg-card rounded-lg border space-y-4">
+          <h2 className="font-semibold mb-2">Préférences</h2>
+          <div className="flex items-center justify-between">
+            <span>Thème</span>
+            <ModeToggle />
+          </div>
+          <Button
+            onClick={handleLogout}
+            variant="destructive"
+            className="w-full"
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Se déconnecter
+          </Button>
+        </div>
+      </div>
+
+      {user?.role === "admin" && (
+        <Tabs defaultValue="users" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="users">Utilisateurs</TabsTrigger>
+            <TabsTrigger value="projects">Projets</TabsTrigger>
+          </TabsList>
+          <TabsContent value="users" className="space-y-4">
+            <UserManagement />
+          </TabsContent>
+          <TabsContent value="projects" className="space-y-4">
+            <ProjectManagement />
+          </TabsContent>
+        </Tabs>
+      )}
     </div>
   );
 }
