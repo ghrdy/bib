@@ -53,7 +53,9 @@ app.use(
 );
 
 // MongoDB connection
-mongoose.connect("mongodb://mongo:27017/dev");
+mongoose.connect(
+  "mongodb://mongo:URFkcQuUTLNOPEzWeNgrlUHzTtTnEWvx@mongodb.railway.internal:27017"
+);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
