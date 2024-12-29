@@ -66,15 +66,11 @@ export default function SettingsPage() {
             <span>Thème</span>
             <ModeToggle />
           </div>
-          <Button
-            onClick={handleLogout}
-            variant="destructive"
-            className="w-full"
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            Se déconnecter
-          </Button>
         </div>
+        <Button onClick={handleLogout} variant="destructive" className="w-full">
+          <LogOut className="mr-2 h-4 w-4" />
+          Se déconnecter
+        </Button>
       </div>
 
       {/* Admin Section - Only visible to admin users */}
