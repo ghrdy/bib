@@ -13,13 +13,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!refreshToken) return;
 
       try {
-        const response = await fetch("http://localhost:5001/api/users/token", {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "bib-production-4c96.up.railway.app:5001/api/users/token",
+          {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Token refresh failed");

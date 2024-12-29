@@ -125,7 +125,7 @@ export default function BooksManagement() {
                   <Avatar>
                     {book.photo ? (
                       <AvatarImage
-                        src={`http://localhost:5001${book.photo}`}
+                        src={`bib-production-4c96.up.railway.app:5001${book.photo}`}
                         alt={book.titre}
                       />
                     ) : (

@@ -7,9 +7,14 @@ interface ProfileAvatarProps {
   className?: string;
 }
 
-export function ProfileAvatar({ imageUrl, name, size = "default", className = "" }: ProfileAvatarProps) {
+export function ProfileAvatar({
+  imageUrl,
+  name,
+  size = "default",
+  className = "",
+}: ProfileAvatarProps) {
   const getInitials = (name: string) => {
-    const parts = name.split(' ');
+    const parts = name.split(" ");
     if (parts.length >= 2) {
       return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
     }
@@ -18,24 +23,24 @@ export function ProfileAvatar({ imageUrl, name, size = "default", className = ""
 
   const sizeClasses = {
     default: "h-10 w-10",
-    lg: "h-20 w-20"
+    lg: "h-20 w-20",
   };
 
   return (
     <Avatar className={`${sizeClasses[size]} ${className}`}>
       {imageUrl ? (
         <AvatarImage
-          src={`http://localhost:5001${imageUrl}`}
+          src={`bib-production-4c96.up.railway.app:5001${imageUrl}`}
           alt={name}
           onError={(e) => {
             const target = e.target as HTMLImageElement;
-            target.src = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="12">${getInitials(name)}</text></svg>`;
+            target.src = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="12">${getInitials(
+              name
+            )}</text></svg>`;
           }}
         />
       ) : (
-        <AvatarFallback>
-          {getInitials(name)}
-        </AvatarFallback>
+        <AvatarFallback>{getInitials(name)}</AvatarFallback>
       )}
     </Avatar>
   );

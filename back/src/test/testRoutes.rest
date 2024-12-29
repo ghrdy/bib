@@ -1,5 +1,5 @@
 ### Login
-POST http://localhost:5001/api/users/login
+POST bib-production-4c96.up.railway.app:5001/api/users/login
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 
 
 ### Login non Admin
-POST http://localhost:5001/api/users/login
+POST bib-production-4c96.up.railway.app:5001/api/users/login
 Content-Type: application/json
 
 {
@@ -18,7 +18,7 @@ Content-Type: application/json
 }
 
 ### Create a new user (Admin only)
-POST http://localhost:5001/api/users/add
+POST bib-production-4c96.up.railway.app:5001/api/users/add
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNDAwMjQ4Y2FkOThlZTBhYzM3NSIsInJvbGUiOiJyZWZlcmVudCIsImlhdCI6MTczMTU5Mjk0NywiZXhwIjoxNzMxNTk2NTQ3fQ.-vBuEqWjdMMjO7t28vsQoetP7lOODYKdfrmGL5qkS9g
 
@@ -31,11 +31,11 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNDAwMjQ4Y2Fk
 }
 
 ### Get all users (Admin only)
-GET http://localhost:5001/api/users
+GET bib-production-4c96.up.railway.app:5001/api/users
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNWM0ZjlhNGJiN2JmNjY2NjI2MiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczMTU5MTUzMSwiZXhwIjoxNzMxNTk1MTMxfQ.5MKJUf-BxQL2EBJzQOVahaHZx4DedGbVozI1neZBau0
 
 ### Update a user (Admin only)
-PUT http://localhost:5001/api/users/6735f400248cad98ee0ac375
+PUT bib-production-4c96.up.railway.app:5001/api/users/6735f400248cad98ee0ac375
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNWM0ZjlhNGJiN2JmNjY2NjI2MiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczMTU5MTUzMSwiZXhwIjoxNzMxNTk1MTMxfQ.5MKJUf-BxQL2EBJzQOVahaHZx4DedGbVozI1neZBau0
 
@@ -48,11 +48,11 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNWM0ZjlhNGJi
 }
 
 ### Delete a user (Admin only)
-DELETE http://localhost:5001/api/users/6735fd8043f1583fe581afa2
+DELETE bib-production-4c96.up.railway.app:5001/api/users/6735fd8043f1583fe581afa2
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNWM0ZjlhNGJiN2JmNjY2NjI2MiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczMTU5MTY4MSwiZXhwIjoxNzMxNTk1MjgxfQ.DwGc3J5u1YRPWjnXbRAcX-yJcRkiOR5zDZjMsxGCZn0
 
 ### Create a new project (Admin only)
-POST http://localhost:5001/api/projects
+POST bib-production-4c96.up.railway.app:5001/api/projects
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNWM0ZjlhNGJiN2JmNjY2NjI2MiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczMTU5MTY4MSwiZXhwIjoxNzMxNTk1MjgxfQ.DwGc3J5u1YRPWjnXbRAcX-yJcRkiOR5zDZjMsxGCZn0
 
@@ -63,15 +63,15 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNWM0ZjlhNGJi
 }
 
 ### Get all projects
-GET http://localhost:5001/api/projects
+GET bib-production-4c96.up.railway.app:5001/api/projects
 Authorization:  
 
 ### Get a single project
-GET http://localhost:5001/api/projects/555555555555555
+GET bib-production-4c96.up.railway.app:5001/api/projects/555555555555555
 Authorization:  
 
 ### Update a project (Admin only)
-PUT http://localhost:5001/api/projects/555555555555555
+PUT bib-production-4c96.up.railway.app:5001/api/projects/555555555555555
 Content-Type: application/json
 Authorization:  
 
@@ -82,17 +82,17 @@ Authorization:
 }
 
 ### Delete a project (Admin only)
-DELETE http://localhost:5001/api/projects/555555555555
+DELETE bib-production-4c96.up.railway.app:5001/api/projects/555555555555
 Authorization:  
 
 
 ### Get all images
-GET http://localhost:5001/api/upload
+GET bib-production-4c96.up.railway.app:5001/api/upload
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzVmNWM0ZjlhNGJiN2JmNjY2NjI2MiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczMTYzMTQyNSwiZXhwIjoxNzMxNjMyMzI1fQ.cWZHYhrs0FINHUP_BcN3uU4GGEzIlYLtvmFU-BYIsc4
 
 ### Create a new child profile
-POST http://localhost:5001/api/childProfiles
+POST bib-production-4c96.up.railway.app:5001/api/childProfiles
 Content-Type: multipart/form-data
 Authorization:  
 
@@ -107,15 +107,15 @@ Authorization:
 }
 
 ### Get all child profiles
-GET http://localhost:5001/api/childProfiles
+GET bib-production-4c96.up.railway.app:5001/api/childProfiles
 Authorization:  
 
 ### Get a single child profile
-GET http://localhost:5001/api/childProfiles/555555555555555
+GET bib-production-4c96.up.railway.app:5001/api/childProfiles/555555555555555
 Authorization:  
 
 ### Update a child profile
-PUT http://localhost:5001/api/childProfiles/555555555555555
+PUT bib-production-4c96.up.railway.app:5001/api/childProfiles/555555555555555
 Content-Type: multipart/form-data
 Authorization:  
 
@@ -130,11 +130,11 @@ Authorization:
 }
 
 ### Delete a child profile
-DELETE http://localhost:5001/api/childProfiles/555555555555
+DELETE bib-production-4c96.up.railway.app:5001/api/childProfiles/555555555555
 Authorization:  
 
 ### Create a new book loan
-POST http://localhost:5001/api/bookLoans
+POST bib-production-4c96.up.railway.app:5001/api/bookLoans
 Content-Type: application/json
 Authorization:  
 
@@ -145,15 +145,15 @@ Authorization:
 }
 
 ### Get all book loans
-GET http://localhost:5001/api/bookLoans
+GET bib-production-4c96.up.railway.app:5001/api/bookLoans
 Authorization:  
 
 ### Get a single book loan
-GET http://localhost:5001/api/bookLoans/555555555555555
+GET bib-production-4c96.up.railway.app:5001/api/bookLoans/555555555555555
 Authorization:  
 
 ### Update a book loan
-PUT http://localhost:5001/api/bookLoans/555555555555555
+PUT bib-production-4c96.up.railway.app:5001/api/bookLoans/555555555555555
 Content-Type: application/json
 Authorization:  
 
@@ -164,11 +164,11 @@ Authorization:
 }
 
 ### Delete a book loan
-DELETE http://localhost:5001/api/bookLoans/xxxxx
+DELETE bib-production-4c96.up.railway.app:5001/api/bookLoans/xxxxx
 Authorization:  
 
 ### Create a new book
-POST http://localhost:5001/api/books
+POST bib-production-4c96.up.railway.app:5001/api/books
 Content-Type: application/json
 Authorization:  
 
@@ -178,15 +178,15 @@ Authorization:
 }
 
 ### Get all books
-GET http://localhost:5001/api/books
+GET bib-production-4c96.up.railway.app:5001/api/books
 Authorization:  
 
 ### Get a single book
-GET http://localhost:5001/api/books/xxxxx
+GET bib-production-4c96.up.railway.app:5001/api/books/xxxxx
 Authorization:  
 
 ### Update a book
-PUT http://localhost:5001/api/books/xxxxx
+PUT bib-production-4c96.up.railway.app:5001/api/books/xxxxx
 Content-Type: application/json
 Authorization:  
 
@@ -196,5 +196,5 @@ Authorization:
 }
 
 ### Delete a book
-DELETE http://localhost:5001/api/books/xxxxx
+DELETE bib-production-4c96.up.railway.app:5001/api/books/xxxxx
 Authorization:  
