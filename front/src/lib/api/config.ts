@@ -1,1 +1,1 @@
-export const API_URL = 'bib-production-4c96.up.railway.app:5001';
+export const API_URL = 'https://bib-production-4c96.up.railway.app:5001';

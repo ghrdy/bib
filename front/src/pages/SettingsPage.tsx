@@ -15,10 +15,13 @@ export default function SettingsPage() {
 
   const handleLogout = async () => {
     try {
-      await fetch("bib-production-4c96.up.railway.app:5001/api/users/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      await fetch(
+        "https://bib-production-4c96.up.railway.app:5001/api/users/logout",
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
       logout();
       navigate("/login");
     } catch (error) {

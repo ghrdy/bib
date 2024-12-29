@@ -199,7 +199,7 @@ export default function ChildrenManagement() {
                   <Avatar>
                     {child.photo ? (
                       <AvatarImage
-                        src={`bib-production-4c96.up.railway.app:5001${child.photo}`}
+                        src={`https://bib-production-4c96.up.railway.app:5001${child.photo}`}
                         alt={child.prenom}
                       />
                     ) : (

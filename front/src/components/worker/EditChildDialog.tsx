@@ -137,7 +137,7 @@ export default function EditChildDialog({
               <Avatar className="h-20 w-20">
                 {child.photo ? (
                   <AvatarImage
-                    src={`bib-production-4c96.up.railway.app:5001${child.photo}`}
+                    src={`https://bib-production-4c96.up.railway.app:5001${child.photo}`}
                     alt={child.prenom}
                   />
                 ) : (

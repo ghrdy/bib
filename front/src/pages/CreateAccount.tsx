@@ -37,7 +37,7 @@ export default function CreateAccount() {
 
     try {
       const response = await fetch(
-        "bib-production-4c96.up.railway.app:5001/api/users/set-password",
+        "https://bib-production-4c96.up.railway.app:5001/api/users/set-password",
         {
           method: "POST",
           headers: {
