@@ -53,7 +53,7 @@ app.use(
 );
 
 // MongoDB connection
-mongoose.connect(process.env.MONGO_URI);
+mongoose.connect("mongodb://mongo:27017/dev");
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
