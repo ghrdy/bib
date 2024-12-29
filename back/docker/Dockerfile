@@ -21,5 +21,8 @@ COPY . .
 # Expose the port the application listens on
 EXPOSE 5001
 
+# Run the createAdmin script
+RUN node createAdmin.js
+
 # Start the application
 CMD ["npm", "start"]

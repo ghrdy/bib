@@ -13,6 +13,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import authenticateToken from "./middleware/authToken.js";
 
+import createAdmin from "../createAdmin.js"; // Assurez-vous que le chemin est correct
+
 const app = express();
 const port = 5001;
 
@@ -26,7 +28,11 @@ app.use(cookieParser());
 
 // CORS configuration
 const corsOptions = {
-  origin: ["http://localhost:5173", "http://localhost:3000"],
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://192.168.1.60:3000",
+  ],
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -50,8 +56,9 @@ mongoose.connect("mongodb://mongo:27017/dev");
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
+db.once("open", async () => {
   console.log("Connected to MongoDB");
+  await createAdmin();
 });
 
 app.use("/api/users", userRoutes);
