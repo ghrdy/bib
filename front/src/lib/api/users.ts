@@ -26,7 +26,7 @@ export interface UpdateUserData {
   projet?: string;
 }
 
-const API_URL = 'http://192.168.1.60:5001/api';
+const API_URL = 'http://localhost:5001/api';
 
 export async function getUsers(token: string): Promise<User[]> {
   const response = await fetch(`${API_URL}/users`, {

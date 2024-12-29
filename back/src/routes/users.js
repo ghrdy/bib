@@ -259,7 +259,7 @@ router.post("/reset-password", isAdmin, async (req, res) => {
       to: user.email,
       subject: "Réinitialisation de mot de passe : Un Livre Pour Tous",
       html: `<p>Cliquez sur le lien pour réinitialiser votre mot de passe : </p>
-             <a href="http://localhost:5173/reset-password?token=${token}">Réinitialiser votre mot de passe</a>`,
+             <a href="http://localhost:3000/reset-password?token=${token}">Réinitialiser votre mot de passe</a>`,
     };
 
     await transporter.sendMail(mailOptions);

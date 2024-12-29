@@ -34,6 +34,7 @@ import { Project, getProjects } from "@/lib/api/projects";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { SearchBar } from "@/components/worker/SearchBar";
+import { ResetPasswordDialog } from "./ResetPasswordDialog";
 
 export default function UserManagement() {
   const { accessToken } = useAuth();
@@ -46,6 +47,10 @@ export default function UserManagement() {
   const [showEditUser, setShowEditUser] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [userToResetPassword, setUserToResetPassword] = useState<User | null>(
+    null
+  );
+  const [showResetPasswordDialog, setShowResetPasswordDialog] = useState(false);
 
   const fetchUsers = async () => {
     try {
@@ -89,6 +94,25 @@ export default function UserManagement() {
   const handleEditUser = (user: User) => {
     setSelectedUser(user);
     setShowEditUser(true);
+  };
+
+  const handleResetPassword = (user: User) => {
+    setUserToResetPassword(user);
+    setShowResetPasswordDialog(true);
+  };
+
+  const confirmResetPassword = async () => {
+    try {
+      if (!userToResetPassword || !accessToken) return;
+
+      await resetUserPassword(userToResetPassword._id, accessToken);
+      toast.success("Email de réinitialisation envoyé");
+    } catch (error) {
+      toast.error("Échec de l'envoi de l'email de réinitialisation");
+    } finally {
+      setShowResetPasswordDialog(false);
+      setUserToResetPassword(null);
+    }
   };
 
   const handleDeleteUser = (user: User) => {
@@ -143,6 +167,7 @@ export default function UserManagement() {
                 <TableHead>Email</TableHead>
                 <TableHead>Rôle</TableHead>
                 <TableHead>Projet</TableHead>
+                <TableHead>Statut</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -160,6 +185,14 @@ export default function UserManagement() {
                         className="bg-yellow-100 text-yellow-800"
                       >
                         En attente de validation
+                      </Badge>
+                    )}
+                    {user.validated && (
+                      <Badge
+                        variant="secondary"
+                        className="bg-green-100 text-green-800"
+                      >
+                        Validé
                       </Badge>
                     )}
                   </TableCell>
@@ -185,18 +218,7 @@ export default function UserManagement() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={async () => {
-                              try {
-                                await resetUserPassword(user._id, accessToken!);
-                                toast.success(
-                                  "Email de réinitialisation envoyé"
-                                );
-                              } catch (error) {
-                                toast.error(
-                                  "Échec de l'envoi de l'email de réinitialisation"
-                                );
-                              }
-                            }}
+                            onClick={() => handleResetPassword(user)}
                           >
                             <KeyRound className="h-4 w-4" />
                           </Button>
@@ -261,6 +283,15 @@ export default function UserManagement() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {userToResetPassword && (
+        <ResetPasswordDialog
+          open={showResetPasswordDialog}
+          onOpenChange={setShowResetPasswordDialog}
+          onConfirm={confirmResetPassword}
+          userName={`${userToResetPassword.prenom} ${userToResetPassword.nom}`}
+        />
+      )}
     </div>
   );
 }
