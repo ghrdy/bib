@@ -1,3 +1,4 @@
+import { API_URL } from './config';
 export interface User {
   _id: string;
   nom: string;
@@ -26,10 +27,10 @@ export interface UpdateUserData {
   projet?: string;
 }
 
-const API_URL = 'http://localhost:5001/api';
+const API_ENDPOINT = `${API_URL}/api`;
 
 export async function getUsers(token: string): Promise<User[]> {
-  const response = await fetch(`${API_URL}/users`, {
+  const response = await fetch(`${API_ENDPOINT}/users`, {
     headers: {
       'Cookie': `accessToken=${token}`,
     },
@@ -44,7 +45,7 @@ export async function getUsers(token: string): Promise<User[]> {
 }
 
 export async function createUser(data: CreateUserData, token: string): Promise<User> {
-  const response = await fetch(`${API_URL}/users/add`, {
+  const response = await fetch(`${API_ENDPOINT}/users/add`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -63,7 +64,7 @@ export async function createUser(data: CreateUserData, token: string): Promise<U
 }
 
 export async function updateUser(id: string, data: UpdateUserData, token: string): Promise<User> {
-  const response = await fetch(`${API_URL}/users/${id}`, {
+  const response = await fetch(`${API_ENDPOINT}/users/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -82,7 +83,7 @@ export async function updateUser(id: string, data: UpdateUserData, token: string
 }
 
 export async function deleteUser(id: string, token: string): Promise<void> {
-  const response = await fetch(`${API_URL}/users/${id}`, {
+  const response = await fetch(`${API_ENDPOINT}/users/${id}`, {
     method: 'DELETE',
     headers: {
       'Cookie': `accessToken=${token}`,
@@ -97,7 +98,7 @@ export async function deleteUser(id: string, token: string): Promise<void> {
 }
 
 export async function resetUserPassword(userId: string, token: string): Promise<void> {
-  const response = await fetch(`${API_URL}/users/reset-password`, {
+  const response = await fetch(`${API_ENDPOINT}/users/reset-password`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

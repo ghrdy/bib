@@ -1,3 +1,4 @@
+import { API_URL } from './config';
 export interface Project {
   _id: string;
   image: string | null;
@@ -10,10 +11,10 @@ export interface CreateProjectData extends FormData {}
 
 export interface UpdateProjectData extends FormData {}
 
-const API_URL = 'http://localhost:5001/api';
+const API_ENDPOINT = `${API_URL}/api`;
 
 export async function getProjects(token: string): Promise<Project[]> {
-  const response = await fetch(`${API_URL}/projects`, {
+  const response = await fetch(`${API_ENDPOINT}/projects`, {
     headers: {
       'Cookie': `accessToken=${token}`,
     },
@@ -28,7 +29,7 @@ export async function getProjects(token: string): Promise<Project[]> {
 }
 
 export async function createProject(data: CreateProjectData, token: string): Promise<Project> {
-  const response = await fetch(`${API_URL}/projects`, {
+  const response = await fetch(`${API_ENDPOINT}/projects`, {
     method: 'POST',
     headers: {
       'Cookie': `accessToken=${token}`,
@@ -46,7 +47,7 @@ export async function createProject(data: CreateProjectData, token: string): Pro
 }
 
 export async function updateProject(id: string, data: UpdateProjectData, token: string): Promise<Project> {
-  const response = await fetch(`${API_URL}/projects/${id}`, {
+  const response = await fetch(`${API_ENDPOINT}/projects/${id}`, {
     method: 'PUT',
     headers: {
       'Cookie': `accessToken=${token}`,
@@ -64,7 +65,7 @@ export async function updateProject(id: string, data: UpdateProjectData, token: 
 }
 
 export async function deleteProject(id: string, token: string): Promise<void> {
-  const response = await fetch(`${API_URL}/projects/${id}`, {
+  const response = await fetch(`${API_ENDPOINT}/projects/${id}`, {
     method: 'DELETE',
     headers: {
       'Cookie': `accessToken=${token}`,

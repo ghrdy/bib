@@ -1,3 +1,4 @@
+import { API_URL } from './config';
 export interface ChildProfile {
   _id: string;
   nom: string;
@@ -14,10 +15,10 @@ export interface CreateChildProfileData extends FormData {}
 
 export interface UpdateChildProfileData extends FormData {}
 
-const API_URL = 'http://localhost:5001/api';
+const API_ENDPOINT = `${API_URL}/api`;
 
 export async function getChildProfiles(token: string): Promise<ChildProfile[]> {
-  const response = await fetch(`${API_URL}/childProfiles`, {
+  const response = await fetch(`${API_ENDPOINT}/childProfiles`, {
     headers: {
       'Cookie': `accessToken=${token}`,
     },
@@ -32,7 +33,7 @@ export async function getChildProfiles(token: string): Promise<ChildProfile[]> {
 }
 
 export async function getChildProfile(id: string, token: string): Promise<ChildProfile> {
-  const response = await fetch(`${API_URL}/childProfiles/${id}`, {
+  const response = await fetch(`${API_ENDPOINT}/childProfiles/${id}`, {
     headers: {
       'Cookie': `accessToken=${token}`,
     },
@@ -47,7 +48,7 @@ export async function getChildProfile(id: string, token: string): Promise<ChildP
 }
 
 export async function createChildProfile(data: CreateChildProfileData, token: string): Promise<ChildProfile> {
-  const response = await fetch(`${API_URL}/childProfiles`, {
+  const response = await fetch(`${API_ENDPOINT}/childProfiles`, {
     method: 'POST',
     headers: {
       'Cookie': `accessToken=${token}`,
@@ -65,7 +66,7 @@ export async function createChildProfile(data: CreateChildProfileData, token: st
 }
 
 export async function updateChildProfile(id: string, data: UpdateChildProfileData, token: string): Promise<ChildProfile> {
-  const response = await fetch(`${API_URL}/childProfiles/${id}`, {
+  const response = await fetch(`${API_ENDPOINT}/childProfiles/${id}`, {
     method: 'PUT',
     headers: {
       'Cookie': `accessToken=${token}`,
@@ -83,7 +84,7 @@ export async function updateChildProfile(id: string, data: UpdateChildProfileDat
 }
 
 export async function deleteChildProfile(id: string, token: string): Promise<void> {
-  const response = await fetch(`${API_URL}/childProfiles/${id}`, {
+  const response = await fetch(`${API_ENDPOINT}/childProfiles/${id}`, {
     method: 'DELETE',
     headers: {
       'Cookie': `accessToken=${token}`,

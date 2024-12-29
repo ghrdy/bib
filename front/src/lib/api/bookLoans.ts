@@ -1,4 +1,5 @@
 import { Book } from "./books";
+import { API_URL } from './config';
 
 export interface BookLoan {
   _id: string;
@@ -21,10 +22,10 @@ export interface UpdateBookLoanData {
   returnDate?: string;
 }
 
-const API_URL = 'http://localhost:5001/api';
+const API_ENDPOINT = `${API_URL}/api`;
 
 export async function getBookLoansByUserId(userId: string, token: string): Promise<BookLoan[]> {
-  const response = await fetch(`${API_URL}/bookLoans/${userId}`, {
+  const response = await fetch(`${API_ENDPOINT}/bookLoans/${userId}`, {
     headers: {
       'Cookie': `accessToken=${token}`,
     },
@@ -40,7 +41,7 @@ export async function getBookLoansByUserId(userId: string, token: string): Promi
 }
 
 export async function createBookLoan(data: CreateBookLoanData, token: string): Promise<BookLoan> {
-  const response = await fetch(`${API_URL}/bookLoans`, {
+  const response = await fetch(`${API_ENDPOINT}/bookLoans`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -59,7 +60,7 @@ export async function createBookLoan(data: CreateBookLoanData, token: string): P
 }
 
 export async function updateBookLoan(id: string, data: UpdateBookLoanData, token: string): Promise<BookLoan> {
-  const response = await fetch(`${API_URL}/bookLoans/${id}`, {
+  const response = await fetch(`${API_ENDPOINT}/bookLoans/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -78,7 +79,7 @@ export async function updateBookLoan(id: string, data: UpdateBookLoanData, token
 }
 
 export async function deleteBookLoan(id: string, token: string): Promise<void> {
-  const response = await fetch(`${API_URL}/bookLoans/${id}`, {
+  const response = await fetch(`${API_ENDPOINT}/bookLoans/${id}`, {
     method: 'DELETE',
     headers: {
       'Cookie': `accessToken=${token}`,

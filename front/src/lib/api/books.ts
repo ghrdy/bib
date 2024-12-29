@@ -1,13 +1,15 @@
+import { API_URL } from './config';
+const API_ENDPOINT = `${API_URL}/api`;
 export interface Book {
   _id: string;
   titre: string;
   photo: string | null;
 }
 
-const API_URL = 'http://localhost:5001/api';
+const API_ENDPOINT = `${API_URL}/api`;
 
 export async function getBooks(token: string): Promise<Book[]> {
-  const response = await fetch(`${API_URL}/books`, {
+  const response = await fetch(`${API_ENDPOINT}/books`, {
     headers: {
       'Cookie': `accessToken=${token}`,
     },
@@ -22,7 +24,7 @@ export async function getBooks(token: string): Promise<Book[]> {
 }
 
 export async function createBook(data: FormData, token: string): Promise<Book> {
-  const response = await fetch(`${API_URL}/books`, {
+  const response = await fetch(`${API_ENDPOINT}/books`, {
     method: 'POST',
     headers: {
       'Cookie': `accessToken=${token}`,
@@ -40,7 +42,7 @@ export async function createBook(data: FormData, token: string): Promise<Book> {
 }
 
 export async function updateBook(id: string, data: FormData, token: string): Promise<Book> {
-  const response = await fetch(`${API_URL}/books/${id}`, {
+  const response = await fetch(`${API_ENDPOINT}/books/${id}`, {
     method: 'PUT',
     headers: {
       'Cookie': `accessToken=${token}`,
@@ -58,7 +60,7 @@ export async function updateBook(id: string, data: FormData, token: string): Pro
 }
 
 export async function deleteBook(id: string, token: string): Promise<void> {
-  const response = await fetch(`${API_URL}/books/${id}`, {
+  const response = await fetch(`${API_ENDPOINT}/books/${id}`, {
     method: 'DELETE',
     headers: {
       'Cookie': `accessToken=${token}`,
