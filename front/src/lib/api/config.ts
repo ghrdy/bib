@@ -1,1 +1,1 @@
-export const API_URL = import.meta.env.VITE_API_URL || 'bib-production-4c96.up.railway.app:5001';
+export const API_URL = 'bib-production-4c96.up.railway.app:5001';
