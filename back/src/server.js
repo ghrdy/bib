@@ -26,7 +26,7 @@ app.use(cookieParser());
 
 // CORS configuration
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "http://localhost:3000"],
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -46,7 +46,7 @@ app.use(
 );
 
 // MongoDB connection
-mongoose.connect("mongodb://127.0.0.1:27017/dev");
+mongoose.connect("mongodb://mongo:27017/dev");
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));

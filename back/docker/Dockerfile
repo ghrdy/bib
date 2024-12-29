@@ -1,26 +1,25 @@
-# Utiliser une image de base officielle Node.js
 FROM node:18-alpine
 
-# Installer les dépendances nécessaires pour compiler bcrypt
+# Install necessary build tools
 RUN apk add --no-cache make gcc g++ python3
 
-# Définir le répertoire de travail dans le conteneur
+# Define the working directory
 WORKDIR /app
 
-# Copier les fichiers package.json et package-lock.json
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Installer les dépendances
+# Install dependencies
 RUN npm install
 
-# Copier le reste des fichiers de l'application
+# Rebuild bcrypt to ensure compatibility
+RUN npm rebuild bcrypt
+
+# Copy the rest of the application files
 COPY . .
 
-# Copier le script de création d'admin
-COPY createAdmin.js .
-
-# Exposer le port sur lequel l'application écoute
+# Expose the port the application listens on
 EXPOSE 5001
 
-# Démarrer l'application et créer l'utilisateur admin
-CMD ["sh", "-c", "node createAdmin.js && npm start"]
+# Start the application
+CMD ["npm", "start"]
