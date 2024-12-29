@@ -1,5 +1,4 @@
 import { API_URL } from './config';
-const API_ENDPOINT = `${API_URL}/api`;
 export interface Book {
   _id: string;
   titre: string;
