@@ -151,7 +151,7 @@ router.post("/add", isAdmin, async (req, res) => {
       to: savedUser.email,
       subject: "Création de compte : Un Livre Pour Tous",
       html: `<p>Cliquez sur le lien pour définir votre mot de passe. : </p>
-             <a href="http://localhost:5173/create-account?token=${token}">Créer Votre Compte</a>`,
+             <a href="http://localhost:3000/create-account?token=${token}">Créer Votre Compte</a>`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -239,6 +239,10 @@ router.post("/reset-password", isAdmin, async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
+
+    // Mettre à jour le statut de l'utilisateur en "en attente de validation"
+    user.validated = false;
+    await user.save();
 
     const token = jwt.sign(
       { id: user._id, email: user.email },

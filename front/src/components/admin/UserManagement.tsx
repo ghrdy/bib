@@ -112,6 +112,7 @@ export default function UserManagement() {
     } finally {
       setShowResetPasswordDialog(false);
       setUserToResetPassword(null);
+      fetchUsers();
     }
   };
 

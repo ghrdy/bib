@@ -1,3 +1,4 @@
+// filepath: /Users/timhrdy/Documents/dev/ARASOFT/old/bib/front/src/pages/SettingsPage.tsx
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UserManagement from "@/components/admin/UserManagement";
 import ProjectManagement from "@/components/admin/ProjectManagement";
@@ -6,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ModeToggle } from "@/components/mode-toggle";
+import "@/index.css"; // Assurez-vous que le chemin est correct
 
 export default function SettingsPage() {
   const { user, logout } = useAuth();
@@ -58,6 +60,12 @@ export default function SettingsPage() {
               {user ? getRoleDisplay(user.role) : ""}
             </p>
           </div>
+          <div className="flex space-x-4 mt-4">
+            <Button onClick={handleLogout} className="w-1/2 logout-button">
+              <LogOut className="mr-2 h-4 w-4" />
+              Se déconnecter
+            </Button>
+          </div>
         </div>
 
         <div className="p-4 bg-card rounded-lg border space-y-4">
@@ -67,10 +75,6 @@ export default function SettingsPage() {
             <ModeToggle />
           </div>
         </div>
-        <Button onClick={handleLogout} variant="destructive" className="w-full">
-          <LogOut className="mr-2 h-4 w-4" />
-          Se déconnecter
-        </Button>
       </div>
 
       {/* Admin Section - Only visible to admin users */}

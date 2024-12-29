@@ -150,3 +150,16 @@
   background-color: var(--selected-tab-background-dark);
   color: var(--selected-tab-foreground-dark);
 }
+
+.logout-button {
+  display: none;
+  justify-content: center; /* Centrer horizontalement */
+  align-items: center; /* Centrer verticalement */
+  text-align: center; /* Centrer le texte */
+}
+
+@media (max-width: 768px) {
+  .logout-button {
+    display: flex;
+  }
+}
