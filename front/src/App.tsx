@@ -10,6 +10,7 @@ import CreateAccount from "@/pages/CreateAccount";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/components/AuthProvider";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import ResetPassword from "@/pages/ResetPassword";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
                 }
               />
               <Route path="/create-account" element={<CreateAccount />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="login" element={<Login />} />
             </Route>
           </Routes>

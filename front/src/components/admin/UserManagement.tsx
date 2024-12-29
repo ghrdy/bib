@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Table,
@@ -25,10 +26,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { UserPlus, Pencil, Trash2 } from "lucide-react";
+import { UserPlus, Pencil, Trash2, KeyRound } from "lucide-react";
 import { AddUserDialog } from "./AddUserDialog";
 import EditUserDialog from "./EditUserDialog";
-import { User, getUsers, deleteUser } from "@/lib/api/users";
+import { User, getUsers, deleteUser, resetUserPassword } from "@/lib/api/users";
 import { Project, getProjects } from "@/lib/api/projects";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
@@ -152,6 +153,16 @@ export default function UserManagement() {
                   <TableCell>{user.email}</TableCell>
                   <TableCell className="capitalize">{user.role}</TableCell>
                   <TableCell>{getProjectName(user.projet)}</TableCell>
+                  <TableCell>
+                    {!user.validated && (
+                      <Badge
+                        variant="secondary"
+                        className="bg-yellow-100 text-yellow-800"
+                      >
+                        En attente de validation
+                      </Badge>
+                    )}
+                  </TableCell>
                   <TableCell className="text-right">
                     <TooltipProvider>
                       <Tooltip>
@@ -166,6 +177,32 @@ export default function UserManagement() {
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>Modifier</p>
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={async () => {
+                              try {
+                                await resetUserPassword(user._id, accessToken!);
+                                toast.success(
+                                  "Email de réinitialisation envoyé"
+                                );
+                              } catch (error) {
+                                toast.error(
+                                  "Échec de l'envoi de l'email de réinitialisation"
+                                );
+                              }
+                            }}
+                          >
+                            <KeyRound className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Réinitialiser le mot de passe</p>
                         </TooltipContent>
                       </Tooltip>
 

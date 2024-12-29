@@ -5,6 +5,7 @@ export interface User {
   email: string;
   role: 'admin' | 'referent' | 'simple';
   projet?: string;
+  validated: boolean;
 }
 
 export interface CreateUserData {
@@ -92,5 +93,22 @@ export async function deleteUser(id: string, token: string): Promise<void> {
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || 'Failed to delete user');
+  }
+}
+
+export async function resetUserPassword(userId: string, token: string): Promise<void> {
+  const response = await fetch(`${API_URL}/users/reset-password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Cookie': `accessToken=${token}`,
+    },
+    credentials: 'include',
+    body: JSON.stringify({ userId }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to reset password');
   }
 }

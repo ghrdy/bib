@@ -99,13 +99,15 @@ router.get("/status", async (req, res) => {
   }
 });
 
-// Route pour définir le mot de passe
 router.post("/set-password", async (req, res) => {
   const { token, password } = req.body;
   try {
-    const decoded = jwt.verify(token, secretKey);
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
     const hashedPassword = await bcrypt.hash(password, 10);
-    await User.findByIdAndUpdate(decoded.id, { password: hashedPassword });
+    await User.findByIdAndUpdate(decoded.id, {
+      password: hashedPassword,
+      validated: true,
+    });
     res.json({ message: "Password set successfully" });
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -227,6 +229,43 @@ router.post("/logout", async (req, res) => {
     res.json({ message: "User logged out" });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+});
+
+router.post("/reset-password", isAdmin, async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.SECRET_KEY,
+      { expiresIn: "1h" }
+    );
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.GMAIL_USER,
+      to: user.email,
+      subject: "Réinitialisation de mot de passe : Un Livre Pour Tous",
+      html: `<p>Cliquez sur le lien pour réinitialiser votre mot de passe : </p>
+             <a href="http://localhost:5173/reset-password?token=${token}">Réinitialiser votre mot de passe</a>`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ message: "Email de réinitialisation envoyé" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
