@@ -26,7 +26,7 @@ export default function Login() {
 
     try {
       const response = await fetch(
-        "http://bib-production-4c96.up.railway.app:5001/api/users/login",
+        "https://bib-production-4c96.up.railway.app/api/users/login",
         {
           method: "POST",
           credentials: "include",

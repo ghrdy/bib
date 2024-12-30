@@ -30,7 +30,7 @@ export function ProfileAvatar({
     <Avatar className={`${sizeClasses[size]} ${className}`}>
       {imageUrl ? (
         <AvatarImage
-          src={`http://bib-production-4c96.up.railway.app:5001${imageUrl}`}
+          src={`https://bib-production-4c96.up.railway.app${imageUrl}`}
           alt={name}
           onError={(e) => {
             const target = e.target as HTMLImageElement;
