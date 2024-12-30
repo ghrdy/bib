@@ -103,7 +103,7 @@ export default function EditProjectDialog({
               <Avatar className="h-20 w-20">
                 {project.image ? (
                   <AvatarImage
-                    src={`https://bib-production-4c96.up.railway.app:5001${project.image}`}
+                    src={`http://bib-production-4c96.up.railway.app:5001${project.image}`}
                     alt={project.nom}
                   />
                 ) : (

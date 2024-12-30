@@ -37,7 +37,7 @@ export default function ResetPassword() {
 
     try {
       const response = await fetch(
-        "https://bib-production-4c96.up.railway.app:5001/api/users/set-password",
+        "http://bib-production-4c96.up.railway.app:5001/api/users/set-password",
         {
           method: "POST",
           headers: {

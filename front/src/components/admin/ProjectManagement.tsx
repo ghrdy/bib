@@ -127,7 +127,7 @@ export default function ProjectManagement() {
                     <Avatar>
                       {project.image ? (
                         <AvatarImage
-                          src={`https://bib-production-4c96.up.railway.app:5001${project.image}`}
+                          src={`http://bib-production-4c96.up.railway.app:5001${project.image}`}
                           alt={project.nom}
                         />
                       ) : (

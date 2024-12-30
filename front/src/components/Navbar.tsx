@@ -18,7 +18,7 @@ export default function Navbar() {
   const handleLogout = async () => {
     try {
       await fetch(
-        "https://bib-production-4c96.up.railway.app:5001/api/users/logout",
+        "http://bib-production-4c96.up.railway.app:5001/api/users/logout",
         {
           method: "POST",
           credentials: "include",

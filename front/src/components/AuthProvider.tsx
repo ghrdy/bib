@@ -14,7 +14,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       try {
         const response = await fetch(
-          "https://bib-production-4c96.up.railway.app:5001/api/users/token",
+          "http://bib-production-4c96.up.railway.app:5001/api/users/token",
           {
             method: "POST",
             credentials: "include",
