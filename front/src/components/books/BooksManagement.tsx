@@ -220,6 +220,21 @@ export default function BooksManagement() {
         </>
       )}
 
+      {showBookDetail && selectedBook && (
+        <BookDetailView
+          book={selectedBook}
+          onBack={() => setShowBookDetail(false)}
+          onEdit={() => {
+            setShowEditBook(true);
+            setShowBookDetail(false);
+          }}
+          onDelete={() => {
+            handleDeleteBook(selectedBook);
+            setShowBookDetail(false);
+          }}
+        />
+      )}
+
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
