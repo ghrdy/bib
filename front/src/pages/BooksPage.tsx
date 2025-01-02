@@ -1,6 +1,18 @@
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import BooksManagement from "@/components/books/BooksManagement";
+import { useModalStore } from "@/lib/stores/modalStore";
 
 export default function BooksPage() {
+  const [searchParams] = useSearchParams();
+  const setShowAddBook = useModalStore((state) => state.setShowAddBook);
+
+  useEffect(() => {
+    if (searchParams.get("action") === "add") {
+      setShowAddBook(true);
+    }
+  }, [searchParams, setShowAddBook]);
+
   return (
     <div className="space-y-6">
       <div>

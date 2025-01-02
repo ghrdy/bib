@@ -48,7 +48,7 @@ export default function HomePage() {
       <div className="md:hidden space-y-6 px-4">
         <h2 className="text-2xl font-semibold">Accès rapides</h2>
         <div className="space-y-4">
-          <Link to="/children" className="block">
+          <Link to="/children?action=add" className="block">
             <Button
               variant="outline"
               size="lg"
@@ -58,7 +58,7 @@ export default function HomePage() {
               Ajouter un enfant
             </Button>
           </Link>
-          <Link to="/books" className="block">
+          <Link to="/books?action=add" className="block">
             <Button
               variant="outline"
               size="lg"

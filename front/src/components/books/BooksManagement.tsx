@@ -39,7 +39,7 @@ export default function BooksManagement() {
   const [books, setBooks] = useState<Book[]>([]);
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showAddBook, setShowAddBook] = useState(false);
+  const { showAddBook, setShowAddBook } = useModalStore();
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [showEditBook, setShowEditBook] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);

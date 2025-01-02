@@ -45,7 +45,7 @@ export default function ChildrenManagement() {
   const [children, setChildren] = useState<ChildProfile[]>([]);
   const [filteredChildren, setFilteredChildren] = useState<ChildProfile[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showAddChild, setShowAddChild] = useState(false);
+  const { showAddChild, setShowAddChild } = useModalStore();
   const [selectedChild, setSelectedChild] = useState<ChildProfile | null>(null);
   const [showEditChild, setShowEditChild] = useState(false);
   const [showLoansDialog, setShowLoansDialog] = useState(false);
