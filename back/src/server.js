@@ -29,12 +29,15 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: "https://bib-52jg.vercel.app", // Origine autorisée
-    methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes autorisées
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Méthodes autorisées
     credentials: true, // Autorise les cookies et les identifiants
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
     exposedHeaders: ["set-cookie"],
   })
 );
+
+// Handle preflight requests
+app.options("*", cors());
 
 // Create uploads directory if it doesn't exist
 import fs from "fs";

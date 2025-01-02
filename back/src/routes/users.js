@@ -63,15 +63,19 @@ router.post("/login", async (req, res) => {
     res.cookie("accessToken", token, {
       httpOnly: true,
       secure: true, // Changed to true for HTTPS
-      sameSite: "None",
+      sameSite: "none",
+      path: "/",
       maxAge: 15 * 60 * 1000, // 15 minutes
+      domain: "bib-production-4c96.up.railway.app",
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "None",
+      sameSite: "none",
+      path: "/",
       maxAge: 6 * 60 * 60 * 1000, // 6 hours
+      domain: "bib-production-4c96.up.railway.app",
     });
 
     res.json({ token, reftoken: refreshToken, userId: user._id });
