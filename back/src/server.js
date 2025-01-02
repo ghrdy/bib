@@ -32,6 +32,7 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes autorisées
     credentials: true, // Autorise les cookies et les identifiants
     allowedHeaders: ["Content-Type", "Authorization"],
+    exposedHeaders: ["set-cookie"],
   })
 );
 

@@ -1,6 +1,7 @@
 import { createContext, useEffect, ReactNode } from "react";
 import { useAuth } from "@/lib/auth";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "@/lib/api/config";
 
 const AuthContext = createContext<null>(null);
 
@@ -13,16 +14,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!refreshToken) return;
 
       try {
-        const response = await fetch(
-          "https://bib-production-4c96.up.railway.app/api/users/token",
-          {
-            method: "POST",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${API_URL}/api/users/token`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Token refresh failed");

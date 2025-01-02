@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
+import { API_URL } from "@/lib/api/config";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -25,17 +26,14 @@ export default function Login() {
     setError("");
 
     try {
-      const response = await fetch(
-        "https://bib-production-4c96.up.railway.app/api/users/login",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/users/login`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();

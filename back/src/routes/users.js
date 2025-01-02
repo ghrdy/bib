@@ -34,26 +34,22 @@ router.post("/login", async (req, res) => {
       {
         id: user._id,
         role: user.role,
-        nom: user.nom, // Ajout du nom
-        prenom: user.prenom, // Ajout du prénom
+        nom: user.nom,
+        prenom: user.prenom,
       },
       secretKey,
-      {
-        expiresIn: "15m",
-      }
+      { expiresIn: "15m" }
     );
 
     const refreshToken = jwt.sign(
       {
         id: user._id,
         role: user.role,
-        nom: user.nom, // Ajout du nom
-        prenom: user.prenom, // Ajout du prénom
+        nom: user.nom,
+        prenom: user.prenom,
       },
       refreshTokenSecret,
-      {
-        expiresIn: "6h",
-      }
+      { expiresIn: "6h" }
     );
 
     // Save refresh token in the database
@@ -63,22 +59,22 @@ router.post("/login", async (req, res) => {
     });
     await newRefreshToken.save();
 
-    // Set cookies
+    // Set cookies with proper options for cross-origin
     res.cookie("accessToken", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "None", // requis pour le cross orig
-      domain: ".railway.app",
-      path: "/",
+      secure: true, // Changed to true for HTTPS
+      sameSite: "None",
+      maxAge: 15 * 60 * 1000, // 15 minutes
     });
+
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "None",
-      path: "/",
+      maxAge: 6 * 60 * 60 * 1000, // 6 hours
     });
 
-    res.json({ reftoken: refreshToken, token, userId: user._id });
+    res.json({ token, reftoken: refreshToken, userId: user._id });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

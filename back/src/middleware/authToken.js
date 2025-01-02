@@ -5,12 +5,13 @@ const authenticateToken = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ message: "Access denied (authmiddleware)" });
   }
-
-  jwt.verify(token, "your_secret_key", (err, user) => {
-    if (err) return res.status(403).json({ message: "Connexion expirée" });
-    req.user = user;
+  try {
+    const decoded = jwt.verify(token, "your_secret_key");
+    req.user = decoded;
     next();
-  });
+  } catch (err) {
+    res.status(403).json({ message: "Token Expired" });
+  }
 };
 
 export default authenticateToken;
