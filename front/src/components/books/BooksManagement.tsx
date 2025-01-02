@@ -33,6 +33,7 @@ import { Book, getBooks, deleteBook } from "@/lib/api/books";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { SearchBar } from "@/components/worker/SearchBar";
+import { useModalStore } from "@/lib/stores/modalStore";
 
 export default function BooksManagement() {
   const { accessToken } = useAuth();

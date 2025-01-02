@@ -39,6 +39,7 @@ import {
 } from "@/lib/api/children";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
+import { useModalStore } from "@/lib/stores/modalStore";
 
 export default function ChildrenManagement() {
   const { accessToken } = useAuth();
