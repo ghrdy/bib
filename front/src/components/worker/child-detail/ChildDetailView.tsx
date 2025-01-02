@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { ChildProfile } from "@/lib/api/children";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft,
