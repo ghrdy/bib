@@ -124,6 +124,11 @@ export default function ChildrenManagement() {
     refreshChildStatus(childId);
   };
 
+  const handleSelectChild = (child: ChildProfile) => {
+    setSelectedChild(child);
+    setShowLoansDialog(true);
+  };
+
   const confirmDelete = async () => {
     try {
       if (!childToDelete || !accessToken) return;
