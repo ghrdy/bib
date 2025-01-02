@@ -344,6 +344,14 @@ export default function ChildrenManagement() {
           onBack={() => setShowChildDetail(false)}
           onRestrict={handleRestrict}
           onLoan={() => setShowLoansDialog(true)}
+          onEdit={() => {
+            setShowEditChild(true);
+            setShowChildDetail(false);
+          }}
+          onDelete={() => {
+            handleDeleteChild(selectedChild);
+            setShowChildDetail(false);
+          }}
         />
       )}
 
