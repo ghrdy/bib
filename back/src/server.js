@@ -31,7 +31,7 @@ const corsOptions = {
   origin: [process.env.FRONTEND_URL || "https://bib-52jg.vercel.app'"],
   credentials: true,
 };
-app.use(cors(corsOptions));
+app.use(cors()); // corsOptions
 
 // Create uploads directory if it doesn't exist
 import fs from "fs";
