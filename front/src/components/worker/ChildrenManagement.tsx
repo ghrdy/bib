@@ -41,6 +41,7 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { useModalStore } from "@/lib/stores/modalStore";
 import { ChildrenList } from "./ChildrenList";
+import { ChildDetailView } from "./child-detail/ChildDetailView";
 
 export default function ChildrenManagement() {
   const { accessToken } = useAuth();
@@ -48,6 +49,7 @@ export default function ChildrenManagement() {
   const [filteredChildren, setFilteredChildren] = useState<ChildProfile[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const { showAddChild, setShowAddChild } = useModalStore();
+  const [showChildDetail, setShowChildDetail] = useState(false);
   const [selectedChild, setSelectedChild] = useState<ChildProfile | null>(null);
   const [showEditChild, setShowEditChild] = useState(false);
   const [showLoansDialog, setShowLoansDialog] = useState(false);
@@ -126,7 +128,21 @@ export default function ChildrenManagement() {
 
   const handleSelectChild = (child: ChildProfile) => {
     setSelectedChild(child);
-    setShowLoansDialog(true);
+    setShowChildDetail(true);
+  };
+
+  const handleRestrict = async () => {
+    if (!selectedChild || !accessToken) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("status", "restreint");
+      await updateChildProfile(selectedChild._id, formData, accessToken);
+      toast.success("Statut mis à jour");
+      fetchChildren();
+    } catch (error) {
+      toast.error("Échec de la mise à jour du statut");
+    }
   };
 
   const confirmDelete = async () => {
@@ -319,6 +335,15 @@ export default function ChildrenManagement() {
             }}
           />
         </>
+      )}
+
+      {showChildDetail && selectedChild && (
+        <ChildDetailView
+          child={selectedChild}
+          onBack={() => setShowChildDetail(false)}
+          onRestrict={handleRestrict}
+          onLoan={() => setShowLoansDialog(true)}
+        />
       )}
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
