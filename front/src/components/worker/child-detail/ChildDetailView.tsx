@@ -20,6 +20,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+
+interface ChildDetailViewProps {
+  child: ChildProfile;
+  onBack: () => void;
+  onRestrict: () => void;
+  onLoan: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
 export function ChildDetailView({
   child,
   onBack,
