@@ -55,7 +55,7 @@ export default function SettingsPage() {
 
       {/* User Info and Settings Section - Visible to all users */}
       <div className="space-y-4">
-        <div className="p-4 bg-card rounded-lg border">
+        <div className="p-4 bg-card rounded-lg border profile-section">
           <h2 className="font-semibold mb-2">Profil</h2>
           <div className="space-y-1">
             <p>{`${user?.prenom} ${user?.nom}`}</p>
