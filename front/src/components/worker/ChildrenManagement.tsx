@@ -42,6 +42,7 @@ import { toast } from "sonner";
 import { useModalStore } from "@/lib/stores/modalStore";
 import { ChildrenList } from "./ChildrenList";
 import { ChildDetailView } from "./child-detail/ChildDetailView";
+import { updateChildProfile } from "@/lib/api/children";
 
 export default function ChildrenManagement() {
   const { accessToken } = useAuth();
