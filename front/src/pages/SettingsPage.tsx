@@ -71,7 +71,7 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        <div className="p-4 bg-card rounded-lg border space-y-4">
+        <div className="p-4 bg-card rounded-lg border space-y-4 preferences-section">
           <h2 className="font-semibold mb-2">Préférences</h2>
           <div className="flex items-center justify-between">
             <span>Thème</span>

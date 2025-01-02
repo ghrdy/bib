@@ -162,12 +162,20 @@
   display: none;
 }
 
+.preferences-section {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .logout-button {
     display: flex;
   }
 
   .profile-section {
+    display: block;
+  }
+
+  .preferences-section {
     display: block;
   }
 }
