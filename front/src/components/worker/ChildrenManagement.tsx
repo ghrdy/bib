@@ -182,101 +182,111 @@ export default function ChildrenManagement() {
         </div>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Photo</TableHead>
-              <TableHead>Prénom / Nom</TableHead>
-              <TableHead>Classe</TableHead>
-              <TableHead>Date de naissance</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredChildren.map((child) => (
-              <TableRow key={child._id}>
-                <TableCell>
-                  <Avatar>
-                    {child.photo ? (
-                      <AvatarImage
-                        src={`https://bib-production-4c96.up.railway.app${child.photo}`}
-                        alt={child.prenom}
-                      />
-                    ) : (
-                      <AvatarFallback>
-                        {child.prenom.charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    )}
-                  </Avatar>
-                </TableCell>
-                <TableCell>{`${child.prenom} ${child.nom}`}</TableCell>
-                <TableCell>{child.classeSuivie}</TableCell>
-                <TableCell>
-                  {new Date(child.dateNaissance).toLocaleDateString()}
-                </TableCell>
-                <TableCell>
-                  <div
-                    className={`w-32 h-8 flex items-center justify-center text-sm font-medium text-white rounded text-center leading-tight ${getStatusColor(
-                      child.status
-                    )}`}
-                    style={{ lineHeight: "1" }}
-                  >
-                    {getStatusText(child.status)}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleViewLoans(child)}
-                        >
-                          <BookOpen className="h-4 w-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Voir les emprunts</p>
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleEditChild(child)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Modifier</p>
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDeleteChild(child)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Supprimer</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </TableCell>
+        {/* Table pour mobile */}
+        <div className="md:hidden">
+          <ChildrenList
+            children={filteredChildren}
+            onSelectChild={handleSelectChild}
+          />
+        </div>
+        {/* Table pour desktop */}
+        <div className="hidden md:block">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Photo</TableHead>
+                <TableHead>Prénom / Nom</TableHead>
+                <TableHead>Classe</TableHead>
+                <TableHead>Date de naissance</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {filteredChildren.map((child) => (
+                <TableRow key={child._id}>
+                  <TableCell>
+                    <Avatar>
+                      {child.photo ? (
+                        <AvatarImage
+                          src={`https://bib-production-4c96.up.railway.app${child.photo}`}
+                          alt={child.prenom}
+                        />
+                      ) : (
+                        <AvatarFallback>
+                          {child.prenom.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
+                  </TableCell>
+                  <TableCell>{`${child.prenom} ${child.nom}`}</TableCell>
+                  <TableCell>{child.classeSuivie}</TableCell>
+                  <TableCell>
+                    {new Date(child.dateNaissance).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    <div
+                      className={`w-32 h-8 flex items-center justify-center text-sm font-medium text-white rounded text-center leading-tight ${getStatusColor(
+                        child.status
+                      )}`}
+                      style={{ lineHeight: "1" }}
+                    >
+                      {getStatusText(child.status)}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleViewLoans(child)}
+                          >
+                            <BookOpen className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Voir les emprunts</p>
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleEditChild(child)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Modifier</p>
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDeleteChild(child)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Supprimer</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
 
       <AddChildDialog
