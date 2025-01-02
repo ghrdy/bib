@@ -66,7 +66,7 @@ router.post("/login", async (req, res) => {
       sameSite: "none",
       path: "/",
       maxAge: 15 * 60 * 1000, // 15 minutes
-      domain: "bib-production-4c96.up.railway.app",
+      domain: ".vercel.app",
     });
 
     res.cookie("refreshToken", refreshToken, {
@@ -75,7 +75,7 @@ router.post("/login", async (req, res) => {
       sameSite: "none",
       path: "/",
       maxAge: 6 * 60 * 60 * 1000, // 6 hours
-      domain: "bib-production-4c96.up.railway.app",
+      domain: ".vercel.app",
     });
 
     res.json({ token, reftoken: refreshToken, userId: user._id });
@@ -304,9 +304,12 @@ router.post("/token", async (req, res) => {
       );
 
       res.cookie("accessToken", newToken, {
-        httpOnly: false,
+        httpOnly: true,
         secure: true,
-        sameSite: "Strict",
+        sameSite: "none",
+        path: "/",
+        maxAge: 15 * 60 * 1000, // 15 minutes
+        domain: ".vercel.app",
       });
       res.json({ message: "Token refreshed" });
     });
