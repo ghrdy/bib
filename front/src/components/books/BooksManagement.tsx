@@ -34,6 +34,8 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { SearchBar } from "@/components/worker/SearchBar";
 import { useModalStore } from "@/lib/stores/modalStore";
+import { BooksList } from "./BooksList";
+import { BookDetailView } from "./BookDetailView";
 
 export default function BooksManagement() {
   const { accessToken } = useAuth();
@@ -45,6 +47,7 @@ export default function BooksManagement() {
   const [showEditBook, setShowEditBook] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [bookToDelete, setBookToDelete] = useState<Book | null>(null);
+  const [showBookDetail, setShowBookDetail] = useState(false);
 
   const fetchBooks = async () => {
     try {
@@ -93,6 +96,11 @@ export default function BooksManagement() {
     }
   };
 
+  const handleSelectBook = (book: Book) => {
+    setSelectedBook(book);
+    setShowBookDetail(true);
+  };
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -111,69 +119,76 @@ export default function BooksManagement() {
         </div>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Photo</TableHead>
-              <TableHead>Titre</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredBooks.map((book) => (
-              <TableRow key={book._id}>
-                <TableCell>
-                  <Avatar>
-                    {book.photo ? (
-                      <AvatarImage
-                        src={`https://bib-production-4c96.up.railway.app${book.photo}`}
-                        alt={book.titre}
-                      />
-                    ) : (
-                      <AvatarFallback>
-                        {book.titre.charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    )}
-                  </Avatar>
-                </TableCell>
-                <TableCell>{book.titre}</TableCell>
-                <TableCell>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleEditBook(book)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Modifier</p>
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDeleteBook(book)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Supprimer</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </TableCell>
+        {/* Table pour mobile */}
+        <div className="md:hidden">
+          <BooksList books={filteredBooks} onSelectBook={handleSelectBook} />
+        </div>
+        {/* Table pour desktop */}
+        <div className="hidden md:block">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Photo</TableHead>
+                <TableHead>Titre</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {filteredBooks.map((book) => (
+                <TableRow key={book._id}>
+                  <TableCell>
+                    <Avatar>
+                      {book.photo ? (
+                        <AvatarImage
+                          src={`https://bib-production-4c96.up.railway.app${book.photo}`}
+                          alt={book.titre}
+                        />
+                      ) : (
+                        <AvatarFallback>
+                          {book.titre.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
+                  </TableCell>
+                  <TableCell>{book.titre}</TableCell>
+                  <TableCell>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleEditBook(book)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Modifier</p>
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDeleteBook(book)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Supprimer</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
 
       <AddBookDialog
@@ -183,12 +198,26 @@ export default function BooksManagement() {
       />
 
       {selectedBook && (
-        <EditBookDialog
-          book={selectedBook}
-          open={showEditBook}
-          onOpenChange={setShowEditBook}
-          onBookUpdated={fetchBooks}
-        />
+        <>
+          <EditBookDialog
+            book={selectedBook}
+            open={showEditBook}
+            onOpenChange={setShowEditBook}
+            onBookUpdated={fetchBooks}
+          />
+          <BookDetailView
+            book={selectedBook}
+            onBack={() => setShowBookDetail(false)}
+            onEdit={() => {
+              setShowEditBook(true);
+              setShowBookDetail(false);
+            }}
+            onDelete={() => {
+              handleDeleteBook(selectedBook);
+              setShowBookDetail(false);
+            }}
+          />
+        </>
       )}
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
