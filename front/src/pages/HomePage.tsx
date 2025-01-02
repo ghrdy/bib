@@ -6,7 +6,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Library, BookMarked, UserCheck } from "lucide-react";
+import {
+  Library,
+  BookMarked,
+  UserCheck,
+  UserPlus,
+  BookPlus,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import Logo from "../assets/Logo.svg?react";
@@ -38,7 +44,35 @@ export default function HomePage() {
         )}
       </section>
 
-      <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4">
+      {/* Mobile Quick Access */}
+      <div className="md:hidden space-y-6 px-4">
+        <h2 className="text-2xl font-semibold">Accès rapides</h2>
+        <div className="space-y-4">
+          <Link to="/children" className="block">
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+            >
+              <UserPlus className="mr-2 h-5 w-5" />
+              Ajouter un enfant
+            </Button>
+          </Link>
+          <Link to="/books" className="block">
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+            >
+              <BookPlus className="mr-2 h-5 w-5" />
+              Ajouter un livre
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      {/* Desktop Feature Cards */}
+      <div className="hidden md:grid md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4">
         <Card className="hover-card glass">
           <CardHeader>
             <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
