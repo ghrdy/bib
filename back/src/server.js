@@ -26,12 +26,13 @@ const __dirname = path.dirname(__filename);
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-// CORS configuration
-const corsOptions = {
-  origin: [process.env.FRONTEND_URL || "https://bib-52jg.vercel.app'"],
-  credentials: true,
-};
-app.use(cors()); // corsOptions
+app.use(
+  cors({
+    origin: "https://bib-52jg.vercel.app", // Origine autorisée
+    methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes autorisées
+    credentials: true, // Autorise les cookies et les identifiants
+  })
+);
 
 // Create uploads directory if it doesn't exist
 import fs from "fs";
