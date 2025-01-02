@@ -20,6 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { ChildProfile } from "@/lib/api/children";
 
 interface ChildDetailViewProps {
   child: ChildProfile;
