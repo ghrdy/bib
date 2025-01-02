@@ -154,7 +154,7 @@ router.post("/add", isAdmin, async (req, res) => {
       to: savedUser.email,
       subject: "Création de compte : Un Livre Pour Tous",
       html: `<p>Cliquez sur le lien pour définir votre mot de passe. : </p>
-             <a href="http://localhost:3000/create-account?token=${token}">Créer Votre Compte</a>`,
+             <a href="https://bib-52jg.vercel.app/create-account?token=${token}">Créer Votre Compte</a>`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -266,7 +266,7 @@ router.post("/reset-password", isAdmin, async (req, res) => {
       to: user.email,
       subject: "Réinitialisation de mot de passe : Un Livre Pour Tous",
       html: `<p>Cliquez sur le lien pour réinitialiser votre mot de passe : </p>
-             <a href="http://localhost:3000/reset-password?token=${token}">Réinitialiser votre mot de passe</a>`,
+             <a href="https://bib-52jg.vercel.app/reset-password?token=${token}">Réinitialiser votre mot de passe</a>`,
     };
 
     await transporter.sendMail(mailOptions);
