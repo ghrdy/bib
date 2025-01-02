@@ -67,12 +67,15 @@ router.post("/login", async (req, res) => {
     res.cookie("accessToken", token, {
       httpOnly: true,
       secure: false,
-      sameSite: "Strict",
+      sameSite: "None", // requis pour le cross orig
+      domain: ".railway.app",
+      path: "/",
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: "Strict",
+      secure: true,
+      sameSite: "None",
+      path: "/",
     });
 
     res.json({ reftoken: refreshToken, token, userId: user._id });
