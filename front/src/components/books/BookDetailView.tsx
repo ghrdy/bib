@@ -111,7 +111,10 @@ export function BookDetailView({
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+            <AlertDialogTitle>
+              <AlertTriangle className="mr-2 h-5 w-5 text-red-600" />
+              Êtes-vous sûr ?
+            </AlertDialogTitle>
             <AlertDialogDescription>
               Cette action est irréversible. Le livre sera définitivement
               supprimé.
@@ -123,11 +126,18 @@ export function BookDetailView({
               onClick={handleDelete}
               className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
             >
+              <Trash2 className="mr-2 h-4 w-4" />
               Supprimer
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <div className="fixed bottom-4 right-4">
+        <Button variant="primary" size="icon" onClick={onEdit}>
+          <BookPlus className="h-5 w-5" />
+        </Button>
+      </div>
     </div>
   );
 }
