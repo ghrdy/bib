@@ -35,7 +35,7 @@ export function ProjectDetailView({
   };
 
   return (
-    <div className="fixed inset-0 bg-background z-50 overflow-auto">
+    <div className="absolute inset-0 bg-background">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b">
         <div className="flex items-center justify-between p-4">
