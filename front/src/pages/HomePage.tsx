@@ -75,52 +75,7 @@ export default function HomePage() {
         {isAuthenticated && isAdmin ? (
           <AdminDashboard />
         ) : (
-          <div className="grid grid-cols-3 gap-6">
-            <Card className="hover-card glass">
-              <CardHeader>
-                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                  <Library className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>Gestion Intelligente</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Gérez efficacement les ressources de votre bibliothèque avec
-                  nos outils intuitifs.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-card glass">
-              <CardHeader>
-                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                  <BookMarked className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>Suivi des Livres</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Suivez vos livres et prêts en toute simplicité avec notre
-                  système de gestion.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-card glass">
-              <CardHeader>
-                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                  <UserCheck className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>Gestion des Utilisateurs</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Gérez les utilisateurs et leurs accès avec précision et
-                  sécurité.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+          
         )}
       </div>
     </div>
