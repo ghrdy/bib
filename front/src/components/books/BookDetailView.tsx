@@ -134,7 +134,7 @@ export function BookDetailView({
       </AlertDialog>
 
       <div className="fixed bottom-4 right-4">
-        <Button variant="primary" size="icon" onClick={onEdit}>
+        <Button variant="default" size="icon" onClick={onEdit}>
           <BookPlus className="h-5 w-5" />
         </Button>
       </div>
