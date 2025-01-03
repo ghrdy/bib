@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  ArrowLeft,
-  AlertTriangle,
-  BookPlus,
-  Pencil,
-  Trash2,
-} from "lucide-react";
+import { ArrowLeft, BookPlus, Pencil, Trash2 } from "lucide-react";
 import { ProfileAvatar } from "@/components/ui/profile-avatar";
 import { ChildStatus } from "./ChildStatus";
 import { formatDate } from "@/lib/utils";
