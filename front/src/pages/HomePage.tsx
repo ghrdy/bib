@@ -6,9 +6,6 @@ import {
   UserCheck,
   UserPlus,
   BookPlus,
-  Users,
-  BookOpen,
-  FolderGit2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
