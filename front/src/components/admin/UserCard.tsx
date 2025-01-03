@@ -38,6 +38,9 @@ export function UserCard({ user, onClick }: UserCardProps) {
           {user.prenom} {user.nom}
         </h3>
         <p className="text-sm text-muted-foreground">{user.email}</p>
+        <p className="text-sm text-muted-foreground">
+          {getRoleDisplay(user.role)}
+        </p>
         <div className="mt-1">
           {!user.validated && (
             <Badge
