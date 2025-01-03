@@ -7,8 +7,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChildProfile, updateChildProfile } from "@/lib/api/children";
 import { useAuth } from "@/lib/auth";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -28,14 +29,29 @@ export default function EditChildDialog({
 }: EditChildDialogProps) {
   const { accessToken } = useAuth();
   const [formData, setFormData] = useState({
-    nom: child.nom,
-    prenom: child.prenom,
-    dateNaissance: child.dateNaissance.split("T")[0],
-    classeSuivie: child.classeSuivie,
-    noteObservation: child.noteObservation,
-    status: child.status,
+    nom: "",
+    prenom: "",
+    dateNaissance: "",
+    classeSuivie: "",
+    noteObservation: "",
+    status: "",
     photo: null as File | null,
   });
+
+  // Update form data when child prop changes or dialog opens
+  useEffect(() => {
+    if (open && child) {
+      setFormData({
+        nom: child.nom,
+        prenom: child.prenom,
+        dateNaissance: child.dateNaissance.split("T")[0],
+        classeSuivie: child.classeSuivie,
+        noteObservation: child.noteObservation,
+        status: child.status,
+        photo: null,
+      });
+    }
+  }, [child, open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,6 +89,13 @@ export default function EditChildDialog({
     if (e.target.files && e.target.files[0]) {
       setFormData({ ...formData, photo: e.target.files[0] });
     }
+  };
+
+  const handleRestrictionChange = (checked: boolean) => {
+    setFormData({
+      ...formData,
+      status: checked ? "restreint" : "possible",
+    });
   };
 
   return (
@@ -168,6 +191,16 @@ export default function EditChildDialog({
               }
             />
           </div>
+
+          <div className="flex items-center justify-between space-x-2">
+            <Label htmlFor="restriction">Restreindre l'accès</Label>
+            <Switch
+              id="restriction"
+              checked={formData.status === "restreint"}
+              onCheckedChange={handleRestrictionChange}
+            />
+          </div>
+
           <Button type="submit" className="w-full">
             Modifier le profil enfant
           </Button>

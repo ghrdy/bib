@@ -10,6 +10,7 @@ import {
 import { ProfileAvatar } from "@/components/ui/profile-avatar";
 import { ChildStatus } from "./ChildStatus";
 import { formatDate } from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -54,14 +55,13 @@ export function ChildDetailView({
           <Button variant="ghost" size="icon" onClick={onBack}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <Button
-            variant="ghost"
-            onClick={onRestrict}
-            className="text-red-500 hover:text-red-600 hover:bg-red-50"
-          >
-            <AlertTriangle className="mr-2 h-5 w-5" />
-            Restreindre
-          </Button>
+          <div className="flex items-center space-x-2">
+            <span className="text-sm font-medium">Restreindre</span>
+            <Switch
+              checked={child.status === "restreint"}
+              onCheckedChange={() => onRestrict()}
+            />
+          </div>
         </div>
       </div>
 
