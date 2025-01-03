@@ -1,12 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Library,
-  BookMarked,
-  UserCheck,
-  UserPlus,
-  BookPlus,
-} from "lucide-react";
+import { UserPlus, BookPlus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import Logo from "../assets/Logo.svg?react";
