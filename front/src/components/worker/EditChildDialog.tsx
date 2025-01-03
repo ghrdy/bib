@@ -192,7 +192,7 @@ export default function EditChildDialog({
             />
           </div>
 
-          <div className="flex items-center justify-between space-x-2">
+          <div className="hidden md:flex items-center justify-between space-x-2">
             <Label htmlFor="restriction">Restreindre l'accès</Label>
             <Switch
               id="restriction"

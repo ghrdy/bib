@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Library,
@@ -12,13 +6,19 @@ import {
   UserCheck,
   UserPlus,
   BookPlus,
+  Users,
+  BookOpen,
+  FolderGit2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import Logo from "../assets/Logo.svg?react";
+import { AdminDashboard } from "@/components/admin/AdminDashboard";
 
 export default function HomePage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const isAdmin = user?.role === "admin";
+
   return (
     <div className="min-h-[80vh] flex flex-col justify-center space-y-12">
       <section className="text-center space-y-6">
@@ -44,118 +44,87 @@ export default function HomePage() {
         )}
       </section>
 
-      {/* Mobile Quick Access */}
-      <div className="md:hidden space-y-6 px-4">
-        <h2 className="text-2xl font-semibold">Accès rapides</h2>
-        <div className="space-y-4">
-          <Link to="/children?action=add" className="block">
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
-            >
-              <UserPlus className="mr-2 h-5 w-5" />
-              Ajouter un enfant
-            </Button>
-          </Link>
-          <Link to="/books?action=add" className="block">
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
-            >
-              <BookPlus className="mr-2 h-5 w-5" />
-              Ajouter un livre
-            </Button>
-          </Link>
+      {/* Mobile Quick Access - Only for authenticated users */}
+      {isAuthenticated && (
+        <div className="md:hidden space-y-6 px-4">
+          <h2 className="text-2xl font-semibold">Accès rapides</h2>
+          <div className="space-y-4">
+            <Link to="/children?action=add" className="block">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+              >
+                <UserPlus className="mr-2 h-5 w-5" />
+                Ajouter un enfant
+              </Button>
+            </Link>
+            <Link to="/books?action=add" className="block">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700"
+              >
+                <BookPlus className="mr-2 h-5 w-5" />
+                Ajouter un livre
+              </Button>
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Desktop Feature Cards */}
-      <div className="hidden md:grid md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4">
-        <Card className="hover-card glass">
-          <CardHeader>
-            <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-              <Library className="h-6 w-6 text-primary" />
-            </div>
-            <CardTitle>Gestion Intelligente</CardTitle>
-            <CardDescription>
-              Gérez efficacement les ressources de votre bibliothèque
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li className="flex items-center gap-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Suivi automatisé
-              </li>
-              <li className="flex items-center gap-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Mises à jour en temps réel
-              </li>
-              <li className="flex items-center gap-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Notifications intelligentes
-              </li>
-            </ul>
-          </CardContent>
-        </Card>
+      {/* Desktop View */}
+      <div className="hidden md:block max-w-6xl mx-auto px-4 w-full">
+        {isAuthenticated && isAdmin ? (
+          <AdminDashboard />
+        ) : (
+          <div className="grid grid-cols-3 gap-6">
+            <Card className="hover-card glass">
+              <CardHeader>
+                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <Library className="h-6 w-6 text-primary" />
+                </div>
+                <CardTitle>Gestion Intelligente</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Gérez efficacement les ressources de votre bibliothèque avec
+                  nos outils intuitifs.
+                </p>
+              </CardContent>
+            </Card>
 
-        <Card className="hover-card glass">
-          <CardHeader>
-            <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-              <BookMarked className="h-6 w-6 text-primary" />
-            </div>
-            <CardTitle>Suivi des Livres</CardTitle>
-            <CardDescription>
-              Suivez vos livres et prêts en toute simplicité
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li className="flex items-center gap-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Catalogage numérique
-              </li>
-              <li className="flex items-center gap-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Gestion des prêts
-              </li>
-              <li className="flex items-center gap-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Rappels de retour
-              </li>
-            </ul>
-          </CardContent>
-        </Card>
+            <Card className="hover-card glass">
+              <CardHeader>
+                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <BookMarked className="h-6 w-6 text-primary" />
+                </div>
+                <CardTitle>Suivi des Livres</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Suivez vos livres et prêts en toute simplicité avec notre
+                  système de gestion.
+                </p>
+              </CardContent>
+            </Card>
 
-        <Card className="hover-card glass">
-          <CardHeader>
-            <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-              <UserCheck className="h-6 w-6 text-primary" />
-            </div>
-            <CardTitle>Gestion des Utilisateurs</CardTitle>
-            <CardDescription>
-              Gérez les utilisateurs avec précision
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li className="flex items-center gap-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Accès basé sur les rôles
-              </li>
-              <li className="flex items-center gap-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Suivi des activités
-              </li>
-              <li className="flex items-center gap-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                Analytique utilisateur
-              </li>
-            </ul>
-          </CardContent>
-        </Card>
+            <Card className="hover-card glass">
+              <CardHeader>
+                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <UserCheck className="h-6 w-6 text-primary" />
+                </div>
+                <CardTitle>Gestion des Utilisateurs</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Gérez les utilisateurs et leurs accès avec précision et
+                  sécurité.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );
