@@ -74,7 +74,7 @@ export default function HomePage() {
       <div className="hidden md:block max-w-6xl mx-auto px-4 w-full">
         {isAuthenticated && isAdmin ? (
           <AdminDashboard />
-        )}
+        ):}
       </div>
     </div>
   );
