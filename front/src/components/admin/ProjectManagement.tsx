@@ -33,6 +33,8 @@ import { Project, getProjects, deleteProject } from "@/lib/api/projects";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { SearchBar } from "@/components/worker/SearchBar";
+import { ProjectsList } from "./ProjectsList";
+import { ProjectDetailView } from "./ProjectDetailView";
 
 export default function ProjectManagement() {
   const { accessToken } = useAuth();
@@ -44,6 +46,7 @@ export default function ProjectManagement() {
   const [showEditProject, setShowEditProject] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
+  const [showProjectDetail, setShowProjectDetail] = useState(false);
 
   const fetchProjects = async () => {
     try {
@@ -92,25 +95,39 @@ export default function ProjectManagement() {
     }
   };
 
+  const handleSelectProject = (project: Project) => {
+    setSelectedProject(project);
+    setShowProjectDetail(true);
+  };
+
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div className="w-full flex justify-between gap-4">
-            <Button onClick={() => setShowAddProject(true)}>
-              <FolderPlus className="mr-2 h-4 w-4" />
-              Ajouter un projet
-            </Button>
-            <div className="w-1/3">
-              <SearchBar
-                value={searchQuery}
-                onChange={setSearchQuery}
-                placeholder="Rechercher un projet..."
-              />
-            </div>
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div className="w-full flex justify-between gap-4">
+          <Button onClick={() => setShowAddProject(true)}>
+            <FolderPlus className="mr-2 h-4 w-4" />
+            Ajouter un projet
+          </Button>
+          <div className="w-1/3">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Rechercher un projet..."
+            />
           </div>
-        </CardHeader>
-        <CardContent>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {/* Mobile view */}
+        <div className="md:hidden">
+          <ProjectsList
+            projects={filteredProjects}
+            onSelectProject={handleSelectProject}
+          />
+        </div>
+
+        {/* Desktop view */}
+        <div className="hidden md:block">
           <Table>
             <TableHeader>
               <TableRow>
@@ -176,8 +193,8 @@ export default function ProjectManagement() {
               ))}
             </TableBody>
           </Table>
-        </CardContent>
-      </Card>
+        </div>
+      </CardContent>
 
       <AddProjectDialog
         open={showAddProject}
@@ -186,21 +203,50 @@ export default function ProjectManagement() {
       />
 
       {selectedProject && (
-        <EditProjectDialog
+        <>
+          <EditProjectDialog
+            project={selectedProject}
+            open={showEditProject}
+            onOpenChange={setShowEditProject}
+            onProjectUpdated={fetchProjects}
+          />
+          <ProjectDetailView
+            project={selectedProject}
+            onBack={() => setShowProjectDetail(false)}
+            onEdit={() => {
+              setShowEditProject(true);
+              setShowProjectDetail(false);
+            }}
+            onDelete={() => {
+              handleDeleteProject(selectedProject);
+              setShowProjectDetail(false);
+            }}
+          />
+        </>
+      )}
+
+      {showProjectDetail && selectedProject && (
+        <ProjectDetailView
           project={selectedProject}
-          open={showEditProject}
-          onOpenChange={setShowEditProject}
-          onProjectUpdated={fetchProjects}
+          onBack={() => setShowProjectDetail(false)}
+          onEdit={() => {
+            setShowEditProject(true);
+            setShowProjectDetail(false);
+          }}
+          onDelete={() => {
+            handleDeleteProject(selectedProject);
+            setShowProjectDetail(false);
+          }}
         />
       )}
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Etes-vous sûr?</AlertDialogTitle>
+            <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est définitive. Le projet sera supprimé du système et
-              les données liées seront perdues.
+              Cette action est irréversible. Le projet sera supprimé du système
+              et les données liées seront perdues.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -211,6 +257,6 @@ export default function ProjectManagement() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </Card>
   );
 }

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Table,
@@ -27,19 +26,20 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { UserPlus, Pencil, Trash2, KeyRound } from "lucide-react";
-import { AddUserDialog } from "./AddUserDialog";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import AddUserDialog from "./AddUserDialog";
 import EditUserDialog from "./EditUserDialog";
 import { User, getUsers, deleteUser, resetUserPassword } from "@/lib/api/users";
-import { Project, getProjects } from "@/lib/api/projects";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { SearchBar } from "@/components/worker/SearchBar";
+import { UsersList } from "./UsersList";
+import { UserDetailView } from "./UserDetailView";
 import { ResetPasswordDialog } from "./ResetPasswordDialog";
 
 export default function UserManagement() {
   const { accessToken } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddUser, setShowAddUser] = useState(false);
@@ -51,6 +51,7 @@ export default function UserManagement() {
     null
   );
   const [showResetPasswordDialog, setShowResetPasswordDialog] = useState(false);
+  const [showUserDetail, setShowUserDetail] = useState(false);
 
   const fetchUsers = async () => {
     try {
@@ -63,33 +64,21 @@ export default function UserManagement() {
     }
   };
 
-  const fetchProjects = async () => {
-    try {
-      if (!accessToken) return;
-      const fetchedProjects = await getProjects(accessToken);
-      setProjects(fetchedProjects);
-    } catch (error) {
-      toast.error("Echec lors de la récupération des projets");
-    }
-  };
-
   useEffect(() => {
     fetchUsers();
-    fetchProjects();
   }, [accessToken]);
 
   useEffect(() => {
     const filtered = users.filter((user) => {
-      const projectName = getProjectName(user.projet).toLowerCase();
+      const searchTerm = searchQuery.toLowerCase();
       return (
-        user.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.prenom.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        projectName.includes(searchQuery.toLowerCase())
+        user.nom.toLowerCase().includes(searchTerm) ||
+        user.prenom.toLowerCase().includes(searchTerm) ||
+        user.email.toLowerCase().includes(searchTerm)
       );
     });
     setFilteredUsers(filtered);
-  }, [searchQuery, users, projects]);
+  }, [searchQuery, users]);
 
   const handleEditUser = (user: User) => {
     setSelectedUser(user);
@@ -136,40 +125,44 @@ export default function UserManagement() {
     }
   };
 
-  const getProjectName = (projectId?: string) => {
-    if (!projectId) return "Aucun projet";
-    const project = projects.find((p) => p._id === projectId);
-    return project ? `${project.nom} (${project.annee})` : "Projet inconnu";
+  const handleSelectUser = (user: User) => {
+    setSelectedUser(user);
+    setShowUserDetail(true);
   };
 
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div className="w-full flex justify-between gap-4">
-            <Button onClick={() => setShowAddUser(true)}>
-              <UserPlus className="mr-2 h-4 w-4" />
-              Ajouter un utilisateur
-            </Button>
-            <div className="w-1/3">
-              <SearchBar
-                value={searchQuery}
-                onChange={setSearchQuery}
-                placeholder="Rechercher un utilisateur..."
-              />
-            </div>
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div className="w-full flex justify-between gap-4">
+          <Button onClick={() => setShowAddUser(true)}>
+            <UserPlus className="mr-2 h-4 w-4" />
+            Ajouter un utilisateur
+          </Button>
+          <div className="w-1/3">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Rechercher un utilisateur..."
+            />
           </div>
-        </CardHeader>
-        <CardContent>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {/* Mobile view */}
+        <div className="md:hidden">
+          <UsersList users={filteredUsers} onSelectUser={handleSelectUser} />
+        </div>
+
+        {/* Desktop view */}
+        <div className="hidden md:block">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Prénom / Nom</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Rôle</TableHead>
-                <TableHead>Projet</TableHead>
                 <TableHead>Statut</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -178,26 +171,19 @@ export default function UserManagement() {
                   <TableCell>{`${user.prenom} ${user.nom}`}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell className="capitalize">{user.role}</TableCell>
-                  <TableCell>{getProjectName(user.projet)}</TableCell>
                   <TableCell>
                     {!user.validated && (
-                      <Badge
-                        variant="secondary"
-                        className="bg-yellow-100 text-yellow-800"
-                      >
+                      <div className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium inline-block">
                         En attente de validation
-                      </Badge>
+                      </div>
                     )}
                     {user.validated && (
-                      <Badge
-                        variant="secondary"
-                        className="bg-green-100 text-green-800"
-                      >
+                      <div className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium inline-block">
                         Validé
-                      </Badge>
+                      </div>
                     )}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell>
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -249,8 +235,8 @@ export default function UserManagement() {
               ))}
             </TableBody>
           </Table>
-        </CardContent>
-      </Card>
+        </div>
+      </CardContent>
 
       <AddUserDialog
         open={showAddUser}
@@ -259,21 +245,55 @@ export default function UserManagement() {
       />
 
       {selectedUser && (
-        <EditUserDialog
+        <>
+          <EditUserDialog
+            user={selectedUser}
+            open={showEditUser}
+            onOpenChange={setShowEditUser}
+            onUserUpdated={fetchUsers}
+          />
+          <UserDetailView
+            user={selectedUser}
+            onBack={() => setShowUserDetail(false)}
+            onResetPassword={() => handleResetPassword(selectedUser)}
+            onEdit={() => {
+              set Continuing with the UserManagement.tsx file content from where we left off:
+
+
+              setShowEditUser(true);
+              setShowUserDetail(false);
+            }}
+            onDelete={() => {
+              handleDeleteUser(selectedUser);
+              setShowUserDetail(false);
+            }}
+          />
+        </>
+      )}
+
+      {showUserDetail && selectedUser && (
+        <UserDetailView
           user={selectedUser}
-          open={showEditUser}
-          onOpenChange={setShowEditUser}
-          onUserUpdated={fetchUsers}
+          onBack={() => setShowUserDetail(false)}
+          onResetPassword={() => handleResetPassword(selectedUser)}
+          onEdit={() => {
+            setShowEditUser(true);
+            setShowUserDetail(false);
+          }}
+          onDelete={() => {
+            handleDeleteUser(selectedUser);
+            setShowUserDetail(false);
+          }}
         />
       )}
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Etes-vous sûr?</AlertDialogTitle>
+            <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est définitive. L'utilisateur sera supprimé du
-              système et les données liées seront perdues.
+              Cette action est irréversible. L'utilisateur sera définitivement
+              supprimé.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -293,6 +313,6 @@ export default function UserManagement() {
           userName={`${userToResetPassword.prenom} ${userToResetPassword.nom}`}
         />
       )}
-    </div>
+    </Card>
   );
 }
