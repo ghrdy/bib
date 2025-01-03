@@ -32,7 +32,7 @@ import { User, getUsers, deleteUser, resetUserPassword } from "@/lib/api/users";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { SearchBar } from "@/components/worker/SearchBar";
-import { UsersList } from "./UsersList";
+import { UsersList } from "./UserList";
 import { UserDetailView } from "./UserDetailView";
 import { ResetPasswordDialog } from "./ResetPasswordDialog";
 import { Badge } from "@/components/ui/badge";
