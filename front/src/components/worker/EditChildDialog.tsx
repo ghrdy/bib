@@ -99,8 +99,8 @@ export default function EditChildDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} className="hidden md:block">
-      <DialogContent className="sm:max-w-[500px]">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="hidden md:block sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Modifier le profil enfant</DialogTitle>
         </DialogHeader>
