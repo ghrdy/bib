@@ -1,4 +1,3 @@
-// front/src/components/worker/EditChildDialog.tsx
 import {
   Dialog,
   DialogContent,
@@ -8,6 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { ChildProfile, updateChildProfile } from "@/lib/api/children";
@@ -38,6 +38,7 @@ export default function EditChildDialog({
     photo: null as File | null,
   });
 
+  // Update form data when child prop changes or dialog opens
   useEffect(() => {
     if (open && child) {
       setFormData({
@@ -90,8 +91,15 @@ export default function EditChildDialog({
     }
   };
 
+  const handleRestrictionChange = (checked: boolean) => {
+    setFormData({
+      ...formData,
+      status: checked ? "restreint" : "possible",
+    });
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange} className="hidden md:block">
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Modifier le profil enfant</DialogTitle>
@@ -181,6 +189,15 @@ export default function EditChildDialog({
               onChange={(e) =>
                 setFormData({ ...formData, noteObservation: e.target.value })
               }
+            />
+          </div>
+
+          <div className="flex items-center justify-between space-x-2">
+            <Label htmlFor="restriction">Restreindre l'accès</Label>
+            <Switch
+              id="restriction"
+              checked={formData.status === "restreint"}
+              onCheckedChange={handleRestrictionChange}
             />
           </div>
 
