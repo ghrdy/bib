@@ -26,7 +26,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { UserPlus, Pencil, Trash2, KeyRound } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import AddUserDialog from "./AddUserDialog";
 import EditUserDialog from "./EditUserDialog";
 import { User, getUsers, deleteUser, resetUserPassword } from "@/lib/api/users";
@@ -36,6 +35,7 @@ import { SearchBar } from "@/components/worker/SearchBar";
 import { UsersList } from "./UsersList";
 import { UserDetailView } from "./UserDetailView";
 import { ResetPasswordDialog } from "./ResetPasswordDialog";
+import { Badge } from "@/components/ui/badge";
 
 export default function UserManagement() {
   const { accessToken } = useAuth();
@@ -47,11 +47,11 @@ export default function UserManagement() {
   const [showEditUser, setShowEditUser] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [showUserDetail, setShowUserDetail] = useState(false);
   const [userToResetPassword, setUserToResetPassword] = useState<User | null>(
     null
   );
   const [showResetPasswordDialog, setShowResetPasswordDialog] = useState(false);
-  const [showUserDetail, setShowUserDetail] = useState(false);
 
   const fetchUsers = async () => {
     try {
@@ -60,7 +60,7 @@ export default function UserManagement() {
       setUsers(fetchedUsers);
       setFilteredUsers(fetchedUsers);
     } catch (error) {
-      toast.error("Echec lors de la récupération des utilisateurs");
+      toast.error("Échec du chargement des utilisateurs");
     }
   };
 
@@ -69,14 +69,12 @@ export default function UserManagement() {
   }, [accessToken]);
 
   useEffect(() => {
-    const filtered = users.filter((user) => {
-      const searchTerm = searchQuery.toLowerCase();
-      return (
-        user.nom.toLowerCase().includes(searchTerm) ||
-        user.prenom.toLowerCase().includes(searchTerm) ||
-        user.email.toLowerCase().includes(searchTerm)
-      );
-    });
+    const filtered = users.filter(
+      (user) =>
+        user.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.prenom.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase())
+    );
     setFilteredUsers(filtered);
   }, [searchQuery, users]);
 
@@ -88,6 +86,11 @@ export default function UserManagement() {
   const handleResetPassword = (user: User) => {
     setUserToResetPassword(user);
     setShowResetPasswordDialog(true);
+  };
+
+  const handleDeleteUser = (user: User) => {
+    setUserToDelete(user);
+    setShowDeleteDialog(true);
   };
 
   const confirmResetPassword = async () => {
@@ -105,11 +108,6 @@ export default function UserManagement() {
     }
   };
 
-  const handleDeleteUser = (user: User) => {
-    setUserToDelete(user);
-    setShowDeleteDialog(true);
-  };
-
   const confirmDelete = async () => {
     try {
       if (!userToDelete || !accessToken) return;
@@ -118,7 +116,7 @@ export default function UserManagement() {
       toast.success("L'utilisateur a été supprimé");
       fetchUsers();
     } catch (error) {
-      toast.error("Echec lors de la suppression de l'utilisateur");
+      toast.error("Échec de la suppression de l'utilisateur");
     } finally {
       setShowDeleteDialog(false);
       setUserToDelete(null);
@@ -128,6 +126,19 @@ export default function UserManagement() {
   const handleSelectUser = (user: User) => {
     setSelectedUser(user);
     setShowUserDetail(true);
+  };
+
+  const getRoleDisplay = (role: string) => {
+    switch (role) {
+      case "admin":
+        return "Administrateur";
+      case "referent":
+        return "Animateur Référent";
+      case "simple":
+        return "Animateur";
+      default:
+        return role;
+    }
   };
 
   return (
@@ -170,17 +181,23 @@ export default function UserManagement() {
                 <TableRow key={user._id}>
                   <TableCell>{`${user.prenom} ${user.nom}`}</TableCell>
                   <TableCell>{user.email}</TableCell>
-                  <TableCell className="capitalize">{user.role}</TableCell>
+                  <TableCell>{getRoleDisplay(user.role)}</TableCell>
                   <TableCell>
                     {!user.validated && (
-                      <div className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium inline-block">
+                      <Badge
+                        variant="secondary"
+                        className="bg-yellow-100 text-yellow-800"
+                      >
                         En attente de validation
-                      </div>
+                      </Badge>
                     )}
                     {user.validated && (
-                      <div className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium inline-block">
+                      <Badge
+                        variant="secondary"
+                        className="bg-green-100 text-green-800"
+                      >
                         Validé
-                      </div>
+                      </Badge>
                     )}
                   </TableCell>
                   <TableCell>
@@ -252,38 +269,30 @@ export default function UserManagement() {
             onOpenChange={setShowEditUser}
             onUserUpdated={fetchUsers}
           />
-          <UserDetailView
-            user={selectedUser}
-            onBack={() => setShowUserDetail(false)}
-            onResetPassword={() => handleResetPassword(selectedUser)}
-            onEdit={() => {
-              set Continuing with the UserManagement.tsx file content from where we left off:
-
-
-              setShowEditUser(true);
-              setShowUserDetail(false);
-            }}
-            onDelete={() => {
-              handleDeleteUser(selectedUser);
-              setShowUserDetail(false);
-            }}
-          />
+          {showUserDetail && (
+            <UserDetailView
+              user={selectedUser}
+              onBack={() => setShowUserDetail(false)}
+              onResetPassword={() => handleResetPassword(selectedUser)}
+              onEdit={() => {
+                setShowEditUser(true);
+                setShowUserDetail(false);
+              }}
+              onDelete={() => {
+                handleDeleteUser(selectedUser);
+                setShowUserDetail(false);
+              }}
+            />
+          )}
         </>
       )}
 
-      {showUserDetail && selectedUser && (
-        <UserDetailView
-          user={selectedUser}
-          onBack={() => setShowUserDetail(false)}
-          onResetPassword={() => handleResetPassword(selectedUser)}
-          onEdit={() => {
-            setShowEditUser(true);
-            setShowUserDetail(false);
-          }}
-          onDelete={() => {
-            handleDeleteUser(selectedUser);
-            setShowUserDetail(false);
-          }}
+      {userToResetPassword && (
+        <ResetPasswordDialog
+          open={showResetPasswordDialog}
+          onOpenChange={setShowResetPasswordDialog}
+          onConfirm={confirmResetPassword}
+          userName={`${userToResetPassword.prenom} ${userToResetPassword.nom}`}
         />
       )}
 
@@ -292,8 +301,8 @@ export default function UserManagement() {
           <AlertDialogHeader>
             <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible. L'utilisateur sera définitivement
-              supprimé.
+              Cette action est irréversible. L'utilisateur sera supprimé du
+              système.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -304,15 +313,6 @@ export default function UserManagement() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      {userToResetPassword && (
-        <ResetPasswordDialog
-          open={showResetPasswordDialog}
-          onOpenChange={setShowResetPasswordDialog}
-          onConfirm={confirmResetPassword}
-          userName={`${userToResetPassword.prenom} ${userToResetPassword.nom}`}
-        />
-      )}
     </Card>
   );
 }
